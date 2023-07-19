@@ -1,0 +1,56 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Vacation Request Review";
+}
+
+<div style="padding:10px 0 26px 10px;">
+    <div class="logo-heading clearfix">
+        <div class="logo-top">
+            <img src="~/Images/logo.png" height="40">
+        </div>
+        <div style="float:left;">
+            <h1>Vacation Request Review</h1>
+        </div>
+    </div>
+    <div class="report-separator">
+        Officer and Site
+    </div>
+    <div class="form-row row-tight clearfix">
+        <div class="form-label"><label>Officer:</label></div>
+        <div class="form-field"><span>@Model.FirstName @Model.LastName</span></div>
+    </div>
+    <div class="form-row row-tight clearfix">
+        <div class="form-label"><label>Client:</label></div>
+        <div class="form-field"><span>@Model.ClientName</span></div>
+    </div>
+    <div class="form-row row-tight clearfix">
+        <div class="form-label"><label>Site:</label></div>
+        <div class="form-field"><span>@Model.SiteName</span></div>
+    </div>
+
+    <div class="report-separator">
+        Vacation Requests
+    </div>
+    <div id="request-list" class="bootstrap-scope"></div>
+</div>
+
+@section Scripts {
+    <script id="list-template" type="text/x-kendo-template">
+        <div style="width:96%; max-width:500px;">
+        # for (var i = 0; i < data.length; i++) { #
+            <div class="panel panel-default details-link">
+                Date Entered: #= kendo.toString(moment.utc(data[i].CreatedDate, "YYYY-MM-DDTHH:mm:ss").local().toDate(), "g") #<br />
+                Start Date: #= kendo.toString(moment.utc(data[i].StartDate, "YYYY-MM-DDTHH:mm:ss").local().toDate(), "d") #<br />
+                End Date: #= kendo.toString(moment.utc(data[i].EndDate, "YYYY-MM-DDTHH:mm:ss").local().toDate(), "d") #<br />
+                Reason: #= replaceBreaks(data[i].Comments) #<br />
+                <b>Status</b>: #= data[i].VacationRequestStatusName #
+                # if (data[i].VacationRequestStatusId != 1) { #
+                    <br /><b>Status Changed By:</b> #= data[i].FirstName # #= data[i].LastName #
+                # } #
+            </div>
+        # } #
+        </div>
+    </script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/VacationRequestRead.js")
+}

@@ -1,0 +1,135 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Parking Violation";
+}
+
+<form id="report-form">
+    <div style="padding:10px 0 26px 10px;">
+        <div class="logo-heading clearfix">
+            <div class="logo-top">
+                <img src="~/Images/logo.png" height="40">
+            </div>
+            <div style="float:left;">
+                <h1>Parking Violation</h1>
+            </div>
+        </div>
+        <div class="report-separator">
+            Officer and Site
+        </div>
+        <div class="form-row row-tight clearfix">
+            <div class="form-label"><label>Officer:</label></div>
+            <div class="form-field"><span>@Model.FirstName @Model.LastName</span></div>
+        </div>
+        <div class="form-row row-tight clearfix">
+            <div class="form-label"><label>Client:</label></div>
+            <div class="form-field"><span>@Model.ClientName</span></div>
+        </div>
+        <div class="form-row row-tight clearfix">
+            <div class="form-label"><label>Site:</label></div>
+            <div class="form-field"><span>@Model.SiteName</span></div>
+        </div>
+        <div class="report-separator">
+            Parking Violation Info
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="violator-first-name">Violator First Name:</label></div>
+            <div class="form-field"><input id="violator-first-name" name="violator-first-name" maxlength="50" type="text" class="k-textbox standard-width" data-bind="value: report.violatorFirstName" /></div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="violator-last-name">Violator Last Name:</label></div>
+            <div class="form-field"><input id="violator-last-name" name="violator-last-name" maxlength="50" type="text" class="k-textbox standard-width" data-bind="value: report.violatorLastName" /></div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="vehicle-make">Vehicle Make:</label><span class="required-indicator">*</span></div>
+            <div class="form-field"><input id="vehicle-make" name="vehicle-make" type="text" maxlength="50" class="k-textbox standard-width" data-bind="value: report.vehicleMake" required data-required-msg="Please enter the Vehicle Make." /></div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="vehicle-model">Model:</label><span class="required-indicator">*</span></div>
+            <div class="form-field"><input id="vehicle-model" name="vehicle-model" type="text" maxlength="50" class="k-textbox standard-width" data-bind="value: report.vehicleModel" required data-required-msg="Please enter the Vehicle Model." /></div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="license-plate">LP#:</label><span class="required-indicator">*</span></div>
+            <div class="form-field"><input id="license-plate" name="license-plate" type="text" maxlength="20" class="k-textbox standard-width" data-bind="value: report.licensePlateNumber" required data-required-msg="Please enter the License Plate Number." /></div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="vin">VIN:</label></div>
+            <div class="form-field"><input id="vin" name="vehicle-color" type="text" maxlength="50" class="k-textbox standard-width" data-bind="value: report.vin" /></div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="vehicle-color">Vehicle Color:</label></div>
+            <div class="form-field"><input id="vehicle-color" name="vehicle-color" type="text" maxlength="50" class="k-textbox standard-width" data-bind="value: report.vehicleColor" /></div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="violation-type">Violation Type:</label><span class="required-indicator">*</span></div>
+            <div class="form-field">
+                <select id="violation-type" name="violation-type" class="standard-width" data-role="dropdownlist" data-option-label="-- Select Type --" data-value-field="ParkingViolationTypeId" data-text-field="ViolationTypeName" data-bind="source: violationTypeDataSource, value: report.parkingViolationTypeId" data-value-primitive="true" required data-required-msg="Please select Type of Violation."></select>
+                <span class="k-invalid-msg" data-for="violation-type"></span>
+            </div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="type-other">If Other, What Type:</label></div>
+            <div class="form-field"><input id="type-other" type="text" maxlength="50" class="k-textbox standard-width" data-bind="value: report.typeIfOther" /></div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="violation-number">Violation #:</label></div>
+            <div class="form-field"><input id="violation-number" type="text" maxlength="50" class="k-textbox standard-width" data-bind="value: report.violationNumber" /></div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="location">Location:</label><span class="required-indicator">*</span></div>
+            <div class="form-field"><input id="location" name="location" type="text" maxlength="250" class="k-textbox standard-width" data-bind="value: report.location" required data-required-msg="Please enter the Location." /></div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="fine">Fine:</label></div>
+            <div class="form-field"><input id="fine" name="vehicle-color" type="text" maxlength="50" class="k-textbox standard-width" data-bind="value: report.fine" /></div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="vehicle-towed">Was Vehicle Towed?:</label><span class="required-indicator">*</span></div>
+            <div class="form-field">
+                <select id="vehicle-towed" name="vehicle-towed" class="standard-width" data-role="dropdownlist" data-option-label="-- N/A --" data-bind="value: report.vehicleTowed" data-value-primitive="true" data-required-msg="Please select was vehicle towed?">
+                   
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+                <span class="k-invalid-msg" data-for="vehicle-towed"></span>
+            </div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="detail">Detail:</label></div>
+            <div class="form-field">
+                <textarea id="detail" name="detail" maxlength="2000" class="k-textbox" data-bind="value: report.detail"></textarea>
+            </div>
+        </div>
+        <div class="report-separator">
+            Photos, Videos, Audio
+        </div>
+        <div style="width:90%; max-width:780px;">
+            <div style="margin-bottom:6px;"><button id="btn-add-photo" class="k-button" type="button" style="width:140px;font-weight:bold; font-family: Verdana;">+ Add Photo, Video, or Audio</button></div>
+            <div id="upload-progress-wrapper" style="width:100%;"></div>
+            <div style="height: 0;width:0; overflow:hidden;"><input name="fileUpload" id="fileUpload" type="file" /></div>
+            <div id="photo-list" style="margin-top:8px;"></div>
+            <div id="media-list" style="margin-top:8px;"></div>
+            <div id="attachment-list" style="margin-top:8px;"></div>
+        </div>
+        <div class="row" style="margin-top:12px;">
+            <div class="form-label">&nbsp;</div>
+            <div class="form-field">
+                <button class="k-button" data-bind="click: submit" style="width:140px; font-weight:bold; font-family: Verdana;">Submit</button>
+                <button class="k-button" data-bind="click: clearForm" style="width:140px; font-weight:bold; font-family: Verdana;">Clear Form</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Head {
+    <link href="~/Content/toastmessage/css/jquery.toastmessage.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <script type="text/javascript" src="/Scripts/jquery.toastmessage.js"></script>
+    <script type="text/javascript">
+        var clientSiteId = @Model.ClientSiteId;
+        var userId = @Model.UserId;
+    </script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/ParkingViolation.js")
+}

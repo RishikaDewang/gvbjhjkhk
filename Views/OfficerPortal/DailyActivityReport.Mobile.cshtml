@@ -1,0 +1,162 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Daily Activity Report";
+}
+
+<div id="form-view" data-role="view" data-title="Daily Activity Report" data-use-native-scrolling="true">
+    <header data-role="header">
+        <div data-role="navbar">
+            <a data-align="right" data-icon="mymenuicon" data-role="button" href="#report-menu">Report Menu</a>
+        </div>
+    </header>
+    <div id="logo" style="text-align:center; margin-top:20px;">
+        <img src="~/Images/logo.png" width="310" height="65">
+    </div>
+    <h2>Daily Activity Report</h2>
+
+    <ul data-role="listview" data-style="inset" data-type="group">
+        <li>
+            <ul>
+                <li>Officer: <span class="list-value">@Model.FirstName @Model.LastName</span></li>
+                <li>Client: <span class="list-value">@Model.ClientName</span></li>
+                <li>Site: <span class="list-value">@Model.SiteName</span></li>
+            </ul>
+        </li>
+    </ul>
+    <form id="report-form">
+        <ul data-role="listview" data-style="inset">
+            <li class="report-separator">
+                Shift Start Notes
+            </li>
+            <li>
+                <label for="post-shift">Post/Shift:<span class="required-indicator">*</span>
+                <input id="post-shift" name="post-shift" type="text" maxlength="100" data-bind="value: report.postShift" required data-required-msg="Please enter your Post/Shift."/>
+                </label>
+            </li>
+            <li>
+                <label for="special-instructions">Special Instructions
+                <textarea id="special-instructions" name="special-instructions" maxlength="500" class="k-input k-textbox" data-bind="value: report.specialInstructions"></textarea>
+                </label>
+            </li>
+            <li>
+                <label for="post-items-received">Post Items Received<span class="required-indicator">*</span>
+                <textarea id="post-items-received" name="post-items-received" maxlength="500" data-bind="value: report.postItemsReceived" required data-required-msg="Please enter Post Items Received." ></textarea>
+                </label>
+            </li>
+            <li class="report-separator">
+                Observations
+                <div>
+                    For every observations, click the "Add Observation" button below.
+                </div>
+            </li>
+            <li>
+                <div id="observation-list" style="margin-bottom:8px;"></div>
+                <a id="btnAddObservation" data-role="button">Add Observation</a>
+            </li>
+            <li class="report-separator">
+                Photos, Videos, Audio
+            </li>
+            <li>
+                <div style="margin-bottom:6px;"><button id="btn-add-photo" class="k-button" type="button" style="width:140px;font-weight:bold; font-family: Verdana;">+ Add Photo, Video, or Audio</button></div>
+                <div id="upload-progress-wrapper" style="width:100%;"></div>
+                <div style="height: 0;width:0; overflow:hidden;"><input name="fileUpload" id="fileUpload" type="file" style="width:0;height:0;" /></div>
+                <div id="photo-list" style="margin-top:8px;"></div>
+                <div id="media-list" style="margin-top:8px;"></div>
+                <div id="attachment-list" style="margin-top:8px;"></div>
+            </li>
+            <li class="report-separator">
+                Relieving Officer Information
+            </li>
+            <li>
+                <label for="relieving-officer-first-name">Relieving Officer First Name<span class="required-indicator">*</span>
+                <input id="relieving-officer-first-name" name="relieving-officer-first-name" type="text" maxlength="50" data-bind="value: report.relievingOfficerFirstName" required data-required-msg="Please enter Relieving Officer First Name." />
+                </label>
+            </li>
+            <li>
+                <label for="relieving-officer-last-name">Relieving Officer Last Name<span class="required-indicator">*</span>
+                <input id="relieving-officer-last-name" name="relieving-officer-last-name" type="text" maxlength="50" data-bind="value: report.relievingOfficerLastName" required data-required-msg="Please enter Relieving Officer Last Name." />
+                </label>
+            </li>
+            <li>
+                <ul class="submit-buttons">
+                    <li><a data-role="button" data-bind="click: submit">Submit</a></li>
+                </ul>
+                <ul id="clear-form-ul" class="submit-buttons" style="display:none;">
+                    <li><br /><a data-role="button" data-bind="click: clearForm">Clear Form</a></li>
+                </ul>
+            </li>
+        </ul>
+    </form>
+    <br /><br />
+</div>
+
+<div data-role="view" id="observation-edit" style="width:95%;max-width:520px;height:auto;">
+    <div data-role="header">
+        <div data-role="navbar">
+            <span id="observation-view-title">Edit Observation</span>
+        </div>
+    </div>
+    <form id="observation-form">
+        <ul data-role="listview" data-style="inset">
+            <li>
+                <ul class="submit-buttons">
+                    <li style="text-align:right;">
+                        <a id="btn-cancel-obs" data-bind="click: cancel" style="width:100px;" data-role="button">Cancel</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <label for="observation-type">
+                    Type of Observation<span class="required-indicator">*</span>
+                    <select id="observation-type" name="observation-type" data-value-field="ObservationTypeId" data-text-field="ObservationTypeName" data-bind="source: observationTypes, value: observation.observationTypeId" required data-required-msg="Please select Type of Observation."></select>
+                    <span class="k-invalid-msg" data-for="observation-type"></span>
+                </label>
+            </li>
+            <li>
+                <label for="observation">
+                    Comments<span class="required-indicator">*</span>
+                    <textarea id="observation" name="observation" maxlength="2000" data-bind="value: observation.observation" required data-required-msg="Please enter Comments."></textarea>
+                </label>
+            </li>
+            <li>
+                <ul class="submit-buttons">
+                    <li style="text-align:right;">
+                        <a id="btn-remove-obs" data-bind="click: remove" data-icon="delete" style="width:40%;" data-role="button">Remove</a>
+                        <a id="btn-submit-obs" data-bind="click: submit" style="width:40%;" data-icon="action" data-role="button">Submit</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </form>
+</div>
+
+@section Head {
+    <link href="~/Content/toastmessage/css/jquery.toastmessage.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <script id="observation-list-template" type="text/x-kendo-tmpl">
+        # for (var i = 0; i < data.length; i++) { #
+            <div style="float:left; vertical-align:top; margin-right: 10px; margin-bottom: 3px;">
+                <b>#= data[i].observationTypeName #</b><br/>
+                <b>#= data[i].observationDateDisplay #</b>
+            </div>
+            <div style="float:right; vertical-align:top;">
+                <a data-role="button" data-icon="edit" class="edit-observation" data-observation-id="#= data[i].darObservationId #">Edit</a>
+            </div>
+            <div style="clear:both;"></div>
+            <div style="padding-top: 6px;">
+                #= replaceBreaks(data[i].observation) #<br/>
+            </div>
+            <hr />
+        # } #
+    </script>
+    <script type="text/javascript">
+        var clientSiteId = @Model.ClientSiteId;
+        var userId = @Model.UserId;
+    </script>
+    <script type="text/javascript" src="/Scripts/amplify.min.js"></script>
+    <script type="text/javascript" src="/Scripts/jquery.toastmessage.js"></script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/DailyActivityReport.Mobile.js")
+}

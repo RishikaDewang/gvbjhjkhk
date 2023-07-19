@@ -1,0 +1,107 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Read POL";
+}
+
+<form id="incident-form">
+<div style="padding:10px 0 26px 10px;">
+    <div class="logo-heading clearfix">
+        <div class="logo-top">
+            <img src="~/Images/logo.png" height="40">
+        </div>
+        <div style="float:left;">
+            <h1>Pass On Log</h1>
+        </div>
+    </div>
+    <div class="report-separator">
+        Officer and Site
+    </div>
+    <div class="form-row row-tight clearfix">
+        <div class="form-label"><label>Officer:</label></div>
+        <div class="form-field"><span>@Model.FirstName @Model.LastName</span></div>
+    </div>
+    <div class="form-row row-tight clearfix">
+        <div class="form-label"><label>Client:</label></div>
+        <div class="form-field"><span>@Model.ClientName</span></div>
+    </div>
+    <div class="form-row row-tight clearfix">
+        <div class="form-label"><label>Site:</label></div>
+        <div class="form-field"><span>@Model.SiteName</span></div>
+    </div>
+
+    <div class="report-separator">
+        Log Entries
+    </div>
+    <div id="log-list" class="bootstrap-scope"></div>
+</div>
+</form>
+
+@section Scripts {
+    <script id="list-template" type="text/x-kendo-template">
+        <div style="width:96%; max-width:1200px;">
+        # for (var i = 0; i < data.length; i++) { #
+            <a class="btn btn-default btn-lg btn-block details-link" data-log-id="#= data[i].PassOnLogId #">
+            <b>Date: #= kendo.toString(moment.utc(data[i].CreatedDate, "YYYY-MM-DDTHH:mm:ss").local().toDate(), "g") #</b><br />
+            <b>Post/Shift:</b> #= data[i].PostShift #<br />
+            <b>Note:</b> #= replaceBreaks(data[i].Note) #
+            # if (!data[i].IsRead) { #
+                <br /><br /><b>Unread</b>
+            # } #
+            </a>
+        # } #
+        </div>
+    </script>
+    <script id="details-template" type="text/x-kendo-template">
+        <div class="form-row">
+            <b>Date:</b><br />
+            #= kendo.toString(moment.utc(data.CreatedDate, "YYYY-MM-DDTHH:mm:ss").local().toDate(), "g") #
+        </div>
+        <div class="form-row">
+            <b>Post/Shift:</b><br />
+            #= data.PostShift #
+        </div>
+        <div class="form-row">
+            <b>Entered By:</b><br />
+            #= nullToString(data.LastName + ', ' + data.FirstName) #
+        </div>
+        <div class="form-row">
+            <b>Note:</b><br />
+            #= replaceBreaks(data.Note) #
+        </div>
+        # if (data.photo.length > 0) { #
+        # for(var i = 0; i< photo.length; i++) { #
+        <div class="form-row">
+            <b>File Attachment:</b><br />
+            <a href="/Upload3/#= data.photo[i].PhotoLarge #" download="#= data.photo[i].PhotoOriginal #">#= data.photo[i].PhotoOriginal #</a>
+        </div>
+        # } #
+        # } #
+        # if (data.document.length > 0) { #
+        # for(var i = 0; i< data.document.length; i++) { #
+        <div class="form-row">
+            <b>File Attachment:</b> <br />
+            <a href="/Upload3/#= data.document[i].FileName #" download="#= data.document[i].OriginalFileName #">#= data.document[i].OriginalFileName #</a>
+        </div>
+        # } #
+        # } #
+        # if (data.media.length > 0) { #
+        # for(var i = 0; i< data.media.length; i++) { #
+        <div class="form-row">
+            <b>File Attachment:</b><br />
+            <a href="/Upload3/#= data.media[i].FileName #" download="#= data.media[i].OriginalFileName #">#= data.media[i].OriginalFileName #</a>
+        </div>
+        # } #
+        # } #
+        # if (!data.IsRead) { #
+        <div id="mark-as-read" class="form-row">
+            <button id="btnMarkAsRead" type="button" data-role="button" data-log-id="#= data.PassOnLogId #">Mark as Read</button>
+        </div>
+        # } #
+
+    </script>
+    <script type="text/javascript">
+        var clientSiteId = @Model.ClientSiteId;
+    </script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/PassOnLogRead.js")
+}

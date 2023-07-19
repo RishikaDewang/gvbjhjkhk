@@ -1,0 +1,62 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Mobile Test</title>
+
+    <link href="Content/kendoui/v2016.1.322/kendo.mobile.all.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="home" data-role="view" data-layout="default">
+        <ul data-role="listview" data-style="inset" data-type="group">
+            <li>
+                Reports
+                <ul>
+                    <li><a href="#stretchview">Daily Activity</a></li>
+                    <li><a href="#stretchview">Stretched View</a></li>
+                    <li><a href="#stretchview">Stretched View</a></li>
+                    <li><a href="#stretchview">Stretched View</a></li>
+                    <li><a href="#stretchview">Stretched View</a></li>
+                    <li><a href="#stretchview">Stretched View</a></li>
+                    <li><a href="#stretchview">Stretched View</a></li>
+                    <li><a href="#stretchview">Stretched View</a></li>
+                    <li><a href="#stretchview">Stretched View</a></li>
+                    <li><a href="#stretchview">Stretched View</a></li>
+                    <li><a href="#stretchview">Stretched View</a></li>
+                    <li><a href="#stretchview">Stretched View</a></li>
+                    <li><a href="#stretchview">Stretched View</a></li>
+                    <li><a href="#stretchview">Stretched View</a></li>
+                    <li><a href="#stretchview">Stretched View</a></li>
+                    <li><a href="#stretchview">Stretched View</a></li>
+                    <li><a href="#stretchview">Stretched View</a></li>
+
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <section data-role="layout" data-id="default">
+        <header data-role="header">
+            <div data-role="navbar">OfficerReports</div>
+        </header>
+        <!--View content will render here-->
+        <footer data-role="footer">
+            <div data-role="tabstrip">
+                <a href="#home">Home</a>
+            </div>
+        </footer>
+    </section>
+
+    <script src="Scripts/kendoui/v2016.1.322/jquery.min.js"></script>
+    <script src="Scripts/kendoui/v2016.1.322/kendo.all.min.js"></script>
+    <script>
+        var app = new kendo.mobile.Application();
+    </script>
+</body>
+</html>

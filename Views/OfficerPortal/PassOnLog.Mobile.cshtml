@@ -1,0 +1,66 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Pass On Log";
+}
+
+<div id="forms" data-role="view" data-title="Pass On Log" data-init="initForm" data-use-native-scrolling="true">
+    <header data-role="header">
+        <div data-role="navbar">
+            <a data-align="right" data-icon="mymenuicon" data-role="button" href="#report-menu">Report Menu</a>
+        </div>
+    </header>
+    <div id="logo" style="text-align:center; margin-top:20px;">
+        <img src="~/Images/logo.png" width="310" height="65">
+    </div>
+    <h2>Pass On Log Entry</h2>
+
+    <ul data-role="listview" data-style="inset" data-type="group">
+        <li>
+            <ul>
+                <li>Officer: <span class="list-value">@Model.FirstName @Model.LastName</span></li>
+                <li>Client: <span class="list-value">@Model.ClientName</span></li>
+                <li>Site: <span class="list-value">@Model.SiteName</span></li>
+            </ul>
+        </li>
+    </ul>
+
+    <form>
+        <ul data-role="listview" data-style="inset">
+            <li class="report-separator">
+                Write to POL
+            </li>
+            <li>
+                <label>Post/Shift:<span class="required-indicator">*</span>
+                <input id="post-shift" name="post-shift" type="text" class="k-input k-textbox" data-bind="value: report.postShift" required data-required-msg="Please enter your Post/Shift."/>
+                </label>
+            </li>
+            <li>
+                <label>Note:<span class="required-indicator">*</span>
+                <textarea id="note" name="note" class="k-input k-textbox" data-bind="value: report.note" required data-required-msg="Please enter a Note."></textarea>
+                </label>
+            </li>
+            <li>
+                <ul class="submit-buttons">
+                    <li><a data-role="button" data-bind="click: submit">Submit</a></li>
+                </ul>
+                <ul id="clear-form-ul" class="submit-buttons" style="display:none;">
+                    <li><br /><a data-role="button" data-bind="click: clearForm">Clear Form</a></li>
+                </ul>
+            </li>
+        </ul>
+    </form>
+</div>
+
+@section Head {
+    <link href="~/Content/toastmessage/css/jquery.toastmessage.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <script type="text/javascript">
+        var clientSiteId = @Model.ClientSiteId;
+    var userId = @Model.UserId;
+    </script>
+    <script type="text/javascript" src="/Scripts/jquery.toastmessage.js"></script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/PassOnLog.Mobile.js")
+}

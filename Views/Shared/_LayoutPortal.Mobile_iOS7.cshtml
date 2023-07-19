@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <title>iOS 7 - @ViewBag.Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" /> 
+    <link href="~/Content/kendoui/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/Content/kendoui/kendo.default.min.css" rel="stylesheet" />
+    <link href="~/Content/kendoui/kendo.mobile.all.min.css" rel="stylesheet" />
+    <link href="~/Content/mobile-page.css" rel="stylesheet" />
+    @if (Request.IsSecureConnection)
+    {
+        <link href="https://fonts.googleapis.com/css?family=Economica:400,700,400italic,700italic&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css" />
+    }
+    else {
+        <link href="http://fonts.googleapis.com/css?family=Economica:400,700,400italic,700italic&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css" />
+    }
+    @RenderSection("Head", false)
+</head>
+<body>
+    @RenderBody()
+
+    <div data-role="modalview" id="msg-view" style="width:auto; height:auto; display:none;">
+        <div data-role="header">
+            <div data-role="navbar">
+                <span id="msg-title"></span>
+            </div>
+        </div>
+        <div style="text-align: center;padding-bottom: 10px;">
+            <p id="msg-text"></p>
+            <a id="msg-ok-button" data-role="button">OK</a>
+        </div>
+    </div>
+    <div data-role="modalview" id="wait-indicator" style="width:auto; height:auto; display:none;">
+        <div data-role="header">
+            <div data-role="navbar">
+                <span id="wait-title">Please Wait...</span>
+            </div>
+        </div>
+        <div style="text-align:center;width:170px; height:70px;">
+            <div class="k-loading-image"></div>
+        </div>
+    </div>
+
+    <script src="~/Scripts/jquery.min.js"></script>
+    @Html.VersionedJsUrl("/Scripts/kendo.all.min.js")
+    @Html.VersionedJsUrl("/Scripts/app/internal-templateloader.js")
+    @Html.VersionedJsUrl("/Scripts/app/internal-portal.js")
+    <script src="~/Scripts/Math.uuid.js"></script>
+    <script src="~/Scripts/moment.min.js"></script>
+    @RenderSection("scripts", required: false)
+    <input type="hidden" id="maxUploadSize" name="maxUploadSize" value="@(ORWeb.Classes.Shared.App.MaxUploadSize)" />
+    <input type="hidden" id="maxUploadSizeStr" name="maxUploadSizeStr" value="@(ORWeb.Classes.Shared.App.FormatBytes)" />
+</body>
+</html>
+

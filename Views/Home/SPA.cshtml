@@ -1,0 +1,801 @@
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title ng-bind="title">OfficerReports</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="robots" content="noindex, nofollow">
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    @*<meta http-equiv="refresh" content="300" />*@
+    <link rel="shortcut icon" type="image/x-icon" href="~/Images/favicon.ico" />
+    <link href="/Content/bootstrap/css/bootstrap-scope.css" rel="stylesheet" />
+    <link href="/Content/kendoui/v2016.1.322/kendo.uniform.min.css" rel="stylesheet" />
+    <link href="/Content/kendoui/v2016.1.322/kendo.common.min.css" rel="stylesheet" />
+    <link href="/Content/styleMain.css" rel="stylesheet" />
+
+    <!-- start - added for Details merge -->
+    <link href="~/Content/stylePortalDesktop.css" rel="stylesheet" />
+    <link href="~/Content/fileupload/css/jquery.fileupload-ui.css" rel="stylesheet" />
+    <link href="~/Content/colorbox/colorbox.css" rel="stylesheet" />
+    <!-- end - add for Details merge -->
+
+    @Html.GetSPAThemeFromUser()
+    <style>
+                html,
+                body {
+                    height: 100%;
+                    margin: 0;
+                    padding: 0;
+                    overflow: hidden;
+                    font-family: Arial, Helvetica, sans-serif;
+                    font-size: 9pt;
+                }
+
+                .report-separator {
+                    background-color: #e6e6e6;
+                    color: #000000;
+                }
+
+                /* #vertical,
+                #horizontal
+                {
+                    height:100%;
+                }
+                */
+
+                /* width of 100% was causing horizontal scroll bar in the past
+                #panelbar {
+                    width: 99%;
+                }
+                */
+                #panelbar p {
+                    margin-left: 1em;
+                    margin-right: 1em;
+                }
+
+                /*.k-panelbar>.k-header,
+                .k-panelbar>.k-state-highlight,
+                .k-panelbar>.k-state-active > .k-header,
+                .k-panelbar>.k-item>.k-state-focused,
+                .k-panelbar>.k-item>.k-header,
+                .k-panelbar>.k-item>.k-header.k-state-hover,
+                .k-panelbar>.k-item>.k-header.k-state-selected.k-state-hover {
+                    background-image: none;
+                    background-image: none, -webkit-linear-gradient(top, #9fc2e2 0%, #458ac5 100%);
+                    background-image: none, -moz-linear-gradient(top, #9fc2e2 0%, #458ac5 100%);
+                    background-image: none, -o-linear-gradient(top, #9fc2e2 0%, #458ac5 100%);
+                    background-image: none, linear-gradient(to bottom, #9fc2e2 0%, #458ac5 100%);
+                    background-position: 50% 50%;
+                    background-color: #458ac5;
+                    color: white;
+                }
+
+                .k-panelbar>li>.k-link {
+                    color: #ffffff;
+                }
+
+                .k-panelbar>li>.k-link>.k-icon {
+                    background-image: url('/Content/kendoui/v2016.1.322/Black/sprite.png') !important;
+                    border-color: transparent;
+                }
+
+                .k-state-hover, .k-state-hover:hover
+                {
+                    color: #2e2e2e;
+                    background-image: none;
+                    background-color: #dfdfdf;
+                    border-color: #cccccc;
+                }*/
+
+                /*
+        .k-state-hover, .k-state-hover:hover, .k-splitbar-horizontal-hover:hover, .k-splitbar-vertical-hover:hover, .k-list>.k-state-hover, .k-scheduler .k-scheduler-toolbar ul li.k-state-hover, .k-pager-wrap .k-link:hover, .k-dropdown .k-state-focused, .k-imagebrowser-dropzone, .k-mobile-list .k-item>.k-link:active, .k-mobile-list .k-item>.k-label:active, .k-mobile-list .k-edit-label.k-check:active, .k-mobile-list .k-scheduler-timezones .k-edit-field:nth-child(2):active, .k-mobile-list .k-recur-view .k-check:active {
+        color: #263248;
+        background-color: #b6bdca;
+        border-color: #b6bdca;
+        }*/
+
+                /*.k-state-selected, .k-state-focused.k-state-selected, .k-state-focused.k-state-selected.k-state-hover {
+                    color: #2e2e2e;
+                    background-color: #dfdfdf;
+                    -webkit-box-shadow: inset 0 0 1px 1px #585858;
+                    box-shadow: inset 0 0 1px 1px #585858;
+                }
+
+                .k-panelbar > .k-item > .k-link.k-header {
+                    padding-left: 6px;
+                }*/
+
+                /* silver */
+                /*.k-content, .k-editable-area, .k-panelbar>li.k-item, .k-panel>li.k-item, .k-tiles {
+                    background-color: #ffffff;
+                }
+                .k-block, .k-widget {
+                    background-color: #ffffff;
+                }
+                .k-panelbar>li.k-state-default>.k-link {
+                    color: #ffffff;
+                }*/
+
+                .k-panelbar .k-item.pb-inner-parent .k-icon {
+                    background-image: url('/Content/kendoui/v2016.1.322/Uniform/sprite.png');
+                }
+
+                .qr-code-container {
+                    padding: 4px;
+                }
+
+                h1 {
+                    margin-left: 10px;
+                    margin-top: 8px;
+                }
+
+                #toggle-filters {
+                    width: 106px;
+                    color: #fff;
+                    border-color: #ef671a;
+                    background-image: url('/Content/kendoui/v2016.1.322/textures/highlight.png');
+                    background-image: none,-webkit-linear-gradient(top,#f6813f 0,#f35a03 100%);
+                    background-image: none,-moz-linear-gradient(top,#f6813f 0,#f35a03 100%);
+                    background-image: none,-o-linear-gradient(top,#f6813f 0,#f35a03 100%);
+                    background-image: none,linear-gradient(to bottom,#f6813f 0,#f35a03 100%);
+                    background-position: 50% 50%;
+                    background-color: #f35800;
+                    -webkit-box-shadow: none;
+                    box-shadow: none;
+                }
+
+                    #toggle-filters:hover {
+                        color: #fff;
+                        border-color: #ef671a;
+                        background-image: url('/Content/kendoui/v2016.1.322/textures/highlight.png');
+                        background-image: none,-webkit-linear-gradient(top,#f1713f 0,#ed4503 100%);
+                        background-image: none,-moz-linear-gradient(top,#f1713f 0,#ed4503 100%);
+                        background-image: none,-o-linear-gradient(top,#f1713f 0,#ed4503 100%);
+                        background-image: none,linear-gradient(to bottom,#f1713f 0,#ed4503 100%);
+                        background-color: #ed4300;
+                        -webkit-box-shadow: none;
+                        box-shadow: none;
+                    }
+
+                    #toggle-filters:active {
+                        color: #fff;
+                        border-color: #ef671a;
+                        background-image: url('/Content/kendoui/v2016.1.322/textures/highlight.png');
+                        background-image: none,-webkit-linear-gradient(top,#f6813f 0,#f35a03 100%);
+                        background-image: none,-moz-linear-gradient(top,#f6813f 0,#f35a03 100%);
+                        background-image: none,-o-linear-gradient(top,#f6813f 0,#f35a03 100%);
+                        background-image: none,linear-gradient(to bottom,#f6813f 0,#f35a03 100%);
+                        background-color: #f35800;
+                        -webkit-box-shadow: none;
+                        box-shadow: none;
+                    }
+
+                    #toggle-filters:focus:active:not(.k-state-disabled):not([disabled]),
+                    #toggle-filters:focus:not(.k-state-disabled):not([disabled]) {
+                        -webkit-box-shadow: none;
+                        box-shadow: none;
+                    }
+
+                    #toggle-filters:focus,
+                    #toggle-filters.k-state-focused {
+                        color: #fff;
+                        border-color: #e84200;
+                        background-image: url('/Content/kendoui/v2016.1.322/textures/highlight.png');
+                        background-image: none,-webkit-linear-gradient(top,#f1713f 0,#ed4503 100%);
+                        background-image: none,-moz-linear-gradient(top,#f1713f 0,#ed4503 100%);
+                        background-image: none,-o-linear-gradient(top,#f1713f 0,#ed4503 100%);
+                        background-image: none,linear-gradient(to bottom,#f1713f 0,#ed4503 100%);
+                        -webkit-box-shadow: none;
+                        box-shadow: none;
+                    }
+
+                    #toggle-filters .k-icon {
+                        background-image: url('/Content/kendoui/v2016.1.322/Black/sprite.png');
+                        border-color: transparent;
+                    }
+
+
+
+                .k-grid td {
+                    vertical-align: top;
+                }
+
+                .k-header-column-menu.k-state-active,
+                .k-grid-filter.k-state-active {
+                    background-color: #E0E0E0;
+                }
+
+                ::-webkit-scrollbar {
+                    -webkit-appearance: none;
+                    width: 7px;
+                    height: 7px;
+                }
+
+                ::-webkit-scrollbar-thumb {
+                    border-radius: 4px;
+                    background-color: rgba(0,0,0,.5);
+                    -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+                }
+
+                .k-splitbar {
+                    background-color: #f3f3f4;
+                }
+
+                .k-splitbar-horizontal-hover:hover,
+                .k-splitbar-vertical-hover:hover {
+                    color: #263248;
+                    background-color: #b6bdca;
+                    border-color: #b6bdca;
+                }
+
+                video {
+                    max-height: 520px;
+                    max-width: 520px;
+                }
+    </style>
+    <style>
+        /* may move - details window css */
+        #cboxOverlay {
+            z-index: 11001;
+        }
+
+        #colorbox {
+            z-index: 11002;
+        }
+
+        #details-window,
+        #edit-window {
+            font-size: 13px;
+        }
+
+            #edit-window .form-field {
+                padding-top: 1px;
+            }
+
+        /* fix out of line delete button */
+        .k-grid tbody td > .k-grid-delete {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
+        .bootstrap-scope .no-lines tbody > tr > td {
+            border-top: none;
+            padding: 3px;
+        }
+        /*
+        .bootstrap-scope .no-lines tbody > tr td:nth-of-type(1) {
+            text-align:right;
+            width: 180px;
+            font-weight: bold;
+        }
+        */
+        .bootstrap-scope .no-lines tbody > tr td:first-child {
+            text-align: right;
+            width: 180px;
+            font-weight: bold;
+        }
+
+        .bootstrap-scope .panel-default > .panel-heading {
+            font-weight: bold;
+            color: #05508f;
+        }
+
+        .k-grid td {
+            vertical-align: top;
+        }
+
+        /* remove red border on firefox for required or invalid fields */
+        input:required, textarea {
+            box-shadow: none;
+        }
+
+        input:invalid, textarea {
+            box-shadow: none;
+        }
+
+        .k-grid-export-image, .k-i-excel {
+            display: inline-block;
+            background: url('/images/Excel-icon.png');
+            margin-right: 4px !important;
+        }
+
+        .marquee {
+            float:left;
+            padding:20px 0 0 400px;
+            width: 585px; 
+            overflow: hidden;
+            border:0px solid #ccc;
+            font-size:21px;font-family:Arial;
+            
+        }
+
+        
+        
+    </style>
+    <!--[if IE]>
+    <style>
+        .k-grid tbody .k-button {
+            /* min-width: 64px; */
+            min-width: 44px;
+        }
+
+        /* fix out of line delete button */
+        .k-grid tbody td>.k-grid-delete {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+    </style>
+    <script src="~/Scripts/json3.min.js"></script>
+    <script src="~/Scripts/html5shiv.js"></script>
+    <script src="~/Scripts/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body style="margin:0; padding: 0;">
+    <div id="top-section">
+        <div class='marquee' id="pol" direction="left">
+            @*<marquee behavior="scroll" direction="left" id="pol"  style="width:585px;font-size:21px;font-family:Arial" ></marquee>*@
+            @*<h3 id="pol"> </h3>*@
+            <input type="hidden" id="polId" />
+        </div>
+
+        <div class="top-section-text" style="float:right;padding: 12px 20px 0 0;">
+
+            @if (Request.IsAuthenticated)
+            {
+                var roleName = ORWeb.Classes.Shared.App.GetUserRoleName(User);
+                int? customerid = ORWeb.Classes.Shared.App.GetCustomerId(User.Identity.Name);
+                if ((roleName == "Customer"))
+                {
+                    <span class="top-section-text"><b>Account #</b>  @customerid |</span>
+                }
+                @:<b>Signed In: </b> @User.Identity.Name |<span style="margin-left:5px;"> </span>
+                @:
+                <a href="/Account/LogOff" class="top-section-text">Sign Out</a>
+
+            }
+        </div>
+    </div>
+    <div id="vertical">
+        <div>
+            <div id="horizontal">
+                <div id="panelbar-wrapper">
+                    <div id="panelbar"></div>
+                </div>
+                <div id="main-div">
+                    <div ng-view style="width:100%;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script id="message-template" type="text/x-kendo-template">
+        <p>#= message #</p>
+        <hr style="background-color: \\#cccccc; border: 0 none; height:1px; margin-top:16px; margin-bottom: 16px;">
+        <div style="text-align:center;">
+            <button class="ok-button k-button">OK</button>
+        </div>
+    </script>
+    <script id="wait-template" type="text/x-kendo-template">
+        <div style="text-align:center;width:170px; height:70px;">
+            <div class="k-loading-image"></div>
+        </div>
+    </script>
+    <script id="photo-list-template" type="text/x-kendo-tmpl">
+        # for (var i = 0; i < data.length; i++) { #
+        <div class="clearfix">
+            <div style="float:left; vertical-align:top; margin-right: 10px; margin-bottom: 3px;">
+                <div>
+                    <img src="#: data[i].SmallUrl #" />
+                </div>
+                <div style="margin-top:8px;">
+                    <b>Description:</b><br />
+                    <textarea maxlength="1000" class="k-textbox photo-description" data-photo-id="#= data[i].PhotoSmall #" data-modified="false">#= nullToString(data[i].PhotoDescription) #</textarea>
+                </div>
+            </div>
+            <div style="float:left; vertical-align:top;"><button type="button" data-role="button" class="remove-photo" style="display:none;" data-photo-id="#= data[i].PhotoSmall #"><span class="k-icon k-i-close"></span> Remove</button></div>
+        </div>
+        <hr class="hr-sep" />
+        # } #
+    </script>
+    <script id="media-list-template" type="text/x-kendo-tmpl">
+        # for (var i = 0; i < data.length; i++) { #
+        <div class="clearfix">
+            <div style="float:left; vertical-align:top; margin-right: 10px; margin-bottom: 3px;">
+                <div>
+                    # if (data[i].MediaTypeId == 3) {#
+                    <b>Video File: </b>
+                    # } else if (data[i].MediaTypeId == 2) { #
+                    <b>Audio File: </b>
+                    # } #<br />
+                    #: data[i].OriginalFileName #
+                </div>
+                <div style="margin-top:8px;">
+                    <b>Description:</b><br />
+                    <textarea maxlength="1000" class="k-textbox media-description" data-media-id="#= data[i].FileName #" data-modified="false">#= nullToString(data[i].AttachmentDescription) #</textarea>
+                </div>
+            </div>
+            <div style="float:left; vertical-align:top;"><button type="button" data-role="button" class="remove-media" style="display:none;" data-media-id="#= data[i].FileName #"><span class="k-icon k-i-close"></span> Remove</button></div>
+        </div>
+        <hr class="hr-sep" />
+        # } #
+    </script>
+    <script id="attachment-list-template" type="text/x-kendo-tmpl">
+        # for (var i = 0; i < data.length; i++) { #
+        <div class="clearfix">
+            <div style="float:left; vertical-align:top; margin-right: 10px; margin-bottom: 3px;">
+                <div>
+                    <b>File: </b><br /> #: data[i].OriginalFileName #
+                </div>
+                <div style="margin-top:8px;">
+                    <b>Description:</b><br />
+                    <textarea maxlength="1000" class="k-textbox attachment-description" data-attachment-id="#= data[i].FileName #" data-modified="false">#= nullToString(data[i].AttachmentDescription) #</textarea>
+                </div>
+            </div>
+            <div style="float:left; vertical-align:top;"><button type="button" data-role="button" class="remove-attachment" style="display:none;" data-attachment-id="#= data[i].FileName #"><span class="k-icon k-i-close"></span> Remove</button></div>
+        </div>
+        <hr class="hr-sep" />
+        # } #
+    </script>
+
+
+    <script id="photo-list-template2" type="text/x-kendo-tmpl">
+        # for (var i = 0; i < data.length; i++) { #
+        <div class="upload-list-item" data-photo-id="#= data[i].PhotoSmall #">
+            <div class="clearfix">
+                <div style="float:left; vertical-align:top; margin-right: 10px; margin-bottom: 3px;"><img src="#: data[i].SmallUrl #" /></div>
+                <div style="float:left; vertical-align:top;"><button type="button" data-role="button" class="remove-photo" data-photo-id="#= data[i].PhotoSmall #"><span class="k-icon k-i-close"></span> Remove</button></div>
+            </div>
+            <div style="margin-top:8px;">
+                <b>Description:</b><br />
+                <textarea maxlength="1000" class="k-textbox upload-description" data-photo-id="#= data[i].PhotoSmall #" data-modified="false">#= nullToEmptyString(data[i].Description) #</textarea>
+            </div>
+            <hr class="hr-sep" />
+        </div>
+        # } #
+    </script>
+    <script id="media-list-template2" type="text/x-kendo-tmpl">
+        # for (var i = 0; i < data.length; i++) { #
+        <div class="upload-list-item" data-media-id="#= data[i].FileName #">
+            <div class="clearfix">
+                <div style="float:left; vertical-align:top; margin-right: 10px; margin-bottom: 3px;">#: data[i].OriginalFileName #</div>
+                <div style="float:left; vertical-align:top;"><button type="button" data-role="button" class="remove-media" data-media-id="#= data[i].FileName #"><span class="k-icon k-i-close"></span> Remove</button></div>
+            </div>
+            <div style="margin-top:8px;">
+                <b>Description:</b><br />
+                <textarea maxlength="1000" class="k-textbox upload-description" data-media-id="#= data[i].FileName #" data-modified="false">#= nullToEmptyString(data[i].Description) #</textarea>
+            </div>
+            <hr class="hr-sep" />
+        </div>
+        # } #
+    </script>
+    <script id="attachment-list-template2" type="text/x-kendo-tmpl">
+        # for (var i = 0; i < data.length; i++) { #
+        <div class="upload-list-item" data-attachment-id="#= data[i].FileName #">
+            <div class="clearfix">
+                <div style="float:left; vertical-align:top; margin-right: 10px; margin-bottom: 3px;">#: data[i].OriginalFileName #</div>
+                <div style="float:left; vertical-align:top;"><button type="button" data-icon="delete" class="k-button remove-attachment" data-attachment-id="#= data[i].FileName #">Remove</button></div>
+            </div>
+            <div style="margin-top:8px;">
+                <b>Description:</b><br />
+                <textarea maxlength="1000" class="k-textbox upload-description" data-attachment-id="#= data[i].FileName #" data-modified="false">#= nullToEmptyString(data[i].Description) #</textarea>
+            </div>
+            <hr class="hr-sep" />
+        </div>
+        # } #
+    </script>
+
+
+    <script id="login-form-template" type="text/x-kendo-tmpl">
+        <form id="re-login-form">
+            <dl>
+                <dt>
+                    <label for="UserName">User Name</label>
+                </dt>
+                <dd>
+                    <input id="UserName" name="UserName" type="text" class="k-input k-textbox" required data-required-msg="Please enter your User Name" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>
+                    <label for="Password">Password</label>
+                </dt>
+                <dd>
+                    <input id="Password" name="Password" type="password" class="k-input k-textbox" required data-required-msg="Please enter your Password" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>
+                </dt>
+                <dd>
+                    <button id="re-login" type="button" class="k-button">Submit</button>
+                </dd>
+            </dl>
+        </form>
+    </script>
+    <script id="description-edit-template" type="text/x-kendo-template">
+        <div id="file-display-description"></div>
+        <div style="font-weight:bold; margin: 6px 0;">Enter a description for the file (not required):</div>
+        <textarea id="photo-description" maxlength="1000" class="k-textbox photo-description"></textarea>
+        <hr style="background-color: \\#cccccc; border: 0 none; height:1px; margin-top:10px; margin-bottom: 10px;">
+        <div style="text-align:center;">
+            <button type="button" class="ok-button k-button">OK</button>
+        </div>
+    </script>
+    <script id="report_header" type="text/x-kendo-template">
+        <div style="margin: 0 0 8px 12px;"><b>Time Zone: #= data.report.TimeZoneDisplayName #</b></div>
+        <div class="panel panel-default">
+            <div class="panel-heading">DATE, CLIENT, &amp; SITE</div>
+            <table class="table table-condensed no-lines">
+                <tr>
+                    <td>Date Entered:</td>
+                    <td>#= kendo.toString(moment.utc(data.report.CreatedDate, "YYYY-MM-DDTHH:mm:ss").tz(data.report.TimeZoneName).toDate(), "g") #</td>
+                </tr>
+                <tr>
+                    <td>Client:</td>
+                    <td>#= data.report.ClientName #</td>
+                </tr>
+                <tr>
+                    <td>Site:</td>
+                    <td>#= data.report.SiteName #</td>
+                </tr>
+            </table>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">OFFICER INFORMATION</div>
+            <table class="table table-condensed no-lines">
+                <tr>
+                    <td>Officer Name:</td>
+                    <td>#= data.report.OfficerFullName #</td>
+                </tr>
+            </table>
+        </div>
+    </script>
+    <script id="report_files" type="text/x-kendo-template">
+        <div id="section-photo" style="display:none;" class="panel panel-default">
+            <div class="panel-heading">PHOTOS</div>
+            <table class="table">
+                <tbody>
+                    # for (var i = 0; i < data.photos.length; i++) { #
+                    <tr class="photo-#= i + 1 #">
+                        <td>#= i + 1 #</td>
+                        <td>
+                            <div>
+                                <img src="/#= data.photos[i].UploadFolder #/#= data.photos[i].PhotoMedium + '?' + (new Date()).getTime() #" id="photo-#= data.photos[i].EntityPhotoId #" />
+                                <div class="btn-group-vertical hidden-print" style="margin-left:10px; vertical-align:top;">
+                                    <a href="/#= data.photos[i].UploadFolder #/#= data.photos[i].PhotoLarge + '?' + (new Date()).getTime() #" id="photo-large-#= data.photos[i].EntityPhotoId #" data-photo-id="#= data.photos[i].EntityPhotoId #" class="btn btn-primary btn-sm cb-photo"><span class="glyphicon glyphicon-zoom-in"></span> Enlarge</a>
+                                    <button type="button" class="btn btn-primary btn-sm rotate-image" data-photo-id="#= data.photos[i].EntityPhotoId #" data-rotate="90">
+                                        <span class="glyphicon glyphicon-repeat"></span> Rotate 90&deg;
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm rotate-image" data-photo-id="#= data.photos[i].EntityPhotoId #" data-rotate="180">
+                                        <span class="glyphicon glyphicon-repeat"></span> Rotate 180&deg;
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-sm rotate-image" data-photo-id="#= data.photos[i].EntityPhotoId #" data-rotate="270">
+                                        <span class="glyphicon glyphicon-repeat"></span> Rotate 270&deg;
+                                    </button>
+                                </div>
+                            </div>
+                            <b>Uploaded By: </b>#= data.photos[i].LastName #, #= data.photos[i].FirstName #<br />
+                            <b>Date: </b>#= kendo.toString(moment.utc(data.photos[i].CreatedDate, "YYYY-MM-DDTHH:mm:ss").tz(data.report.TimeZoneName).toDate(), "g") #<br />
+                            <b>Description: </b>#= addBreaks(data.photos[i].PhotoDescription) #
+
+                        </td>
+                    </tr>
+                    # } #
+                </tbody>
+            </table>
+        </div>
+        <div id="section-video" style="display:none;" class="panel panel-default">
+            <div class="panel-heading">VIDEOS</div>
+            <table class="table">
+                <tbody>
+                    # for (var i = 0; i < data.videos.length; i++) { #
+                    <tr class="video-#= i + 1 #">
+                        <td>#= i + 1 #</td>
+                        <td>
+                            # if (data.videos[i].MediaConversionRan && (data.videos[i].MP4Success || data.videos[i].OGGSuccess)) { #
+                            <video controls>
+                                # if (data.videos[i].MP4Success) { #
+                                <source src="/#= data.videos[i].UploadFolder #/#= data.videos[i].MP4File #" type="video/mp4">
+                                # } #
+                                # if (data.videos[i].OGGSuccess) { #
+                                <source src="/#= data.videos[i].UploadFolder #/#= data.videos[i].OGGFile #" type="video/ogv">
+                                # } #
+                                Your browser does not support the video tag.
+                                <br />
+                                # if (data.videos[i].MP4Success) { #
+                                <a href="/#= data.videos[i].UploadFolder #/#= data.videos[i].MP4File #">MP4 File</a>
+                                # } #
+                                # if (data.videos[i].OGGSuccess) { #
+                                <br />
+                                <a href="/#= data.videos[i].UploadFolder #/#= data.videos[i].OGGFile #">OGG File</a>
+                                # } #
+                            </video>
+                            # } else { #
+                            <a href="/#= data.videos[i].UploadFolder #/#= data.videos[i].FileName #">#= data.videos[i].OriginalFileName #</a>
+                            # } #
+                            <br />
+                            <b>Uploaded By: </b>#= data.videos[i].LastName #, #= data.videos[i].FirstName #<br />
+                            <b>Date: </b>#= kendo.toString(moment.utc(data.videos[i].CreatedDate, "YYYY-MM-DDTHH:mm:ss").tz(data.report.TimeZoneName).toDate(), "g") #<br />
+                            <b>Description: </b>#= addBreaks(data.videos[i].AttachmentDescription) #
+                        </td>
+                    </tr>
+                    # } #
+                </tbody>
+            </table>
+        </div>
+        <div id="section-audio" style="display:none;" class="panel panel-default">
+            <div class="panel-heading">AUDIO FILES</div>
+            <table class="table">
+                <tbody>
+                    # for (var i = 0; i < data.audioFiles.length; i++) { #
+                    <tr class="audio-#= i + 1 #">
+                        <td>#= i + 1 #</td>
+                        <td>
+                            # if (data.audioFiles[i].MediaConversionRan && data.audioFiles[i].MP3Success) { #
+                            <audio controls>
+                                <source src="/#= data.audioFiles[i].UploadFolder #/#= data.audioFiles[i].MP3File #" type="audio/mp3">
+                                Your browser does not support the audio element.
+                                <br />
+                                # if (data.audioFiles[i].MP3Success) { #
+                                <a href="/#= data.audioFiles[i].UploadFolder #/#= data.audioFiles[i].MP3File #">MP3 File</a>
+                                # } #
+                            </audio>
+                            # } else { #
+                            <a href="/#= data.audioFiles[i].UploadFolder #/#= data.audioFiles[i].FileName #">#= data.audioFiles[i].OriginalFileName #</a>
+                            # } #
+                            <br />
+                            <b>Uploaded By: </b>#= data.audioFiles[i].LastName #, #= data.audioFiles[i].FirstName #<br />
+                            <b>Date: </b>#= kendo.toString(moment.utc(data.audioFiles[i].CreatedDate, "YYYY-MM-DDTHH:mm:ss").tz(data.report.TimeZoneName).toDate(), "g") #<br />
+                            <b>Description: </b>#= addBreaks(data.audioFiles[i].AttachmentDescription) #
+                        </td>
+                    </tr>
+                    # } #
+                </tbody>
+            </table>
+        </div>
+        <div id="section-attachment" style="display:none;" class="panel panel-default">
+            <div class="panel-heading">ATTACHMENTS</div>
+            <table class="table">
+                <tbody>
+                    # for (var i = 0; i < data.attachments.length; i++) { #
+                    <tr class="attachment-#= i + 1 #">
+                        <td>#= i + 1 #</td>
+                        <td>
+                            <a href="/#= data.attachments[i].UploadFolder #/#= data.attachments[i].FileName #" download="#= data.attachments[i].OriginalFileName #">#= data.attachments[i].OriginalFileName #</a>
+                            <br />
+                            <b>Uploaded By: </b>#= data.attachments[i].LastName #, #= data.attachments[i].FirstName #<br />
+                            <b>Date: </b>#= kendo.toString(moment.utc(data.attachments[i].CreatedDate, "YYYY-MM-DDTHH:mm:ss").tz(data.report.TimeZoneName).toDate(), "g") #<br />
+                            <b>Description: </b>#= addBreaks(data.attachments[i].AttachmentDescription) #
+                        </td>
+                    </tr>
+                    # } #
+                </tbody>
+            </table>
+        </div>
+    </script>
+    <script id="report_comment_editor" type="text/x-kendo-template">
+        <div style="width:500px">
+            <div class="k-edit-label" style="vertical-align:top;">
+                <span class="required-indicator">*</span><label for="RelatedSection">Related Section</label>
+            </div>
+            <div data-container-for="RelatedSection" class="k-edit-field">
+                <select id="RelatedSection" name="RelatedSection" style="width:250px;" data-role="dropdownlist" data-value-primitive="true" data-option-label="-- Select Related Section --" data-bind="value: RelatedSection" required data-required-msg="Please select the Related Section">
+                    # var sections = getAngularScope().sections;
+                    for (var i = 0; i < sections.length; i++) { #
+                    <option value="#= sections[i].sectionName #">#= sections[i].sectionName #</option>
+                    # } #
+                </select>
+            </div>
+            <div class="k-edit-label" style="vertical-align:top;">
+                <span class="required-indicator">*</span><label for="Comment">Comment</label>
+            </div>
+            <div data-container-for="Comment" class="k-edit-field">
+                <textarea id="Comment" name="Comment" style="width:260px; height:150px;" maxlength="500" class="k-textbox" data-bind="value: Comment" required data-required-msg="Please enter the Comment"></textarea>
+            </div>
+        </div>
+    </script>
+    <script id="comments-print" type="text/x-kendo-template">
+        <div class="panel panel-default">
+            <div class="panel-heading">Comments</div>
+            <table class="table table-condensed comments">
+                <tr>
+                    <th style="width:19%;">Date</th>
+                    <th style="width:19%;">Entered By</th>
+                    <th style="width:19%;">Related Section</th>
+                    <th style="width:43%;">Comment</th>
+                </tr>
+                # for (var i = 0; i < data.length; i++) { #
+                <tr>
+                    <td>#= kendo.toString(moment(data[i].CreatedDate).toDate(), "g") #</td>
+                    <td>#= data[i].FullName #</td>
+                    <td>#= data[i].RelatedSection #</td>
+                    <td>#= addBreaks(data[i].Comment) #</td>
+                </tr>
+                # } #
+            </table>
+        </div>
+    </script>
+    <script id="wait-message-template" type="text/x-kendo-template">
+        <p id="wait-message">#= message #</p>
+        <div style="text-align:center;padding-top:12px;">
+            <div class="k-loading-image" style="height:38px;background-size:36px;position:relative;"></div>
+        </div>
+    </script>
+
+    @Html.VersionedJsUrl("/Scripts/bundles/spa.js")
+
+    @*<script src="~/Scripts/kendoui/v2016.1.322/kendo.all_or.js"></script>
+        <script src="~/Scripts/kendoui/v2016.1.322/kendo.timezones.min.js"></script>*@
+
+    @Html.VersionedJsUrl("/Scripts/bundles/spa-internal.js")
+    @Html.GetCultureScript()
+    <script src="~/Scripts/jstz.min.js"></script>
+    <script src="~/Scripts/jszip.min.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/jspdf/jspdf.js"></script>
+    @*<script src="//cdn.jsdelivr.net/npm/jquery.marquee@1.5.0/jquery.marquee.min.js" type="text/javascript"></script>*@
+    <script src="~/Scripts/jquery.marquee.min.js"></script>
+    <script type="text/javascript">
+
+        Modernizr.load({
+            test: window.btoa && window.atob,
+            nope: '/Scripts/base64.min.js'
+        });
+
+        function loadjsfile(filename, filetype) {
+            if (filetype == "js") { //if filename is a external JavaScript file
+                var fileref = document.createElement('script')
+                fileref.setAttribute("type", "text/javascript")
+                fileref.setAttribute("src", filename)
+            }
+            if (typeof fileref != "undefined")
+                document.getElementsByTagName("head")[0].appendChild(fileref)
+        }
+
+        function loadMarkerWithLabel() {
+            loadjsfile('/Scripts/markerwithlabel.js', 'js');
+        }
+
+        function nullToEmptyString(value) {
+            return (value != null) ? value : '';
+        }
+
+
+        // fix grid menu close issue (could check for chrome)
+        // kendo.ui.Menu.fn._mouseleave = function () { };
+
+        // http://stackoverflow.com/questions/4565112/javascript-how-to-find-out-if-the-user-browser-is-chrome
+        var isChromium = window.chrome,
+            winNav = window.navigator,
+            vendorName = winNav.vendor,
+            isOpera = winNav.userAgent.indexOf("OPR") > -1,
+            isIEedge = winNav.userAgent.indexOf("Edge") > -1;
+
+        if (isChromium !== null && isChromium !== undefined && vendorName === "Google Inc." && isOpera == false && isIEedge == false) {
+            kendo.ui.Menu.fn._mouseleave = function () { };
+        }
+    </script>
+    <!-- end - added for details pages -->
+    <script src="~/api/Utility/SPAJS" type="text/javascript"></script>
+    @if (HttpContext.Current.IsDebuggingEnabled)
+    {
+        <script src="~/Scripts/require.js" data-main="/Scripts/angularapp/js/bootstrap.js" data-debug="true" type="text/javascript"></script>
+    }
+    else
+    {
+        <script src="~/Scripts/require.js" data-main="/Scripts/angularapp/js/bootstrap.min.js" type="text/javascript"></script>
+    }
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=@(ORWeb.Classes.Shared.App.GoogleAPIKey)&sensor=false&libraries=geometry&callback=loadMarkerWithLabel"></script>
+
+    <input type="hidden" id="maxUploadSize" name="maxUploadSize" value="@(ORWeb.Classes.Shared.App.MaxUploadSize)" />
+    <input type="hidden" id="maxUploadSizeStr" name="maxUploadSizeStr" value="@(ORWeb.Classes.Shared.App.FormatBytes)" />
+
+
+</body>
+</html>

@@ -1,0 +1,174 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Custom Report";
+}
+
+
+<form id="dynamic-form">
+    <div style="padding:10px 0 26px 10px;">
+        <div class="logo-heading clearfix">
+            <div class="logo-top">
+                <img src="~/Images/logo.png" height="40">
+            </div>
+            <div style="float:left;">
+                <h1 id="report-name"></h1>
+            </div>
+        </div>
+        <div class="report-separator">
+            Officer and Site
+        </div>
+        <div class="form-row row-tight clearfix">
+            <div class="form-label"><label>Officer:</label></div>
+            <div class="form-field">@Model.FirstName @Model.LastName</div>
+        </div>
+        <div class="form-row row-tight clearfix">
+            <div class="form-label"><label>Client:</label></div>
+            <div class="form-field">@Model.ClientName</div>
+        </div>
+        <div class="form-row row-tight clearfix">
+            <div class="form-label"><label>Site:</label></div>
+            <div class="form-field">@Model.SiteName</div>
+        </div>
+        <div id="dynamic-form-div" style="padding:10px 0 26px 10px;">
+
+        </div>
+    </div>
+</form>
+
+<script id="form-template" type="text/x-kendo-template">
+    <div>
+        # for (var i = 0; i < data.ReportDefinition.formItems.length; i++) { #
+        # if (data.ReportDefinition.formItems[i].type === 'separator') { #
+        <div class="report-separator">
+            #= data.ReportDefinition.formItems[i].html #
+        </div>
+        # }  else if (data.ReportDefinition.formItems[i].type === 'paragraph') { #
+        <div class="form-row clearfix">
+            #= data.ReportDefinition.formItems[i].html #
+        </div>
+        # } else { #
+        <div class="form-row clearfix">
+            <div class="form-label">
+                <label for="#= data.ReportDefinition.formItems[i].id #">#= data.ReportDefinition.formItems[i].label #</label>:# if (data.ReportDefinition.formItems[i].required) { #<span class="required-indicator">*</span># } #
+            </div>
+            <div class="form-field">
+                # if (data.ReportDefinition.formItems[i].instruction) { #
+                <div style="font-weight:bold;margin-top:5px;">#= data.ReportDefinition.formItems[i].instruction #</div>
+                # } #
+                # if ((data.ReportDefinition.formItems[i].type === 'text') || (data.ReportDefinition.formItems[i].type === 'email') || (data.ReportDefinition.formItems[i].type === 'number') || (data.ReportDefinition.formItems[i].type === 'tel') || (data.ReportDefinition.formItems[i].type === 'url')) { #
+                <input id="#= data.ReportDefinition.formItems[i].id #" name="#= data.ReportDefinition.formItems[i].id #" type="#= data.ReportDefinition.formItems[i].type #" class="k-textbox #= data.ReportDefinition.formItems[i].class #" # if (data.ReportDefinition.formItems[i].maxlength) { # maxlength="#= data.ReportDefinition.formItems[i].maxlength #" # } # data-bind="value: report.#= data.ReportDefinition.formItems[i].id #" # if (data.ReportDefinition.formItems[i].required) { # required data-required-msg="#= data.ReportDefinition.formItems[i].requiredMessage #" # } # />
+                # } else if (data.ReportDefinition.formItems[i].type === 'select') { #
+                <select id="#= data.ReportDefinition.formItems[i].id #" name="#= data.ReportDefinition.formItems[i].id #" class="#= data.ReportDefinition.formItems[i].class #" data-role="dropdownlist" data-option-label="-- Select --" data-bind="value: report.#= data.ReportDefinition.formItems[i].id #" data-value-primitive="true" # if (data.ReportDefinition.formItems[i].required) { # required data-required-msg="#= data.ReportDefinition.formItems[i].requiredMessage #" # } #>
+                    # for (var j = 0; j < data.ReportDefinition.formItems[i].options.length; j++) { #
+                    <option value="#= data.ReportDefinition.formItems[i].options[j].value #">#= data.ReportDefinition.formItems[i].options[j].text #</option>
+                    # } #
+                </select>
+                <span class="k-invalid-msg" data-for="#= data.ReportDefinition.formItems[i].id #"></span>
+                # } else if (data.ReportDefinition.formItems[i].type === 'datetime') { #
+                <input id="#= data.ReportDefinition.formItems[i].id #" name="#= data.ReportDefinition.formItems[i].id #" class="#= data.ReportDefinition.formItems[i].class #" data-bind="value: report.#= data.ReportDefinition.formItems[i].id #" # if (data.ReportDefinition.formItems[i].required) { # required data-required-msg="#= data.ReportDefinition.formItems[i].requiredMessage #" # } # />
+                <span class="k-invalid-msg" data-for="#= data.ReportDefinition.formItems[i].id #"></span>
+                # } else if (data.ReportDefinition.formItems[i].type === 'date') { #
+                <input id="#= data.ReportDefinition.formItems[i].id #" name="#= data.ReportDefinition.formItems[i].id #" class="#= data.ReportDefinition.formItems[i].class #" data-bind="value: report.#= data.ReportDefinition.formItems[i].id #" # if (data.ReportDefinition.formItems[i].required) { # required data-required-msg="#= data.ReportDefinition.formItems[i].requiredMessage #" # } # />
+                <span class="k-invalid-msg" data-for="#= data.ReportDefinition.formItems[i].id #"></span>
+                # } else if (data.ReportDefinition.formItems[i].type === 'kendoMultiSelect') { #
+                <select id="#= data.ReportDefinition.formItems[i].id #" name="#= data.ReportDefinition.formItems[i].id #" class="#= data.ReportDefinition.formItems[i].class #" data-role="multiselect" data-option-label="-- Select --" data-bind="value: report.#= data.ReportDefinition.formItems[i].id #" data-value-primitive="true" # if (data.ReportDefinition.formItems[i].required) { # required data-required-msg="#= data.ReportDefinition.formItems[i].requiredMessage #" # } #>
+                    # for (var j = 0; j < data.ReportDefinition.formItems[i].options.length; j++) { #
+                    <option value="#= data.ReportDefinition.formItems[i].options[j].value #">#= data.ReportDefinition.formItems[i].options[j].text #</option>
+                    # } #
+                </select>
+                <span class="k-invalid-msg" data-for="#= data.ReportDefinition.formItems[i].id #"></span>
+                # } else if (data.ReportDefinition.formItems[i].type === 'checkBoxList') { #
+                # for (var j = 0; j < data.ReportDefinition.formItems[i].options.length; j++) { #
+                <label>
+                    <input type="checkbox" name="#= data.ReportDefinition.formItems[i].id #" value="#= data.ReportDefinition.formItems[i].options[j].value #" data-bind="checked: report.#= data.ReportDefinition.formItems[i].id #" />
+                    #= data.ReportDefinition.formItems[i].options[j].text #
+                </label><br />
+                # } #
+                <span class="k-invalid-msg" data-for="#= data.ReportDefinition.formItems[i].id #"></span>
+                # } else if (data.ReportDefinition.formItems[i].type === 'checkBox') { #
+                <input type="checkbox" name="#= data.ReportDefinition.formItems[i].id #" data-bind="checked: report.#= data.ReportDefinition.formItems[i].id #" />
+                # } else if (data.ReportDefinition.formItems[i].type === 'radioButtonList') { #
+                <div class="field-margin-needed">
+                    # for (var j = 0; j < data.ReportDefinition.formItems[i].options.length; j++) { #
+                    # if (data.ReportDefinition.formItems[i].layout == 'horizontal') { #
+                    <label style="margin-right:10px;">
+                        <input type="radio" name="#= data.ReportDefinition.formItems[i].id #" value="#= data.ReportDefinition.formItems[i].options[j].value #" data-bind="checked: report.#= data.ReportDefinition.formItems[i].id #" />
+                        #= data.ReportDefinition.formItems[i].options[j].text #
+                    </label>
+                    # } else  { #
+                    <div style="margin: 0 0 9px 4px;">
+                        <label style="vertical-align:auto;">
+                            <input type="radio" name="#= data.ReportDefinition.formItems[i].id #" value="#= data.ReportDefinition.formItems[i].options[j].value #" data-bind="checked: report.#= data.ReportDefinition.formItems[i].id #" />
+                            #= data.ReportDefinition.formItems[i].options[j].text #
+                        </label>
+                    </div>
+                    # } #
+                    # } #
+                </div>
+                <span class="k-invalid-msg" data-for="#= data.ReportDefinition.formItems[i].id #"></span>
+                # } else if (data.ReportDefinition.formItems[i].type === 'radioBoolean') { #
+                <div class="field-margin-needed">
+                    <label style="margin-left:4px;">
+                        <input type="radio" name="#= data.ReportDefinition.formItems[i].id #" value="true" data-bind="checked: report.#= data.ReportDefinition.formItems[i].id #" />
+                        #= data.ReportDefinition.formItems[i].options.trueLabel #
+                    </label>
+                    <label style="margin-left:10px;">
+                        <input type="radio" name="#= data.ReportDefinition.formItems[i].id #" value="false" data-bind="checked: report.#= data.ReportDefinition.formItems[i].id #" />
+                        #= data.ReportDefinition.formItems[i].options.falseLabel #
+                    </label>
+                    <span class="k-invalid-msg" data-for="#= data.ReportDefinition.formItems[i].id #"></span>
+                </div>
+                # } else if (data.ReportDefinition.formItems[i].type === 'autoComplete') { #
+                <input id="#= data.ReportDefinition.formItems[i].id #" name="#= data.ReportDefinition.formItems[i].id #" class="#= data.ReportDefinition.formItems[i].class #" data-bind="value: report.#= data.ReportDefinition.formItems[i].id #" # if (data.ReportDefinition.formItems[i].required) { # required data-required-msg="#= data.ReportDefinition.formItems[i].requiredMessage #" # } # />
+                <span class="k-invalid-msg" data-for="#= data.ReportDefinition.formItems[i].id #"></span>
+                # } else if (data.ReportDefinition.formItems[i].type === 'textarea') { #
+                <textarea id="#= data.ReportDefinition.formItems[i].id #" name="#= data.ReportDefinition.formItems[i].id #" class="k-textbox #= data.ReportDefinition.formItems[i].class #" # if (data.ReportDefinition.formItems[i].maxlength) { # maxlength="#= data.ReportDefinition.formItems[i].maxlength #" # } # data-bind="value: report.#= data.ReportDefinition.formItems[i].id #" # if (data.ReportDefinition.formItems[i].required) { # required data-required-msg="#= data.ReportDefinition.formItems[i].requiredMessage #" # } #></textarea>
+                # } else if (data.ReportDefinition.formItems[i].type === 'kendoNumeric') { #
+                <input id="#= data.ReportDefinition.formItems[i].id #" name="#= data.ReportDefinition.formItems[i].id #" class="#= data.ReportDefinition.formItems[i].class #" # if (data.ReportDefinition.formItems[i].maxlength) { # maxlength="#= data.ReportDefinition.formItems[i].maxlength #" # } # data-bind="value: report.#= data.ReportDefinition.formItems[i].id #" # if (data.ReportDefinition.formItems[i].required) { # required data-required-msg="#= data.ReportDefinition.formItems[i].requiredMessage #" # } # />
+                <span class="k-invalid-msg" data-for="#= data.ReportDefinition.formItems[i].id #"></span>
+                # } else if (data.ReportDefinition.formItems[i].type === 'upload') { #
+                <div style="width:90%; max-width:780px;">
+                    <div style="margin-bottom:6px;"><button id="btn-#= data.ReportDefinition.formItems[i].id #" class="k-button" type="button" style="width:140px;font-weight:bold; font-family: Verdana;">+ Add Photo, Video, or Audio</button></div>
+                    <div id="upw-#= data.ReportDefinition.formItems[i].id #" style="width:100%;"></div>
+                    <div style="height: 0;width:0; overflow:hidden;"><input name="upload-#= data.ReportDefinition.formItems[i].id #" id="upload-#= data.ReportDefinition.formItems[i].id #" data-id="#= data.ReportDefinition.formItems[i].id #" type="file" /></div>
+                    <div id="photo-list-#= data.ReportDefinition.formItems[i].id #"  data-id="#= data.ReportDefinition.formItems[i].id #" class="upload-display" style="margin-top:8px;"></div>
+                    <div id="media-list-#= data.ReportDefinition.formItems[i].id #" data-id="#= data.ReportDefinition.formItems[i].id #" class="upload-display" style="margin-top:8px;"></div>
+                    <div id="attachment-list-#= data.ReportDefinition.formItems[i].id #" data-id="#= data.ReportDefinition.formItems[i].id #" class="upload-display" style="margin-top:8px;"></div>
+                </div>
+                # } #
+            </div>
+        </div>
+        # } #
+        # } #
+    </div>
+    <div class="form-row clearfix">
+        <div class="form-label">&nbsp;</div>
+        <div class="form-field"><button class="k-button" data-bind="click: submit" style="width:140px; font-weight:bold; font-family: Verdana;">Submit</button></div>
+    </div>
+</script>
+
+@section Head {
+    <style type="text/css">
+        /*.form-row {
+            margin-bottom:10px;
+        }*/
+        @@media (max-width: 767px) {
+            .field-margin-needed {
+                margin-top:10px;
+            }
+            .form-row {
+                margin-bottom:12px;
+            }
+        }
+    </style>
+}
+
+@section Scripts {
+    <!-- find a different way to set clientSiteId -->
+    <script src="~/Scripts/underscore-min.js"></script>
+    <script type="text/javascript">
+        var clientSiteId = @Model.ClientSiteId;
+    </script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/CustomReport.js")
+}

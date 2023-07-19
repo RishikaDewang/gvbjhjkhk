@@ -1,0 +1,83 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Vacation Request";
+}
+
+<div id="forms" data-role="view" data-title="Vacation Request" data-init="initForm" data-use-native-scrolling="true">
+    <header data-role="header">
+        <div data-role="navbar">
+            <a data-align="right" data-icon="mymenuicon" data-role="button" href="#report-menu">Report Menu</a>
+        </div>
+    </header>
+    <div id="logo" style="text-align:center; margin-top:20px;">
+        <img src="~/Images/logo.png" width="310" height="65">
+    </div>
+    <h2>Vacation Request</h2>
+
+    <ul data-role="listview" data-style="inset" data-type="group">
+        <li>
+            <ul>
+                <li>Officer: <span class="list-value">@Model.FirstName @Model.LastName</span></li>
+                <li>Client: <span class="list-value">@Model.ClientName</span></li>
+                <li>Site: <span class="list-value">@Model.SiteName</span></li>
+            </ul>
+        </li>
+    </ul>
+
+    <form>
+        <ul data-role="listview" data-style="inset">
+            <li class="report-separator">
+                Contact Info and Vacation Request
+            </li>
+            <li>
+                <label for="phone">Phone
+                <input id="phone" name="phone" type="text" maxlength="50" class="k-input k-textbox" data-bind="value: report.phone" />
+                </label>
+            </li>
+            <li>
+                <label for="email">Email
+                <input id="email" name="email" type="email" maxlength="100" class="k-input k-textbox" data-bind="value: report.email" />
+                </label>
+            </li>
+            <li>
+                <label for="start-date">Start Date<span class="required-indicator">*</span>
+                <input id="start-date" name="start-date" type="date" data-bind="value: report.startDate"  required data-required-msg="Please enter the Start Date."/>
+                <span class="k-invalid-msg" data-for="start-date"></span>
+                </label>
+            </li>
+            <li>
+                <label for="end-date">End Date<span class="required-indicator">*</span>
+                <input id="end-date" name="end-date" type="date" data-bind="value: report.endDate"  required data-required-msg="Please enter the End Date."/>
+                <span class="k-invalid-msg" data-for="end-date"></span>
+                </label>
+            </li>
+            <li>
+                <label for="reason">Reason<span class="required-indicator">*</span>
+                <textarea id="reason" name="reason" maxlength="1000" class="k-input k-textbox" data-bind="value: report.comments" required data-required-msg="Please enter the Reason."></textarea>
+                </label>
+            </li>
+            <li>
+                <ul class="submit-buttons">
+                    <li><a data-role="button" data-bind="click: submit">Submit</a></li>
+                </ul>
+            </li>
+        </ul>
+    </form>
+    <br /><br />
+    <div class="message-log"></div>
+</div>
+
+@section Head {
+    <link href="~/Content/mobiscroll.custom-2.9.2.min.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <script src="~/Scripts/modernizr.custom.js"></script>
+    <script src="~/Scripts/mobiscroll.custom-2.9.2.min.js"></script>
+	<script type="text/javascript">
+	    var officerPhone = '@Model.Phone';
+	    var officerEmailAddress = '@Model.EmailAddress';
+	</script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/VacationRequest.Mobile.js")
+}

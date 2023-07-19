@@ -1,0 +1,166 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>OfficerReports - Officer Location Dashboard</title>
+    <link href="~/Content/kendoui/v2016.1.322/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/Content/kendoui/v2016.1.322/kendo.silver.min.css" rel="stylesheet" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial;
+            font-size: 12px;
+        }
+
+        .labels {
+            color: red;
+            background-color: white;
+            font-family: "Lucida Grande", "Arial", sans-serif;
+            font-size: 10px;
+            font-weight: bold;
+            text-align: center;
+            width: 30px;
+            /*width: 60px;*/
+            border: 2px solid black;
+            white-space: nowrap;
+        }
+
+        .hidden-labels {
+            width: 0;
+            height:0;
+            border-width:0;
+            display:none;
+        }
+
+        .map-list-item {
+            padding: 0;
+            border: 1px solid lightgray;
+        }
+
+        .map-list-item:hover {
+            background-color: #f6f6f6;
+            cursor: pointer;
+            border: 1px solid darkgray;
+        }
+
+        .list-item-header {
+            background-color: #686868;
+            color: white;
+            padding: 3px 4px;
+            font-weight: bold;
+            font-size:13px;
+        }
+
+        .list-item-info {
+            padding: 2px 4px;
+        }
+
+        .menu-instruction {
+            font-weight: bold;
+            padding: 2px 0 5px 0;
+        }
+
+        label.checkbox-label,
+        label.radiobutton-label {
+            margin-bottom:1px;
+        }
+
+        label.checkbox-label input[type=checkbox],
+        label.radiobutton-label input[type=radio] {
+            position: relative;
+            vertical-align: middle;
+            bottom: 2px;
+        }
+
+        #clear-button {
+            padding: 1px 7px 1px 7px;
+        }
+
+        .disconnected {
+            color: red;
+        }
+
+        .connected {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div style="background-color:#F5F5F6">
+        <ul id="menu" style="float:left;visibility:hidden;">
+            <li>
+                Sites
+                <ul>
+                    <li>
+                        <div style="padding:5px; width:580px;">
+                            <div class="menu-instruction">Select Sites to Monitor</div>
+                            <div id="site-grid"></div>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <div style="float:right;padding:0 4px 0 0;">
+            <div style="float:left;padding-top:8px;margin-right:24px;">
+                Status: <span id="connection-status" style="font-weight:bold;"></span>
+            </div>
+            <div style="float:left;padding-top:8px;margin-right:24px;">
+                Activity Since: <span id="start-time" style="font-weight:bold;"></span>
+            </div>
+            <div style="float:left;margin:2px 12px 0 0;">
+                <button id="clear-button" type="button" class="k-primary">Clear</button>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+    <div id="map-container" style="width:100%;padding:0;margin:0;overflow:hidden;">
+        <div id="map" style="float:left;padding:0;margin:0;"></div>
+        <div id="map-list" style="width:250px;overflow-y:auto;float:left;padding:0;margin:0"></div>
+        <div style="clear:both;"></div>
+    </div>
+    <script type="text/x-kendo-template" id="officer-loc-tooltip-template">
+        <div>
+            ID:  #= activityId #<br />
+            Time: #= kendo.toString(LocationDate, 'G') #
+        </div>
+    </script>
+    <script type="text/x-kendo-template" id="officer-loc-list-template">
+        <div class="map-list-item" data-activity-number="#= activityId #">
+            <div class="list-item-header">
+                <div style="float:left;">
+                    Officer Location
+                </div>
+                <div style="float:right;">
+                    #= activityId #
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            <div class="list-item-info">
+                Time: <b>#= kendo.toString(LocationDate, 'G') #</b><br />
+                Officer: #= LastName #, #= FirstName #<br />
+                Battery Level: #= BatteryLevel #<br />
+                Battery Charging: #= BatteryCharging #<br />
+                Accurate Within: #= accuracyText #<br />
+                <div>
+                    <div style="float:left;">Accuracy:</div><div style="width:30px;height:15px;background-color:#= AccuracyColor #;float:left;margin-left:6px;"></div><div style="float:left;margin-left:6px;">#= AccuracyName #</div><div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </script>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/jquery.throttledresize.min.js"></script>
+    @Html.VersionedJsUrl("/Scripts/kendoui/v2016.1.322/kendo.all.min.js")
+    @Html.GetCultureScript()
+    <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    @Html.VersionedJsUrl("/Scripts/app/Dashboard/OfficerLocation.js")
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=@(ORWeb.Classes.Shared.App.GoogleAPIKey)&sensor=false&libraries=geometry&callback=loadMarkerWithLabel"></script>
+</body>
+</html>

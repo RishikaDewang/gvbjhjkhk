@@ -1,0 +1,103 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Truck Log";
+}
+
+<form id="report-form">
+    <div style="padding:10px 0 26px 10px;">
+        <div class="logo-heading clearfix">
+            <div class="logo-top">
+                <img src="~/Images/logo.png" height="40">
+            </div>
+            <div style="float:left;">
+                <h1>Truck Log</h1>
+            </div>
+        </div>
+        <div class="report-separator">
+            Officer and Site
+        </div>
+        <div class="form-row row-tight clearfix">
+            <div class="form-label"><label>Officer:</label></div>
+            <div class="form-field"><span>@Model.FirstName @Model.LastName</span></div>
+        </div>
+        <div class="form-row row-tight clearfix">
+            <div class="form-label"><label>Client:</label></div>
+            <div class="form-field"><span>@Model.ClientName</span></div>
+        </div>
+        <div class="form-row row-tight clearfix">
+            <div class="form-label"><label>Site:</label></div>
+            <div class="form-field"><span>@Model.SiteName</span></div>
+        </div>
+        <div class="report-separator">
+            Truck Check-In
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="company">Company:</label><span class="required-indicator">*</span></div>
+            <div class="form-field"><input id="company" name="company" type="text" maxlength="50" class="k-textbox standard-width" data-bind="value: report.company" required data-required-msg="Please enter the Company name." /></div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="in_driver">Driver:</label><span class="required-indicator">*</span></div>
+            <div class="form-field"><input id="in_driver" name="in-driver" type="text" maxlength="50" class="k-textbox standard-width" data-bind="value: report.inDriver" required data-required-msg="Please enter the Driver name." /></div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="tractor_number">Tractor #:</label><span class="required-indicator">*</span></div>
+            <div class="form-field"><input id="tractor_number" name="tractor_number" maxlength="50" type="text" class="k-textbox standard-width" data-bind="value: report.tractorNumber" required data-required-msg="Please enter the Tractor #." /></div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="lp_number">LP #:</label></div>
+            <div class="form-field"><input id="lp_number" name="lp_number" maxlength="50" type="text" class="k-textbox standard-width" data-bind="value: report.LPNumber" /></div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="vin">VIN:</label></div>
+            <div class="form-field"><input id="vin" name="vin" maxlength="50" type="text" class="k-textbox standard-width" data-bind="value: report.VIN" /></div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="trailer_number">Trailer # In:</label></div>
+            <div class="form-field"><input id="trailer_number" type="text" maxlength="50" class="k-textbox standard-width" data-bind="value: report.inTrailerNumber" /></div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="seal_number">Seal #:</label></div>
+            <div class="form-field"><input id="seal_number" type="text" maxlength="50" class="k-input k-textbox" data-bind="value: report.inSealNumber" /></div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="dock-bay-number">Dock / Bay #:</label></div>
+            <div class="form-field"><input id="dock-bay-number" name="dock-bay-number" maxlength="50" type="text" class="k-textbox standard-width" data-bind="value: report.DockBayNumber" /></div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="notes">Notes:</label></div>
+            <div class="form-field"><textarea id="notes" maxlength="1000" class="k-textbox" data-bind="value: report.inNotes"></textarea></div>
+        </div>
+        <div class="report-separator">
+            Photos, Videos, Audio
+        </div>
+        <div style="width:90%; max-width:780px;">
+            <div style="margin-bottom:6px;"><button id="btn-add-photo" class="k-button" type="button" style="width:140px;font-weight:bold; font-family: Verdana;">+ Add Photo, Video, or Audio</button></div>
+            <div id="upload-progress-wrapper" style="width:100%;"></div>
+            <div style="height: 0;width:0; overflow:hidden;"><input name="fileUpload" id="fileUpload" type="file" /></div>
+            <div id="photo-list" style="margin-top:8px;"></div>
+            <div id="media-list" style="margin-top:8px;"></div>
+            <div id="attachment-list" style="margin-top:8px;"></div>
+        </div>
+        <div class="row" style="margin-top:12px;">
+            <div class="form-label">&nbsp;</div>
+            <div class="form-field">
+                <button class="k-button" data-bind="click: submit" style="width:140px; font-weight:bold; font-family: Verdana;">Submit</button>
+                <button class="k-button" data-bind="click: clearForm" style="width:140px; font-weight:bold; font-family: Verdana;">Clear Form</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Head {
+    <link href="~/Content/toastmessage/css/jquery.toastmessage.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <script type="text/javascript" src="/Scripts/jquery.toastmessage.js"></script>
+    <script type="text/javascript">
+        var clientSiteId = @Model.ClientSiteId;
+        var userId = @Model.UserId;
+    </script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/TruckLog.js")
+}

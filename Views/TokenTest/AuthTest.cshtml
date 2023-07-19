@@ -1,0 +1,82 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    <div>
+        <h2>Get Customers Admin Test</h2>
+        <div>
+            <button type="button" id="get-customers">Get Customers</button>
+        </div>
+        <h2>Amplify Test</h2>
+        <div>
+            <button type="button" id="amplify-store">Amplify Store</button>
+        </div>
+        <div>
+            <button type="button" id="amplify-retrieve">Amplify Retrieve</button>
+        </div>
+    </div>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/amplify.min.js"></script>
+    <script>
+        $(function () {
+            //var token = '23aFk3r0NLabR4ORY_hE-AHrrHPuSr2FCVx73OjgExLZIi75zs6ze7gcEQcLsS-OS_OD2qkrK5fpLSDqfgf6tvM25qWtWxgg10qIGl0sxzFNMCms_itdtzN7MLVAkzX_lNvi-pd7LWZLAdO80BbePjzxCYq8gUl7Zfs2CnJMyrreEEQ_0zTrdJu1MA15XtCHyh6UAsVBPKEMOEEviMbJhetFs63KT4CFwqRdrs9HUwMUuQcwtP4Px9oW5hclvtcvRdkt2H6LuTtQVZN-rmaXHsFXL10qafYVZ_fAMzreulbxWwV7WEjXFaFYrCTiQjA9eQbNaOA_ZS36QhlM81OoI1W7i6dAkdH24cVjEW5IlidJf0PknS_V4l0Ag25ahaqXgCPmVTdkS18ZXVTgCjUsA5wVLwSTIlOJCeDQ7yODHaKrIWUb';
+            //var token = "bZ-RVIB9NaciTV2YCcc20RqDlWV4FJppp9JuBACSEAf5wIt3RE-GPS6NDO7b_z4wVuIB3ZL9KK1h54FePQ34_yGbIkEE4DidLqDQ9x7uhbmlR2_Z6so4Y1vny8i-jMD9nHaAH1551s6xqnETYeQug4WW8fZyHz4dzDVQmKKa0N2aIn-ovfYsqsNoeBaeafOBPMahhJ-o3xKoUbY8X7o-pKAk3CdG1RmtetpEC13AcQKLrw6MDHcdHAeVz1cXNmgTNhqBY8HMu4d5T5fQgXhwLwopV9h51EW_QgQv4A7jmxqZnYpZ8mEyBcf1qtlh76zDtLKDhPlwKUknbXU_8s2oGhB1JpN3nVeF836Rd-GugbzHlJ2YL-ThKUMPBiloKQXvYotFsW1NQQWQaCFBJp9vkcuVASzhvX9Yyu8goTekT6tcQLKW";
+
+            // officerricky
+            var token = "QPekPszItsBpP5P90kc2-GKtNOvEFCXXec2bpl-NuU-dca_hT7zc3E1Sezakm7L2YAdYLIuR0JJs9BfogJZDDAArjupklsqiimmZDeWEoT9E_P9aJ9W0NUbDFAmjGVtoc89_2533djTRDjrRux6yR3wmXRSwDF0qXxzjJq06TbGM1bnGdcIJrf2U7As6RZr4b7Z8YBc1FxRaVNoShrIhZ1HlVwGQDHrIhxb9dfmuCwnuvJOKf_eMdnnGTxuEqd3mzTwsbm9zryvNQo3NQSyS2LHjY4RWq_BqtPy2RgsbQOAwhKcmWMrXAe_g6iGc7f7AupxIoQy7HHTtYwnNyw52C8UGKwXfLKTfO20geV4hpZxJ-JxVqGN1_8xqMv6KTGcLr70mgjNfkL3HOKjK-cCWP77Nxz3YzMWu7yB6pwHss8eJ_y3L";
+            var storeName = 'DAR1|1';
+
+            $('#get-customers').click(function () {
+                $.ajax({
+                    dataType: "json",
+                    url: "/api/Customer",
+                    beforeSend: function (xhr)
+                    {
+                        //xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                    }
+                })
+                .done(function (data) {
+                    console.log("success");
+                })
+                .fail(function () {
+                    console.log("error");
+                })
+                .always(function () {
+                    console.log("complete");
+                });
+            });
+
+            //http://dev-test.nemikor.com/web-storage/support-test/
+            $('#amplify-store').click(function () {
+                try {
+                    var len = 10001000;
+                    var str = new Array(len + 1).join('x');
+                    console.log('stored length - ' + str.length);
+                    amplify.store(storeName, str);
+                }
+                catch (err) {
+                    alert('Error storing DAR: ' + err.message);
+                }
+            });
+
+            $('#amplify-retrieve').click(function () {
+                try {
+                    var str = amplify.store(storeName)
+                    console.log('retrieved length - ' + str.length);
+                }
+                catch (err) {
+                    alert(err.message);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

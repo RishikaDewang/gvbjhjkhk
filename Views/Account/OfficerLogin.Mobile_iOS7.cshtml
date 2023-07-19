@@ -1,0 +1,188 @@
+@model ORWeb.Models.LoginModel
+@{
+    Layout = null;
+    ViewBag.Title = "Sign In | OfficerReports.com";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <title>Officer Portal Sign In</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta name="apple-mobile-web-app-capable" content="no"/>
+    <meta name="apple-mobile-web-app-title" content="Portal">
+    <link rel="apple-touch-icon" href="~/Images/icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="~/Images/icon-72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="~/Images/icon_at_2x.png" />
+    <link href="~/Content/kendoui/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/Content/kendoui/kendo.default.min.css" rel="stylesheet" />
+    <link href="~/Content/kendoui/kendo.mobile.all.min.css" rel="stylesheet" />
+    <link href="~/Content/mobile-page.css" rel="stylesheet" />
+    <style>
+        input.password-field {
+             -webkit-text-security: disc;
+        }
+    </style>
+</head>
+<body>
+    <div id="main-view" data-role="view" data-title="iOS7 - Officer Portal Sign In" data-use-native-scrolling="true">
+        <div id="logo" style="text-align:center; margin-top:20px;">
+            <img src="~/Images/logo.png" width="310" height="65">
+        </div>
+        <h1>Officer Portal Sign In</h1>
+
+        <form id="login-form">
+            <ul data-role="listview" data-style="inset">
+                <li>
+                    <label for="UserName">User Name
+                    <input id="UserName" name="UserName" type="text" class="k-input k-textbox" required data-required-msg="Please enter your User Name" />
+                    </label>
+                </li>
+                <li>
+                    <label for="Password">Password
+                    <input id="Password" name="Password" type="text" autocomplete="off" class="k-input k-textbox password-field" required data-required-msg="Please enter your Password" />
+                    </label>
+                </li>
+                <li>
+                    <ul class="submit-buttons">
+                        <li><a id="btnSubmitLogin" data-role="button">Submit</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </form>
+        <br />
+        <div class="message-log" style="display:none;"></div>
+    </div>
+
+    <div id="site-selection-view" data-role="view" data-title="Site Selection" data-use-native-scrolling="true" style="display:none;">
+        <header data-role="header">
+            <div data-role="navbar">
+                <a class="nav-button" data-align="left" data-role="backbutton">Back</a>
+                <span data-role="view-title"></span>
+            </div>
+        </header>
+
+        <h2>Site Selection</h2>
+
+        <div id="site-list">
+
+
+        </div>
+    </div>
+
+    <div id="schedule-option-view" data-role="view" data-title="Options" data-use-native-scrolling="true" style="display:none;">
+        <header data-role="header">
+            <div data-role="navbar">
+                <a class="nav-button" data-align="left" data-role="backbutton">Back</a>
+                <span data-role="view-title"></span>
+            </div>
+        </header>
+
+        <h2>Options</h2>
+
+        <ul data-role="listview" data-style="inset">
+            <li>
+                <ul class="submit-buttons">
+                    <li><a id="btnGoToSchedule" data-role="button">View Schedule</a></li>
+                </ul>
+            </li>
+            <li>
+                <ul class="submit-buttons">
+                    <li><a id="btnAccessSite" data-role="button">Select Work Site</a></li>
+                </ul>
+            </li>
+        </ul>
+
+        <div class="message-log" style="display:none;"></div>
+    </div>
+
+    <div id="schedule-view" data-role="view" data-title="Schedule" data-use-native-scrolling="true" style="display:none;">
+        <header data-role="header">
+            <div data-role="navbar">
+                <a class="nav-button" data-align="left" data-role="backbutton">Back</a>
+                <span data-role="view-title"></span>
+            </div>
+        </header>
+
+        <h2>Schedule</h2>
+
+        <div id="scheduler"></div>
+    </div>
+
+    <div data-role="modalview" id="geo-supervisor-prompt" style="width:auto; height:auto; display:none;">
+        <div data-role="header">
+            <div data-role="navbar">
+                <span id="Location Detection Error"></span>
+            </div>
+        </div>
+        <div style="text-align: center;padding-bottom: 10px;">
+            <p>
+                Geolocation failed.<br/>
+                Click the Retry button to attempt Geolocation again<br />
+                Click the Continue button to access sites that you supervise (other sites will not be available for access)
+            </p>
+            <a id="geo-retry-button" data-role="button">Retry</a><a id="geo-continue-button" data-role="button">Continue</a>
+        </div>
+    </div>
+
+    <div data-role="modalview" id="msg-view" style="width:auto; height:auto; display:none;">
+        <div data-role="header">
+            <div data-role="navbar">
+                <span id="msg-title"></span>
+            </div>
+        </div>
+        <div style="text-align: center;padding-bottom: 10px;">
+            <p id="msg-text"></p>
+            <a id="msg-ok-button" data-role="button">OK</a>
+        </div>
+    </div>
+
+    <div data-role="modalview" id="wait-indicator" style="width:auto; height:auto; display:none;">
+        <div data-role="header">
+            <div data-role="navbar">
+                <span id="wait-title">Please Wait...</span>
+            </div>
+        </div>
+        <div style="text-align:center;width:170px; height:70px;">
+            <div class="k-loading-image"></div>
+        </div>
+    </div>
+
+    <script src="~/Scripts/modernizr.custom.js"></script>
+    <script src="~/Scripts/jquery.min.js"></script>
+    @Html.VersionedJsUrl("/Scripts/kendo.all.min.js")
+    <script src="~/Scripts/purl.js"></script>
+    @Html.VersionedJsUrl("/Scripts/app/internal-portal.js")
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/Scripts/kendo.timezones.min.js"></script>
+    <script id="list-template" type="text/x-kendo-template">
+        <ul id="log-list-view" data-role="listview" data-style="inset">
+        # for (var i = 0; i < data.length; i++) { #
+            <li>
+                Client: #= data[i].CompanyName #<br />
+                Site: #= data[i].SiteName #<br />
+                # if (data[i].Address1) { #
+                    #= data[i].Address1 #<br />
+                    # if (data[i].Address2) { #
+                        #= data[i].Address2 #<br />
+                    # } #
+                    #= data[i].City #, #= data[i].State # #= data[i].PostalCode #<br />
+                # } #
+                <div class="submit-buttons">
+                    <a id="btnSubmitLogin" data-role="button" class="site-button" data-site-id="#= data[i].ClientSiteId #">Select This Site</a>
+                </div>
+            </li>
+        # } #
+        </ul>
+    </script>
+	<script type="text/javascript">
+	    var deviceType = '@Request.GetDeviceType()';
+	    if ((window.applicationCache) && (navigator.userAgent.match(/(iPad|iPhone|iPod)/i))) {
+	        document.title = document.getElementsByName('apple-mobile-web-app-title')[0].content;
+	    }
+	</script>
+    @Html.VersionedJsUrl("/Scripts/app/Account/OfficerLogin.Mobile.js")
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDBmfxrZF_QQPpGB_pZj3vlf2di-KQCFOc&sensor=false&libraries=geometry"></script>
+</body>
+</html>

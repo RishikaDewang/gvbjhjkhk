@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <title>@ViewBag.Title</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="shortcut icon" type="image/x-icon" href="~/Images/favicon.ico" />
+    <!--
+    <link href="~/Content/kendoui/v2016.1.322/kendo.silver.min.css" rel="stylesheet"/>
+    <link href="~/Content/kendoui/v2016.1.322/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap/css/bootstrap-scope.css" rel="stylesheet"/>
+    <link href="~/Content/styleMain.css" rel="stylesheet"/>
+    -->
+    @Html.VersionedCssUrl("/Content/LayoutCSS.min.css")
+    <link href="~/Content/stylePortalDesktop.css" rel="stylesheet"/>
+    @if (Request.IsSecureConnection)
+    {
+        <link href="https://fonts.googleapis.com/css?family=Economica:400,700,400italic,700italic&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css" />
+    }
+    else {
+        <link href="http://fonts.googleapis.com/css?family=Economica:400,700,400italic,700italic&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css" />
+    }
+    @RenderSection("Head", false)
+    <!--[if lt IE 9]>
+    <script src="~/Scripts/html5shiv.js"></script>
+    <script src="~/Scripts/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="bootstrap-scope clearfix" style="width:100%; background-color:#424242; position:fixed; z-index:10;">
+        <div style="padding: 5px 10px; float:right;">
+            <button id="menu-button" type="button" class="btn btn-default"><i class="mymenuicon"></i> Menu</button>
+        </div>
+    </div>
+    <div style="padding-top:46px; padding-bottom:12px;">
+        @RenderBody()
+    </div>
+
+    <script id="menu-template" type="text/x-kendo-template">
+        <div class="report-menu clearfix">
+            <div id="custom-report-links"></div>
+            <div class="icon_box ui-2" style="display:none;"><a href="/OfficerPortal/DailyActivityReport" target="_blank"><img src="/images/a.png" class="report-icon-image"><br />Daily</a></div>
+            <div class="icon_box ui-17" style="display:none;"><a href="/OfficerPortal/SiteCheckReport" target="_blank"><img src="/images/b.png" class="report-icon-image"><br />SiteCheck</a></div>
+            <div class="icon_box ui-3" style="display:none;"><a href="/OfficerPortal/IncidentReport" target="_blank"><img src="/images/b.png" class="report-icon-image"><br />Incident</a></div>
+            <div class="icon_box ui-14" style="display:none;"><a href="/OfficerPortal/CleryReport" target="_blank"><img src="/images/b.png" class="report-icon-image"><br />Clery</a></div>
+            <div class="icon_box ui-15" style="display:none;"><a href="/OfficerPortal/DynamicReport/supervisor_report" target="_blank"><img src="/images/a.png" class="report-icon-image"><br />Inspection</a></div>
+            <div class="icon_box ui-5" style="display:none;"><a href="/OfficerPortal/MaintenanceRequest" target="_blank"><img src="/images/c.png" class="report-icon-image"><br />Maintenance</a></div>
+            <div class="icon_box ui-4" style="display:none;"><a href="/OfficerPortal/IncidentChecklist" target="_blank"><img src="/images/d.png" class="report-icon-image"><br />Checklist</a></div>
+            <div class="icon_box ui-7" style="display:none;"><a href="/OfficerPortal/PassOnLog" target="_blank"><img src="/images/e.png" class="report-icon-image"><br />Write POL</a></div>
+            <div class="icon_box ui-7" style="display:none;"><a href="/OfficerPortal/PassOnLogRead" target="_blank"><img src="/images/f.png" class="report-icon-image"><br />Read POL</a></div>
+            <div class="icon_box ui-6" style="display:none;"><a href="/OfficerPortal/ParkingViolation" target="_blank"><img src="/images/j.png" class="report-icon-image"><br />Parking</a></div>
+            <div class="icon_box ui-10" style="display:none;"><a href="/OfficerPortal/TemperatureLog" target="_blank"><img src="/images/k.png" class="report-icon-image"><br />Temperatures</a></div>
+            <div class="icon_box ui-11" style="display:none;"><a href="/OfficerPortal/TruckLog" target="_blank"><img src="/images/g.png" class="report-icon-image"><br />In</a></div>
+            <div class="icon_box ui-11" style="display:none;"><a href="/OfficerPortal/TruckLogOut" target="_blank"><img src="/images/h.png" class="report-icon-image"><br />Out</a></div>
+            <div class="icon_box ui-9" style="display:none;"><a href="/OfficerPortal/PostOrders" target="_blank"><img src="/images/Orders.png" class="report-icon-image"><br />Post Orders</a></div>
+            <div class="icon_box ui-13" style="display:none;"><a href="/OfficerPortal/VisitorLog" target="_blank"><img src="/images/visitor-login.png" class="report-icon-image"><br />Visitor In</a></div>
+            <div class="icon_box ui-13" style="display:none;"><a href="/OfficerPortal/VisitorLogOut" target="_blank"><img src="/images/visitor-logout.png" class="report-icon-image"><br />Visitor Out</a></div>
+            <div class="icon_box ui-8" style="display:none;"><a href="/OfficerPortal/PolicyManual" target="_blank"><img src="/images/policy-manual.png" class="report-icon-image"><br />Policy Manual</a></div>
+            <div class="icon_box ui-12" style="display:none;"><a href="/OfficerPortal/VacationRequest" target="_blank"><img src="/images/vacation-request.png" class="report-icon-image"><br />Request</a></div>
+            <div class="icon_box ui-12" style="display:none;"><a href="/OfficerPortal/VacationRequestRead" target="_blank"><img src="/images/vacation.png" class="report-icon-image"><br />TO Review</a></div>
+            <div class="icon_box"><a href="/Account/Logoff"><img src="/images/i.png" class="report-icon-image"><br />Sign Out</a></div>
+        </div>
+    </script>
+    <script id="message-template" type="text/x-kendo-template">
+        <p>#= message #</p>
+        <hr style="background-color: \\#cccccc; border: 0 none; height:1px; margin-top:16px; margin-bottom: 16px;">
+        <div style="text-align:center;">
+            <button type="button" class="ok-button k-button">OK</button>
+        </div>
+    </script>
+    <script id="wait-template" type="text/x-kendo-template">
+        <div style="text-align:center;width:170px; height:70px;">
+            <div class="k-loading-image"></div>
+        </div>
+    </script>
+    <script id="wait-message-template" type="text/x-kendo-template">
+        <p id="wait-message">#= message #</p>
+        <div style="text-align:center;padding-top:12px;">
+            <div class="k-loading-image" style="height:38px;background-size:36px;position:relative;"></div>
+        </div>
+    </script>
+    <script id="yes-no-prompt" type="text/x-kendo-template">
+        <div style="padding:8px 8px 0 8px;">#= message #</div>
+        <hr style="background-color: \\#cccccc; border: 0 none; height:1px; margin-top:16px; margin-bottom: 16px;">
+        <div style="text-align:center;padding-bottom:6px;">
+            <button type="button" class="yes-button k-button">Yes</button><button type="button" class="no-button k-button" style="margin-left:10px;">No</button>
+        </div>
+    </script>
+    <script id="photo-list-template" type="text/x-kendo-tmpl">
+        # for (var i = 0; i < data.length; i++) { #
+        <div class="clearfix">
+            <div style="float:left; vertical-align:top; margin-right: 10px; margin-bottom: 3px;"><img src="#: data[i].SmallUrl #" /></div>
+            <div style="float:left; vertical-align:top;"><button type="button" data-role="button" class="remove-photo" data-photo-id="#= data[i].PhotoSmall #"><span class="k-icon k-i-close"></span> Remove</button></div>
+        </div>
+        <hr class="hr-sep" />
+        # } #
+    </script>
+    <script id="media-list-template" type="text/x-kendo-tmpl">
+        # for (var i = 0; i < data.length; i++) { #
+        <div class="clearfix">
+            <div style="float:left; vertical-align:top; margin-right: 10px; margin-bottom: 3px;">#: data[i].OriginalFileName #</div>
+            <div style="float:left; vertical-align:top;"><button type="button" data-role="button" class="remove-media" data-media-id="#= data[i].FileName #"><span class="k-icon k-i-close"></span> Remove</button></div>
+        </div>
+        <hr class="hr-sep" />
+        # } #
+    </script>
+    <script id="attachment-list-template" type="text/x-kendo-tmpl">
+        # for (var i = 0; i < data.length; i++) { #
+        <div class="clearfix">
+            <div style="float:left; vertical-align:top; margin-right: 10px; margin-bottom: 3px;">#: data[i].OriginalFileName #</div>
+            <div style="float:left; vertical-align:top;"><button type="button" data-icon="delete" class="k-button remove-attachment" data-attachment-id="#= data[i].FileName #">Remove</button></div>
+        </div>
+        <hr class="hr-sep" />
+        # } #
+    </script>
+
+    <script id="photo-list-template2" type="text/x-kendo-tmpl">
+        # for (var i = 0; i < data.length; i++) { #
+        <div class="upload-list-item" data-photo-id="#= data[i].PhotoSmall #">
+            <div class="clearfix">
+                <div style="float:left; vertical-align:top; margin-right: 10px; margin-bottom: 3px;"><img src="#: data[i].SmallUrl #" /></div>
+                <div style="float:left; vertical-align:top;"><button type="button" data-role="button" class="remove-photo" data-photo-id="#= data[i].PhotoSmall #"><span class="k-icon k-i-close"></span> Remove</button></div>
+            </div>
+            <div style="margin-top:8px;">
+                <b>Description:</b><br />
+                <textarea maxlength="1000" class="k-textbox upload-description" data-photo-id="#= data[i].PhotoSmall #" data-modified="false">#= nullToEmptyString(data[i].Description) #</textarea>
+            </div>
+            <hr class="hr-sep" />
+        </div>
+        # } #
+    </script>
+    <script id="media-list-template2" type="text/x-kendo-tmpl">
+        # for (var i = 0; i < data.length; i++) { #
+        <div class="upload-list-item" data-media-id="#= data[i].FileName #">
+            <div class="clearfix">
+                <div style="float:left; vertical-align:top; margin-right: 10px; margin-bottom: 3px;">#: data[i].OriginalFileName #</div>
+                <div style="float:left; vertical-align:top;"><button type="button" data-role="button" class="remove-media" data-media-id="#= data[i].FileName #"><span class="k-icon k-i-close"></span> Remove</button></div>
+            </div>
+            <div style="margin-top:8px;">
+                <b>Description:</b><br />
+                <textarea maxlength="1000" class="k-textbox upload-description" data-media-id="#= data[i].FileName #" data-modified="false">#= nullToEmptyString(data[i].Description) #</textarea>
+            </div>
+            <hr class="hr-sep" />
+        </div>
+        # } #
+    </script>
+    <script id="attachment-list-template2" type="text/x-kendo-tmpl">
+        # for (var i = 0; i < data.length; i++) { #
+        <div class="upload-list-item" data-attachment-id="#= data[i].FileName #">
+            <div class="clearfix">
+                <div style="float:left; vertical-align:top; margin-right: 10px; margin-bottom: 3px;">#: data[i].OriginalFileName #</div>
+                <div style="float:left; vertical-align:top;"><button type="button" data-icon="delete" class="k-button remove-attachment" data-attachment-id="#= data[i].FileName #">Remove</button></div>
+            </div>
+            <div style="margin-top:8px;">
+                <b>Description:</b><br />
+                <textarea maxlength="1000" class="k-textbox upload-description" data-attachment-id="#= data[i].FileName #" data-modified="false">#= nullToEmptyString(data[i].Description) #</textarea>
+            </div>
+            <hr class="hr-sep" />
+        </div>
+        # } #
+    </script>
+
+
+    <script id="login-form-template" type="text/x-kendo-tmpl">
+        <form id="re-login-form">
+            <dl>
+                <dt>
+                    <label for="UserName">User Name</label>
+                </dt>
+                <dd>
+                    <input id="UserName" name="UserName" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" class="k-input k-textbox" required data-required-msg="Please enter your User Name" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>
+                    <label for="Password">Password</label>
+                </dt>
+                <dd>
+                    <input id="Password" name="Password" type="password" autocomplete="off" autocorrect="off" autocapitalize="off" class="k-input k-textbox" required data-required-msg="Please enter your Password" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>
+                </dt>
+                <dd>
+                    <button id="re-login" type="button" class="k-button">Submit</button>
+                </dd>
+            </dl>
+        </form>
+    </script>
+    <script id="menu-link-template" type="text/x-kendo-tmpl">
+        <div class="icon_box"><a href="/OfficerPortal/CustomReport?id=#: CustomReportId #" target="_blank"><img src="/images/b.png" class="report-icon-image"><br />#: NameAbbreviation #</a></div>
+    </script>
+
+    @Html.VersionedJsUrl("/Scripts/bundles/portal.js")
+    <script src="/Scripts/amplify.min.js"></script>
+    @Html.VersionedJsUrl("/Scripts/app/internal-misc.min.js")
+    @Html.VersionedJsUrl("/Scripts/app/internal-templateloader.js")
+    @Html.VersionedJsUrl("/Scripts/app/internal-main-fileupload.js")
+    @Html.VersionedJsUrl("/Scripts/app/internal-globalization.js")
+    @Html.GetCultureScript()
+    <script type="text/javascript">
+        var orpData = null;
+        var r = null;
+
+        $(function () {
+            try {
+                var orpValue = $.cookie('orp');
+                if (orpValue) {
+                    orpData = JSON.parse(atob(orpValue));
+                    r = parseInt(orpData.r.charAt(24));
+                }
+            }
+            catch (err) {
+                console.log(err.message);
+            }
+
+            $('#menu-button').click(function () {
+                var maxWidth = 620;
+                var minWidth = 342;
+                var width = $(window).width() - 40;
+
+                var template = kendo.template($("#menu-template").html());
+
+                var kendoWindow = $('<div />').kendoWindow({
+                    title: 'Menu',
+                    resizable: true,
+                    modal: true,
+                    actions: ["Close"],
+                    width: width,
+                    minWidth: minWidth,
+                    maxWidth: maxWidth,
+                    deactivate: function () {
+                        this.destroy();
+                    }
+                });
+
+                kendoWindow.data("kendoWindow").content(template({}));
+
+                $.each(orpData.functionIds, function (idx, value) {
+                    //$('.ui-' + value).show();
+                    if (value !== 15) {
+                        $('.ui-' + value).show();
+                    }
+                    else if (r == 3) {
+                        $('.ui-' + value).show();
+                    }
+                });
+
+                if (orpData.customReports) {
+                    var template = kendo.template($("#menu-link-template").html());
+                    $.each(orpData.customReports, function (idx, customReport) {
+                        var linkHtml = template(customReport);
+                        $('#custom-report-links').append(linkHtml);
+                    });
+                }
+
+                kendoWindow.data("kendoWindow").center().open();
+            });
+
+            $(document).on('click', '.report-menu a', function (e) {
+                var link = this;
+                setTimeout(function () {
+                    $(link).closest('.k-window-content').data('kendoWindow').close();
+                }, 1);
+            });
+        });
+    </script>
+    @RenderSection("scripts", required: false)
+    <input type="hidden" id="maxUploadSize" name="maxUploadSize" value="@(ORWeb.Classes.Shared.App.MaxUploadSize)" />
+    <input type="hidden" id="maxUploadSizeStr" name="maxUploadSizeStr" value="@(ORWeb.Classes.Shared.App.FormatBytes)" />
+</body>
+</html>
+

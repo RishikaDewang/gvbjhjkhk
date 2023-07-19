@@ -1,0 +1,63 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title</title>
+    <link rel="shortcut icon" type="image/x-icon" href="~/Images/favicon.ico" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="robots" content="noindex, nofollow">
+    @Html.VersionedCssUrl("/Content/bootstrap/css/bootstrap-scope.css")
+    <style>
+        body {
+            font-family: Arial;
+        }
+    </style>
+    @Html.GetNonSPAThemeFromUrl()
+</head>
+<body>
+    <div class="main-content bootstrap-scope" style="display:none;width:358px;">
+        <div style="width:100%;text-align:center;">
+            <div id="theme-logo"></div>
+        </div>
+        
+        <br/>
+        <div id="login-controls" style="width:100%;text-align:center;">
+            <a href='@Url.Action("Login", "Account")' class="btn btn-primary btn-lg">Enter Main Site</a>
+            <a href='@Url.Action("OfficerLogin", "Account")' class="btn btn-primary btn-lg">Enter Officer Portal</a>
+        </div>
+        <div id="cookies-disabled" style="text-align:center;display:none;">
+            <b>Cookies Disabled</b><br /><br />
+            OfficerReports requires that browser cookies are enabled.  Please enable cookies on your browser or device and refresh the page.
+        </div>
+        <div class="or-show-custom" style="margin-top:50px;width:100%;text-align:center;font-size:14px; font-style:italic; color:#808080;">
+            Powered by OfficerReports
+        </div>
+    </div>
+    <script src="~/Scripts/jquery.min.js"></script>
+    <script src="~/Scripts/jquery.cookie.min.js"></script>
+    <script src="~/Scripts/app/cookie-check.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $(window).resize(function () {
+                $('.main-content').css({
+                    position: 'absolute',
+                    left: ($(window).width() - $('.main-content').outerWidth()) / 2,
+                    top: ($(window).height() - $('.main-content').outerHeight()) / 2
+                });
+            });
+
+            if (!checkCookiesEnabled()) {
+                $('#login-controls').hide();
+                $('#cookies-disabled').show();
+            }
+
+            $(window).resize();
+            $('.main-content').show();
+        });
+    </script>
+</body>
+</html>

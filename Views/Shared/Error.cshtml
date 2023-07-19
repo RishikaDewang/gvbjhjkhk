@@ -1,0 +1,40 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+
+@{
+    Layout = null;
+    ViewBag.Title = "Error";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="shortcut icon" type="image/x-icon" href="~/Images/favicon.ico">
+    <link href="/Content/styleMain.css" rel="stylesheet"/>
+</head>
+<body>
+    <div style="margin: 30px;">
+        <h1>Error Occurred</h1>
+        <p>
+        <b>An unexpected error has occurred.  Please contact your system administrator.</b>
+        </p>
+        @if (Model != null && HttpContext.Current.IsDebuggingEnabled)
+        {
+            <div style="margin-top:20px;">
+                <p>
+                    <b>Exception:</b> @Model.Exception.Message<br />
+                    <b>Controller:</b> @Model.ControllerName<br />
+                    <b>Action:</b> @Model.ActionName
+                </p>
+                <div style="overflow:scroll">
+                    <pre>
+        @Model.Exception.StackTrace
+                    </pre>
+                </div>
+            </div>
+        }
+    </div>
+</body>
+</html>

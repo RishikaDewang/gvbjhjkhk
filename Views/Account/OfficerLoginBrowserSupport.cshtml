@@ -1,0 +1,70 @@
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Officer Portal Browser Support</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+    <link rel="shortcut icon" type="image/x-icon" href="~/Images/favicon.ico">
+    <style>
+        body {
+            font-family: Arial;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content bootstrap-scope" style="display:none;width:600px;">
+        <div style="width:100%;text-align:center;margin-bottom:28px;">
+            <img src="~/Images/logo.png" />
+        </div>
+        <div style="width:100%;text-align:center;">
+            <h4>The Officer Portal does not currently support Internet Explorer @Request.Browser.MajorVersion.  Please use Google Chrome (recommended), Firefox, or upgrade to Internet Explorer 9 or above.  Links to install or upgrade are below.</h4>
+            <table>
+                <tr>
+                    <td style="text-align:left;">
+                        <a href="https://www.google.com/intl/en/chrome/browser/"><img src="~/Images/chrome_logo_2x.png" style="height:55px;border-width:0px;" /></a>
+                    </td>
+                    <td style="vertical-align:middle;text-align:left;">
+                        <a href="https://www.google.com/intl/en/chrome/browser/">Chrome Installation Page</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align:left;">
+                        <a href="http://www.mozilla.org/en-US/firefox/new/"><img src="~/Images/header-firefox.png" style="height:55px;border-width:0px;" /></a>
+                    </td>
+                    <td style="vertical-align:middle;text-align:left;">
+                        <a href="http://www.mozilla.org/en-US/firefox/new/">Firefox Installation Page</a>
+                    </td>
+                </tr>
+                 <tr>
+                    <td style="text-align:left;">
+                        <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie"><img src="~/Images/ie.png" style="height:55px;border-width:0px;" /></a>
+                    </td>
+                    <td style="vertical-align:middle;text-align:left;">
+                        <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie">Internet Explorer Installation Page</a>
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <b>We apologize for any inconvenience.</b>
+        </div>
+    </div>
+
+    <script src="~/Scripts/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(window).resize(function () {
+            $('.main-content').css({
+                position: 'absolute',
+                left: ($(window).width() - $('.main-content').outerWidth()) / 2,
+                top: ($(window).height() - $('.main-content').outerHeight()) / 2
+            });
+        });
+
+        $(window).resize();
+        $('.main-content').show();
+    </script>
+</body>
+</html>

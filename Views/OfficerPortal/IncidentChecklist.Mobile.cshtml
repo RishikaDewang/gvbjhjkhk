@@ -1,0 +1,85 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Incident Checklist";
+}
+
+<div id="main" data-role="view" data-title="Incident Checklist" data-use-native-scrolling="true">
+    <header data-role="header">
+        <div data-role="navbar">
+            <a data-align="right" data-icon="mymenuicon" data-role="button" href="#report-menu">Report Menu</a>
+        </div>
+    </header>
+    <div id="logo" style="text-align:center; margin-top:20px;">
+        <img src="~/Images/logo.png" width="310" height="65">
+    </div>
+    <h2>Incident Checklist</h2>
+
+    <ul data-role="listview" data-style="inset" data-type="group">
+        <li>
+            <ul>
+                <li>Officer: <span class="list-value">@Model.FirstName @Model.LastName</span></li>
+                <li>Client: <span class="list-value">@Model.ClientName</span></li>
+                <li>Site: <span class="list-value">@Model.SiteName</span></li>
+            </ul>
+        </li>
+    </ul>
+
+    <h4>Follow the instructions below for each incident type</h4>
+    <div id="checkLists"></div>
+    <br /><br />
+</div>
+
+@section Scripts {
+    <script id="javascriptTemplate" type="text/x-kendo-template">
+        # for (var i = 0; i < data.length; i++) { #
+            <ul data-role="listview" data-style="inset">
+			    <li class="report-separator">
+				    #= data[i].IncidentType #
+			    </li>
+			    <li>
+                    <b>Step 1:</b>
+                    <div style="margin:4px 0 0 20px;">
+                    #= replaceBreaks(data[i].Step1) #
+                    </div>
+                </li>
+                # if (data[i].Step2) { #
+			        <li>
+                        <b>Step 2:</b>
+                        <div style="margin:4px 0 0 20px;">
+                        #= replaceBreaks(data[i].Step2) #
+                        </div>
+                    </li>
+                # } #
+                # if (data[i].Step3) { #
+			        <li>
+                        <b>Step 3:</b>
+                        <div style="margin:4px 0 0 20px;">
+                        #= replaceBreaks(data[i].Step3) #
+                        </div>
+                    </li>
+                # } #
+                # if (data[i].Step4) { #
+			        <li>
+                        <b>Step 4:</b>
+                        <div style="margin:4px 0 0 20px;">
+                        #= replaceBreaks(data[i].Step4) #
+                        </div>
+                    </li>
+                # } #
+                # if (data[i].Step5) { #
+			        <li>
+                        <b>Step 5:</b>
+                        <div style="margin:4px 0 0 20px;">
+                        #= replaceBreaks(data[i].Step5) #
+                        </div>
+                    </li>
+                # } #
+            </ul>
+        # } #
+    </script>
+	<script type="text/javascript">
+	    var clientSiteId = @Model.ClientSiteId;
+	</script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/IncidentChecklist.Mobile.js")
+}

@@ -1,0 +1,45 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+
+@{
+    Layout = null;
+    ViewBag.Title = "Error";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Anti-forgery Error</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="shortcut icon" type="image/x-icon" href="~/Images/favicon.ico">
+    <link href="/Content/styleMain.css" rel="stylesheet"/>
+</head>
+<body style="background-color:#ffffff;">
+    <div style="margin: 30px;width:100%;text-align:center;">
+        <img src="~/Images/logo.png" />
+        <div style="margin-top:10px;">
+            <h2>Security Error</h2>
+            <div style="width:500px;margin: 0 auto;text-align:left;padding-top:20px;padding-bottom:10px;font-size:14px;">
+                Our Sign In and other pages use a security measure to ensure that forms
+                being submitted to our servers are the same forms that were delivered to the users web browser.
+                <br /><br />
+                You may have attempted to Sign In from multiple brower tabs or windows without signing out first.
+                If you are signed in already in any other tabs or windows, please click "Sign Out" and close the other
+                windows.  Another cause of this problem is a double form submission which can occur if a "Submit" button
+                is clicked in rapid succession.  Click the "Go Back" button below to try again.
+                <br /><br />
+            </div>
+            <button type="button" id="go-back" style="width:100px;height:26px;font-weight:bold;">Go Back</button>
+        </div>
+    </div>
+    <script src="~/Scripts/kendoui/v2016.1.322/jquery.min.js"></script>
+    <script>
+        $(function () {
+            $('#go-back').click(function (e) {
+                e.preventDefault();
+                location.href = document.referrer;
+            });
+        });
+    </script>
+</body>
+</html>

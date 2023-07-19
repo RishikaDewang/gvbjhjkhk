@@ -1,0 +1,116 @@
+﻿@model IEnumerable<ORWeb.Models.EF.Log>
+
+@using System.Linq;
+
+@{
+    ViewBag.Title = "Log Entries";
+    var timeZone = ((ORWeb.Models.EF.TimeZone)ViewBag.TimeZone);
+}
+
+<div class="bootstrap-scope" style="">
+<p>
+<strong>Number Of Entries:</strong> @String.Format("{0:n0}", Model.Count())<br />
+<strong>Dates displayed in Time Zone:</strong> @timeZone.DisplayName
+</p>
+
+<div style="margin: 20px 0 20px 0">
+    <div style="float:left">
+        <button id="btnClearLog" class="btn btn-danger">Clear All Log Entries</button>
+    </div>
+    <div style="float:left; margin-left:10px">
+        <button id="btnClearLogPortion" class="btn btn-danger">Clear All Log Entries except Last 200</button>
+    </div>
+    <div style="clear:both"></div>
+</div>
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Thread)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Level)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Logger)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Message)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Exception)
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+    var rowClass = "";
+    switch (item.Level) 
+    {
+        case "WARN":
+            rowClass = "warning";
+            break;
+        case "INFO":
+            rowClass = "info";
+            break;
+        case "ERROR":
+        case "FATAL":
+            rowClass = "error";
+            break;
+    }
+    <tr class="@rowClass">
+        <td>
+            @ORWeb.Classes.Shared.App.ConvertUtcToLocal(item.Date, timeZone.TimeZoneName).ToString("MM/dd/yyyy h:mm:ss tt")
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Thread)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Level)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Logger)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Message)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Exception)
+        </td>
+        <td>
+            <p><a class="btn btn-danger" href="@Url.Action("Delete", "Log", new { id = item.Id }, null)"><i class="icon-trash icon-white"></i> Delete</a></p>
+        </td>
+    </tr>
+}
+    </tbody>
+</table>
+</div>
+
+@section Head {
+    <link rel="Stylesheet" href="@Href("~/Content/jqueryui/themes/base/jquery.ui.all.css")" />
+}
+
+@section Scripts {
+    <script type="text/javascript" src="@Href("~/Scripts/jquery-ui-1.9.2.min.js")"></script>
+    <script type="text/javascript" src="@Href("~/Scripts/jquery.blockUI.js")"></script>
+    @Html.VersionedJsUrl("/Scripts/app/internal-util.js")
+    <script type="text/javascript">
+        $(function () {
+            $('#btnClearLog').click(function () {
+                var id = null;
+                PerformOperation("Delete Confirmation", "Are you sure that you want to Clear All Log Entries",
+                'Log', 'ClearLog', 'Continue', 'Cancel', id, locationReload);
+            });
+            $('#btnClearLogPortion').click(function () {
+                var id = 200;
+                PerformOperation("Delete Confirmation", "Are you sure that you want to Clear All Log Entries except Last 200",
+                'Log', 'ClearLogPortion', 'Continue', 'Cancel', id, locationReload);
+            });
+        });
+    </script>
+}

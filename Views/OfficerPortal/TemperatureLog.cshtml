@@ -1,0 +1,97 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Temperature Log";
+}
+
+<form id="incident-form">
+    <div style="padding:10px 0 26px 10px;">
+        <div class="logo-heading clearfix">
+            <div class="logo-top">
+                <img src="~/Images/logo.png" height="40">
+            </div>
+            <div style="float:left;">
+                <h1>Temperature Log</h1>
+            </div>
+        </div>
+        <div class="report-separator">
+            Officer and Site
+        </div>
+        <div class="form-row row-tight clearfix">
+            <div class="form-label"><label>Officer:</label></div>
+            <div class="form-field"><span>@Model.FirstName @Model.LastName</span></div>
+        </div>
+        <div class="form-row row-tight clearfix">
+            <div class="form-label"><label>Client:</label></div>
+            <div class="form-field"><span>@Model.ClientName</span></div>
+        </div>
+        <div class="form-row row-tight clearfix">
+            <div class="form-label"><label>Site:</label></div>
+            <div class="form-field"><span>@Model.SiteName</span></div>
+        </div>
+        <div class="report-separator">
+            Temperature Log
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="equipment-type">Equipment Type:</label><span class="required-indicator">*</span></div>
+            <div class="form-field">
+                <select id="equipment-type" name="equipment-type" class="standard-width" data-role="dropdownlist" data-option-label="-- Select Equipment Type --" data-value-field="EquipmentTypeId" data-text-field="EquipmentTypeName" data-bind="source: equipmentTypeDataSource, value: report.equipmentTypeId" data-value-primitive="true" required data-required-msg="Please select Equipment Type."></select>
+                <span class="k-invalid-msg" data-for="equipment-type"></span>
+            </div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="equipment-type-other">If Other, What Type:</label></div>
+            <div class="form-field">
+                <input id="equipment-type-other" type="text" maxlength="50" class="k-textbox standard-width" data-bind="value: report.typeIfOther" />
+            </div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="equipment-id">Equipment ID:</label><span class="required-indicator">*</span></div>
+            <div class="form-field">
+                <input id="equipment-id" name="equipment-id" type="text" maxlength="50" class="k-textbox standard-width" data-bind="value: report.equipmentId" required data-required-msg="Please enter the Equipment ID." />
+            </div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="temperature">Temperature:</label><span class="required-indicator">*</span></div>
+            <div class="form-field">
+                <input id="temperature" name="temperature" type="text" style="width:100px;" min="-10000" max="10000" data-bind="value: report.temperature" required data-required-msg="Please enter the Temperature." />
+                <span class="k-invalid-msg" data-for="temperature"></span>
+            </div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="humidity">Humidity:</label></div>
+            <div class="form-field">
+                <input id="humidity" name="humidity" type="text" style="width:70px;" data-bind="value: report.humidity" /> <span style="font-weight:bold;font-size:15px;">%</span>
+                <span class="k-invalid-msg" data-for="humidity"></span>
+            </div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="fuel-level">Fuel Level:</label></div>
+            <div class="form-field"><input id="fuel-level" name="fuel-level" type="text" maxlength="50" class="k-textbox standard-width" data-bind="value: report.fuelLevel" /></div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="co2-level">C02 Level:</label></div>
+            <div class="form-field"><input id="co2-level" name="co2-level" type="text" maxlength="50" class="k-textbox standard-width" data-bind="value: report.co2Level" /></div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label">&nbsp;</div>
+            <div class="form-field">
+                <button class="k-button" data-bind="click: submit" style="width:140px; font-weight:bold; font-family: Verdana;">Submit</button>
+                <button class="k-button" data-bind="click: clearForm" style="width:140px; font-weight:bold; font-family: Verdana;">Clear Form</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Head {
+    <link href="~/Content/toastmessage/css/jquery.toastmessage.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <script type="text/javascript" src="/Scripts/jquery.toastmessage.js"></script>
+    <script type="text/javascript">
+        var clientSiteId = @Model.ClientSiteId;
+        var userId = @Model.UserId;
+    </script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/TemperatureLog.js")
+}

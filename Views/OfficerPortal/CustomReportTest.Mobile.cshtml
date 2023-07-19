@@ -1,0 +1,145 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Custom Report Test";
+}
+
+<div id="forms" data-role="view" data-title="Custom Report" data-use-native-scrolling="true">
+    <header data-role="header">
+        <div data-role="navbar">
+            <a data-align="right" data-icon="mymenuicon" data-role="button" href="#report-menu">Report Menu</a>
+        </div>
+    </header>
+    <div id="logo" style="text-align:center; margin-top:20px;">
+        <img src="~/Images/logo.png" width="310" height="65">
+    </div>
+    <h2>Custom Report Definition</h2>
+
+    <ul data-role="listview" data-style="inset">
+        <li class="report-separator">
+            Definition
+        </li>
+        <li>
+            <label for="form-definition">Definition</label><br />
+            <textarea id="form-definition" name="form-definition" class="k-input k-textbox"></textarea>
+        </li>
+        <li>
+            <ul class="submit-buttons">
+                <li><a data-role="button" id="create-form">Submit</a></li>
+            </ul>
+        </li>
+    </ul>
+
+    <form id="dynamic-form">
+        <ul id="dynamic-form-ul" data-role="listview" data-style="inset">
+
+        </ul>
+    </form>
+</div>
+
+<script id="form-template" type="text/x-kendo-template">
+    <li class="report-separator">
+        #= data.reportNameSingular #<br />
+        #= data.entityId #
+    </li>
+    # for (var i = 0; i < data.formItems.length; i++) { #
+        # if (data.formItems[i].mobileType === 'separator') { #
+            <li class="report-separator">
+                #= data.formItems[i].html #
+            </li>
+        # } else  if (data.formItems[i].mobileType === 'upload') { #
+            <li class="report-separator">
+                Photos, Videos, Audio
+            </li>
+            <li>
+                <div style="margin-bottom:6px;"><button id="btn-add-photo" class="k-button" type="button" style="width:140px;font-weight:bold; font-family: Verdana;">+ Add Photo, Video, or Audio</button></div>
+                <div id="upload-progress-wrapper" style="width:100%;"></div>
+                <div style="height: 0;width:0; overflow:hidden;"><input name="fileUpload" id="fileUpload" type="file" style="width:0;height:0;" /></div>
+                <div id="photo-list" style="margin-top:8px;"></div>
+                <div id="media-list" style="margin-top:8px;"></div>
+                <div id="attachment-list" style="margin-top:8px;"></div>
+            </li>
+        # } else { #
+            <li>
+                <label for="#= data.formItems[i].id #">#= data.formItems[i].label #</label>
+                # if (data.formItems[i].required) { #
+                    <span class="required-indicator">*</span>
+                # } #
+                <br />
+                # if ((data.formItems[i].mobileType === 'text') || (data.formItems[i].mobileType === 'email') || (data.formItems[i].mobileType === 'number') || (data.formItems[i].mobileType === 'tel') || (data.formItems[i].mobileType === 'url')) { #
+                    <input id="#= data.formItems[i].id #" name="#= data.formItems[i].id #" type="#= data.formItems[i].mobileType #" class="k-input k-textbox" # if (data.formItems[i].maxlength) { # maxlength="#= data.formItems[i].maxlength #" # } # data-bind="value: report.#= data.formItems[i].id #" # if (data.formItems[i].required) { # required data-required-msg="#= data.formItems[i].requiredMessage #" # } #/>
+                # } else if (data.formItems[i].mobileType === 'select') { #
+                    <select id="#= data.formItems[i].id #" name="#= data.formItems[i].id #" data-role="dropdownlist" data-option-label="-- Select --" data-bind="value: report.#= data.formItems[i].id #" data-value-primitive="true" # if (data.formItems[i].required) { # required data-required-msg="#= data.formItems[i].requiredMessage #" # } #>
+                    # for (var j = 0; j < data.formItems[i].options.length; j++) { #
+                        <option value="#= data.formItems[i].options[j].value #">#= data.formItems[i].options[j].text #</option>
+                    # } #
+                    </select>
+                    <span class="k-invalid-msg" data-for="#= data.formItems[i].id #"></span>
+                # } else if (data.formItems[i].mobileType === 'datetime') { #
+                    # if (!Modernizr.inputtypes["datetime-local"] || isAlcatel || forceMobiscroll) { #
+                        <input id="#= data.formItems[i].id #" name="#= data.formItems[i].id #" type="text" style="height:32px;" data-bind="mobiscroll-datetime: report.#= data.formItems[i].id #" data-mobiscroll-options="{ timeFormat: 'HH:ii', timeWheels: 'HHii', theme: 'android', mode: 'scroller' }" # if (data.formItems[i].required) { # required data-required-msg="#= data.formItems[i].requiredMessage #" # } #/>
+                    # } else { #
+                        <input id="#= data.formItems[i].id #" name="#= data.formItems[i].id #" type="datetime-local" style="height:32px;" data-bind="value: report.#= data.formItems[i].id #" # if (data.formItems[i].required) { # required data-required-msg="#= data.formItems[i].requiredMessage #" # } #/>
+                    # } #
+                    <span class="k-invalid-msg" data-for="#= data.formItems[i].id #"></span>
+                # } else if (data.formItems[i].mobileType === 'date') { #
+                    # if (!Modernizr.inputtypes["date-local"] || isAlcatel || forceMobiscroll) { #
+                        <input id="#= data.formItems[i].id #" name="#= data.formItems[i].id #" type="text" style="height:32px;" data-bind="mobiscroll-datetime: report.#= data.formItems[i].id #" data-mobiscroll-options="{ timeFormat: 'HH:ii', timeWheels: 'HHii', theme: 'android', mode: 'scroller' }" # if (data.formItems[i].required) { # required data-required-msg="#= data.formItems[i].requiredMessage #" # } #/>
+                    # } else { #
+                        <input id="#= data.formItems[i].id #" name="#= data.formItems[i].id #" type="datetime-local" style="height:32px;" data-bind="value: report.#= data.formItems[i].id #" # if (data.formItems[i].required) { # required data-required-msg="#= data.formItems[i].requiredMessage #" # } #/>
+                    # } #
+                    <span class="k-invalid-msg" data-for="#= data.formItems[i].id #"></span>
+                # } else if (data.formItems[i].mobileType === 'checkBoxList') { #
+                    <ul data-role="listview" data-style="inset">
+                    # for (var j = 0; j < data.formItems[i].options.length; j++) { #
+                        <li>
+                            <label>
+                                <input type="checkbox" name="#= data.formItems[i].id #" value="#= data.formItems[i].options[j].value #" data-bind="checked: report.#= data.formItems[i].id #" />
+                                #= data.formItems[i].options[j].text #
+                            </label>
+                        </li>
+                    # } #
+                    </ul>
+                    <span class="k-invalid-msg" data-for="#= data.formItems[i].id #"></span>
+                # } else if (data.formItems[i].mobileType === 'radioButtonList') { #
+                    <ul data-role="listview" data-style="inset">
+                    # for (var j = 0; j < data.formItems[i].options.length; j++) { #
+                        <li>
+                            <label>
+                                <input type="radio" name="#= data.formItems[i].id #" value="#= data.formItems[i].options[j].value #" data-bind="checked: report.#= data.formItems[i].id #" />
+                                #= data.formItems[i].options[j].text #
+                            </label>
+                        </li>
+                    # } #
+                    </ul>
+                    <span class="k-invalid-msg" data-for="#= data.formItems[i].id #"></span>
+                # } else if (data.formItems[i].mobileType === 'autoComplete') { #
+                    <input id="#= data.formItems[i].id #" name="#= data.formItems[i].id #" data-bind="value: report.#= data.formItems[i].id #" # if (data.formItems[i].required) { # required data-required-msg="#= data.formItems[i].requiredMessage #" # } # />
+                    <span class="k-invalid-msg" data-for="#= data.formItems[i].id #"></span>
+                # } else if (data.formItems[i].mobileType === 'textarea') { #
+                    <textarea id="#= data.formItems[i].id #" name="#= data.formItems[i].id #" class="k-input k-textbox" # if (data.formItems[i].maxlength) { # maxlength="#= data.formItems[i].maxlength #" # } # data-bind="value: report.#= data.formItems[i].id #" # if (data.formItems[i].required) { # required data-required-msg="#= data.formItems[i].requiredMessage #" # } #></textarea>
+                # } else if (data.formItems[i].mobileType === 'kendoSwitch') { #
+                    <input id="#= data.formItems[i].id #" name="#= data.formItems[i].id #" data-bind="checked: report.#= data.formItems[i].id #" />
+                # }  #
+            </li>
+        # } #
+    # } #
+    <li>
+        <ul class="submit-buttons">
+            <li><a data-role="button" data-bind="click: submit">Submit</a></li>
+        </ul>
+    </li>
+</script>
+
+@section Head {
+    <link href="~/Content/mobiscroll/mobiscroll.custom-2.14.3.min.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <script src="~/Scripts/modernizr.custom.js"></script>
+    <script src="~/Scripts/mobiscroll.custom-2.14.3.min.js"></script>
+    <script type="text/javascript">
+        var clientSiteId = @Model.ClientSiteId;
+    </script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/CustomReportTest.Mobile.js")
+}

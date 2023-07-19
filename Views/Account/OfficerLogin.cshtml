@@ -1,0 +1,240 @@
+@model ORWeb.Models.LoginModel
+@{
+    Layout = null;
+    ViewBag.Title = "Sign In | OfficerReports";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <title>Officer Portal Sign In</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="shortcut icon" type="image/x-icon" href="~/Images/favicon.ico" />
+    <link href="~/Content/bootstrap/css/bootstrap-scope.css" rel="stylesheet" />
+    <link href="~/Content/kendoui/v2016.1.322/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/Content/kendoui/v2016.1.322/kendo.uniform.min.css" rel="stylesheet" />
+    <link href="~/Content/styleMain.css" rel="stylesheet" />
+    <link href="~/Content/stylePortalDesktop.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial;
+            background-color: white;
+        }
+
+        .k-scheduler-footer {
+            display: none !important;
+        }
+
+        #schedule-view.k-window-content {
+            overflow-y: hidden;
+        }
+
+        .k-scheduler-table .resource-table td {
+            padding: 0;
+            border-style: none;
+        }
+        .containereye i {
+            margin-left: -30px;
+            cursor: pointer;
+        }
+    </style>
+    @Html.GetNonSPAThemeFromUrl()
+    <!--[if lt IE 9]>
+    <script src="~/Scripts/html5shiv.js"></script>
+    <script src="~/Scripts/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div id="login-controls" style="padding:10px 0 26px 10px;display:none;">
+        <div style="width:100%;text-align:left;">
+            <div id="theme-logo" style="margin:0 0 0 28px;"></div>
+        </div>
+        <div style="margin:20px 0 0 30px;">
+            <form id="login-form">
+                <div style="margin-bottom:16px;">
+                    <h2>Officer Portal Sign In</h2>
+                </div>
+
+
+                <div class="form-row clearfix">
+                    <div class="form-label" style="width:140px;"><label for="UserName">User Name:</label></div>
+                    <div class="form-field"><input id="UserName" name="UserName" type="text" class="k-textbox standard-width" required data-required-msg="Please enter your User Name" /></div>
+                </div>
+                <div class="form-row clearfix">
+                    <div class="form-label" style="width:140px;"><label for="Password">Password:</label></div>
+                    <div class="form-field">
+                        <input id="Password" name="Password" type="password" class="k-textbox standard-width" required data-required-msg="Please enter your Password" />
+                        <span id="toggle_pwd" class="fa fa-fw fa-eye field_icon"></span>
+
+
+
+                    </div>
+                </div>
+                <div class="form-row clearfix">
+                    <div class="form-label" style="width:140px;">&nbsp;</div>
+                    <div class="form-field"><button id="btnSubmitLogin" class="k-button" style="width:140px; font-weight:bold; font-family: Verdana;">Submit</button></div>
+                </div>
+            </form>
+            <br />
+        </div>
+        <div class="message-log" style="display:none;"></div>
+    </div>
+
+    <div id="cookies-disabled" style="padding:10px 0 26px 10px;display:none;">
+        <div style="margin-bottom: 10px;">
+            <img src="/Images/logo.png" height="50">
+        </div>
+        <div style="text-align:center; max-width:360px;">
+            <b>Cookies Disabled</b><br /><br />
+            OfficerReports requires that browser cookies are enabled.  Please enable cookies on your browser or device and refresh the page.
+        </div>
+    </div>
+
+    <div id="schedule-view" style="display:none;">
+        <div id="scheduler"></div>
+    </div>
+
+    @Html.VersionedJsUrl("/Scripts/bundles/portal.js")
+    @Html.VersionedJsUrl("/Scripts/app/internal-misc.min.js")
+    @Html.VersionedJsUrl("/Scripts/app/cookie-check.min.js")
+    <script src="~/Scripts/jstz.min.js"></script>
+
+    <script id="schedule-option-template" type="text/x-kendo-template">
+        <h2>Select Option</h2>
+        <div class="bootstrap-scope">
+            <button id="btnGoToSchedule" type="button" class="btn btn-default btn-lg btn-block">View Schedule</button>
+
+            <button id="btnAccessSite" type="button" class="btn btn-default btn-lg btn-block">Select Work Site</button>
+        </div>
+    </script>
+    <script id="geo-continue-prompt-template" type="text/x-kendo-template">
+        <div>
+            <b>#= message #</b><br /><br />
+            <span class="retry-element" style="display:none;">Click the <b>Retry</b> button to attempt Geolocation again<br /></span>
+            Click the <b>Continue</b> button to access sites that you supervise or are unrestriced (other sites will not be available).
+        </div>
+        <hr style="background-color: \\#cccccc; border: 0 none; height:1px; margin-top:16px; margin-bottom: 16px;">
+        <div style="text-align:center;">
+            <button class="geo-retry-button retry-element k-button" style="display:none;">Retry</button>
+            <button class="geo-continue-button k-button">Continue</button>
+        </div>
+    </script>
+
+    <script id="message-template" type="text/x-kendo-template">
+        <p>#= message #</p>
+        <hr style="background-color: \\#cccccc; border: 0 none; height:1px; margin-top:16px; margin-bottom: 16px;">
+        <div style="text-align:center;">
+            <button type="button" class="ok-button k-button">OK</button>
+        </div>
+    </script>
+    <script id="wait-template" type="text/x-kendo-template">
+        <div style="text-align:center;width:170px; height:70px;">
+            <div class="k-loading-image"></div>
+        </div>
+    </script>
+    <script id="list-template" type="text/x-kendo-template">
+        <h2>Select a Site</h2>
+        <div class="bootstrap-scope">
+            # for (var i = 0; i < data.length; i++) { #
+            <a class="btn btn-default btn-lg btn-block site-button" style="padding:0;" data-site-id="#= data[i].ClientSiteId #">
+                <div style="padding: 10px 15px;">
+                    Client: #= data[i].CompanyName #<br />
+                    Site: #= data[i].SiteName #<br />
+                    # if (data[i].Address1) { #
+                    #= data[i].Address1 #<br />
+                    # if (data[i].Address2) { #
+                    #= data[i].Address2 #<br />
+                    # } #
+                    #= data[i].City #, #= data[i].State # #= data[i].PostalCode #<br />
+                    # } #
+                </div>
+            </a>
+            # } #
+        </div>
+    </script>
+    <script id="agenda-event-template" type="text/x-kendo-template">
+        #: title #
+        <div style="margin:6px 0 6px 0">#: description #</div>
+        <table class="resource-table">
+            #if (resources[0]) { #
+            <tr>
+                <td style="font-weight:bold;text-align:right;">
+                    Site:
+                </td>
+                <td>
+                    #: resources[0].text #
+                </td>
+            </tr>
+            # } #
+            <tr>
+                <td style="font-weight:bold;text-align:right;">
+                    Officers:
+                </td>
+                <td>
+                    # for (var i = 1; i < resources.length; i++) { #
+                    #: resources[i].text #<br />
+                    # } #
+                </td>
+            </tr>
+        </table>
+    </script>
+    <script id="all-day-event-template" type="text/x-kendo-template">
+        <div title="(#: kendo.toString(start, " g") # - #: kendo.toString(end, "g" ) #): #: title #">
+            <div class="k-event-template" style="white-space:nowrap;overflow: hidden;text-overflow: ellipsis;">
+                #: title #
+                - #: kendo.toString(start, "g") # - #: kendo.toString(end, "g") #
+                # if (resources[0]) { #
+                - <b>Site: </b>#: resources[0].text #
+                # } #
+                - <b>Officers: </b>
+                # for (var i = 1; i < resources.length; i++) { ## if (i > 1) { #; # } ##: resources[i].text ## } #
+            </div>
+        </div>
+    </script>
+    <script id="event-template" type="text/x-kendo-template">
+        <div title="(#: kendo.toString(start, " h:mm tt") # - #: kendo.toString(end, "h:mm tt" ) #): #: title #">
+            <div class="k-event-template k-event-time">#: kendo.toString(start, "h:mm tt") # - #: kendo.toString(end, "h:mm tt") #</div>
+            <div class="k-event-template">#: title #</div>
+            <div style="margin-left:8px;">
+                <div>
+                    # if (resources[0]) { #
+                    <b>Site:</b><br />
+                    #: resources[0].text #
+                </div>
+                # } #
+                <div style="margin-top:6px;">
+                    <b>Officers:</b><br />
+                    # for (var i = 1; i < resources.length; i++) { #
+                    #: resources[i].text #<br />
+                    # } #
+                </div>
+            </div>
+        </div>
+    </script>
+    <script type="text/javascript">
+        var deviceType = '@Request.GetDeviceType()';
+        //$.webshims.polyfill('geolocation');
+        $(function () {
+            if (checkCookiesEnabled()) {
+                $('#login-controls').show();
+            }
+            else {
+                $('#cookies-disabled').show();
+            }
+        });
+    </script>
+    @Html.VersionedJsUrl("/Scripts/app/Account/OfficerLogin.js")
+    <!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDBmfxrZF_QQPpGB_pZj3vlf2di-KQCFOc&sensor=false&libraries=geometry"></script> -->
+    <script type="text/javascript">
+        $(function () {
+            $("#toggle_pwd").click(function () {
+                $(this).toggleClass("fa-eye fa-eye-slash");
+                var type = $(this).hasClass("fa-eye-slash") ? "text" : "password";
+                $("#Password").attr("type", type);
+            });
+        });
+    </script>
+</body>
+</html>

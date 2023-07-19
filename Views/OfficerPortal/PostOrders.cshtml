@@ -1,0 +1,99 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Post Orders";
+}
+
+<div style="padding:10px 0 26px 10px;">
+    <div class="logo-heading clearfix">
+        <div class="logo-top">
+            <img src="~/Images/logo.png" height="40">
+        </div>
+        <div style="float:left;">
+            <h1>Post Orders</h1>
+        </div>
+    </div>
+    <div class="report-separator">
+        Officer and Site
+    </div>
+    <div class="form-row row-tight clearfix">
+        <div class="form-label"><label>Officer:</label></div>
+        <div class="form-field"><span>@Model.FirstName @Model.LastName</span></div>
+    </div>
+    <div class="form-row row-tight clearfix">
+        <div class="form-label"><label>Client:</label></div>
+        <div class="form-field"><span>@Model.ClientName</span></div>
+    </div>
+    <div class="form-row row-tight clearfix">
+        <div class="form-label"><label>Site:</label></div>
+        <div class="form-field"><span>@Model.SiteName</span></div>
+    </div>
+
+    <div id="post-orders" class="bootstrap-scope"></div>
+</div>
+
+@section Scripts {
+    <script id="post-orders-template" type="text/x-kendo-template">
+		<div class="report-separator">
+            Address
+        </div>
+        <div class="form-row clearfix">
+            # if (data.Address1) { #
+                #= data.Address1 #<br />
+                # if (data.Address2) { #
+                    #= data.Address2 #<br />
+                # } #
+                #= data.City #, #= data.State # #= data.PostalCode #
+            # } else { #
+                --
+            # } #
+        </div>
+		<div class="report-separator">
+            Client Contact
+        </div>
+        <div class="form-row clearfix">
+            #= nullToString(data.ClientContact) #<br />
+            <b>Phone</b><br />
+            #= nullToString(data.ClientContactPhone) #
+        </div>
+		<div class="report-separator">
+            Maintenance
+        </div>
+        <div class="form-row clearfix">
+            #= nullToString(data.MaintenanceContact) #<br />
+            <b>Phone</b><br />
+            #= nullToString(data.MaintenancePhone) #
+        </div>
+		<div class="report-separator">
+            Police
+        </div>
+        <div class="form-row clearfix">
+            #= nullToString(data.PoliceContact) #<br />
+            <b>Phone</b><br />
+            #= nullToString(data.PolicePhone) #
+        </div>
+		<div class="report-separator">
+            Towing Company
+        </div>
+        <div class="form-row clearfix">
+            #= nullToString(data.TowingContact) #<br />
+            <b>Phone</b><br />
+            #= nullToString(data.TowingPhone) #
+        </div>
+		<div class="report-separator">
+            Comments
+        </div>
+        <div class="form-row clearfix">
+            #= replaceBreaks(data.PostOrderComments) #
+        </div>
+        # if (data.POFileName) { #
+			<div class="report-separator">
+                File Attachment
+            </div> 
+            <div class="form-row clearfix">
+                <a href="/Upload/#= data.POFileName #" data-rel="external" target="_blank" download="#= data.POOriginalFileName #">#= data.POOriginalFileName #</a>
+            </div>
+        # } #
+    </script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/PostOrders.js")
+}

@@ -1,0 +1,105 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Truck Check-Out";
+}
+
+<div style="padding:10px 0 26px 10px;">
+    <div class="logo-heading clearfix">
+        <div class="logo-top">
+            <img src="~/Images/logo.png" height="40">
+        </div>
+        <div style="float:left;">
+            <h1>Truck Check-Out</h1>
+        </div>
+    </div>
+    <div class="report-separator">
+        Officer and Site
+    </div>
+    <div class="form-row row-tight clearfix">
+        <div class="form-label"><label>Officer:</label></div>
+        <div class="form-field"><span>@Model.FirstName @Model.LastName</span></div>
+    </div>
+    <div class="form-row row-tight clearfix">
+        <div class="form-label"><label>Client:</label></div>
+        <div class="form-field"><span>@Model.ClientName</span></div>
+    </div>
+    <div class="form-row row-tight clearfix">
+        <div class="form-label"><label>Site:</label></div>
+        <div class="form-field"><span>@Model.SiteName</span></div>
+    </div>
+
+    <div class="report-separator">
+        Trucks
+    </div>
+    <div id="truck-list" class="bootstrap-scope"></div>
+</div>
+
+@section Scripts {
+    <script id="list-template" type="text/x-kendo-template">
+        <div style="width:96%; max-width:1200px;">
+        # for (var i = 0; i < data.length; i++) { #
+            <div>
+                <a class="btn btn-default btn-lg btn-block details-link" data-log-id="#= data[i].TruckLogId #">
+                <b>Date:</b> #= kendo.toString(moment.utc(data[i].InDate, "YYYY-MM-DDTHH:mm:ss").local().toDate(), "g") #<br />
+                <b>Company:</b> #= data[i].Company #<br />
+                <b>Driver:</b> #= data[i].InDriver #<br />
+                <b>Tractor \\#:</b> #= data[i].TractorNumber #
+                </a>
+            </div>
+        # } #
+        </div>
+    </script>
+    <script id="details-template" type="text/x-kendo-template">
+        <div id="truck-out-form">
+            <div class="form-row clearfix">
+                <div class="form-label">Date:</div>
+                <div class="form-field">#= kendo.toString(moment.utc(data.InDate, "YYYY-MM-DDTHH:mm:ss").local().toDate(), "g") #</div>
+            </div>
+            <div class="form-row clearfix">
+                <div class="form-label">Company:</div>
+                <div class="form-field">#= data.Company #</div>
+            </div>
+            <div class="form-row clearfix">
+                <div class="form-label">Inbound Driver:</div>
+                <div class="form-field">#= data.InDriver #</div>
+            </div>
+            <div class="form-row clearfix">
+                <div class="form-label">Tractor \\#:</div>
+                <div class="form-field">#= data.TractorNumber #</div>
+            </div>
+            <div class="form-row clearfix">
+                <div class="form-label">LP \\#:</div>
+                <div class="form-field">#= data.LPNumber != null ? data.LPNumber : '' #</div>
+            </div>
+            <div class="form-row clearfix">
+                <div class="form-label">VIN:</div>
+                <div class="form-field">#= data.VIN != null ? data.VIN : '' #</div>
+            </div>
+            <div class="form-row clearfix">
+                <div class="form-label"><label for="out-driver">Outbound Driver</label><span class="required-indicator">*</span></div>
+                <div class="form-field"><input id="out-driver" type="text" maxlength="50" value="#= data.InDriver #" class="k-input k-textbox" required data-required-msg="Please enter the Outbound Driver name." /></div>
+            </div>
+            <div class="form-row clearfix">
+                <div class="form-label"><label for="out-trailer-number">Trailer \\#</label></div>
+                <div class="form-field"><input id="out-trailer-number" type="text" maxlength="50" class="k-input k-textbox" /></div>
+            </div>
+            <div class="form-row clearfix">
+                <div class="form-label"><label for="out-seal-number">Seal \\#</label></div>
+                <div class="form-field"><input id="out-seal-number" type="text" maxlength="50" class="k-input k-textbox" /></div>
+            </div>
+            <div class="form-row clearfix">
+                <div class="form-label"><label for="out-notes">Notes on Exit</label></div>
+                <div class="form-field"><textarea id="out-notes" maxlength="2000" class="k-input k-textbox"></textarea></div>
+            </div>
+            <div class="form-row clearfix">
+                <div class="form-label">&nbsp;</div>
+                <div class="form-field"><button id="btnUpdate" type="button" data-role="button" data-log-id="#= data.TruckLogId #">Check Out</button></div>
+            </div>
+        </div>
+    </script>
+    <script type="text/javascript">
+        var clientSiteId = @Model.ClientSiteId;
+    </script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/TruckLogOut.js")
+}

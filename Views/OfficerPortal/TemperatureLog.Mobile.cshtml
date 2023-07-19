@@ -1,0 +1,90 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Temperature Log";
+}
+
+<div id="forms" data-role="view" data-title="Temperature Log" data-use-native-scrolling="true">
+    <header data-role="header">
+        <div data-role="navbar">
+            <a data-align="right" data-icon="mymenuicon" data-role="button" href="#report-menu">Report Menu</a>
+        </div>
+    </header>
+    <div id="logo" style="text-align:center; margin-top:20px;">
+        <img src="~/Images/logo.png" width="310" height="65">
+    </div>
+    <h2>Temperature Log</h2>
+
+    <ul data-role="listview" data-style="inset" data-type="group">
+        <li>
+            <ul>
+                <li>Officer: <span class="list-value">@Model.FirstName @Model.LastName</span></li>
+                <li>Client: <span class="list-value">@Model.ClientName</span></li>
+                <li>Site: <span class="list-value">@Model.SiteName</span></li>
+            </ul>
+        </li>
+    </ul>
+
+    <form>
+        <ul data-role="listview" data-style="inset">
+            <li class="report-separator">
+                Temperature Log
+            </li>
+            <li>
+                <label for="equipment-type">Equipment Type<span class="required-indicator">*</span>
+                    <select id="equipment-type" name="equipment-type" data-value-field="EquipmentTypeId" data-text-field="EquipmentTypeName" data-bind="source: equipmentTypes, value: report.equipmentTypeId" data-value-primitive="true" required data-required-msg="Please select Equipment Type."></select>
+                    <span class="k-invalid-msg" data-for="equipment-type"></span>
+                </label>
+            </li>
+            <li>
+                <label for="equipment-type-other">If Other, What Type
+                <input id="equipment-type-other" type="text" maxlength="50" class="k-input k-textbox" data-bind="value: report.typeIfOther" />
+                </label>
+            </li>
+            <li>
+                <label for="equipment-id">Equipment ID<span class="required-indicator">*</span>
+                <input id="equipment-id" name="equipment-id" type="text" maxlength="50" class="k-input k-textbox" data-bind="value: report.equipmentId" required data-required-msg="Please enter the Equipment ID." />
+                </label>
+            </li>
+            <li>
+                <label for="temperature">Temperature<span class="required-indicator">*</span><br />
+                    <input id="temperature" name="temperature" type="number" style="width:120px;" class="k-input k-textbox" data-bind="value: report.temperature" required data-required-msg="Please enter the Temperature." />
+                </label>
+                <a data-role="button" id="toggle-minus" data-bind="click: toggleMinus" style="display:none;"> +/- </a>
+            </li>
+            <li>
+                <label for="humidity">Humidity<br />
+                    <input id="humidity" name="humidity" type="number" min="0" max="100" style="width:100px;" class="k-input k-textbox" data-bind="value: report.humidity" data-max-msg="Please enter value between 1 and 100 or leave empty" /> <span style="font-weight:bold;">%</span>
+                    <span class="k-invalid-msg" data-for="humidity"></span>
+                </label>
+            </li>
+            <li>
+                <label for="fuel-level">Fuel Level
+                <input id="fuel-level" name="fuel-level" type="text" maxlength="50" class="k-input k-textbox" data-bind="value: report.fuelLevel" />
+                </label>
+            </li>
+            <li>
+                <ul class="submit-buttons">
+                    <li><a data-role="button" data-bind="click: submit">Submit</a></li>
+                </ul>
+                <ul id="clear-form-ul" class="submit-buttons" style="display:none;">
+                    <li><br /><a data-role="button" data-bind="click: clearForm">Clear Form</a></li>
+                </ul>
+            </li>
+        </ul>
+    </form>
+    <br /><br />
+</div>
+
+@section Head {
+    <link href="~/Content/toastmessage/css/jquery.toastmessage.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <script type="text/javascript" src="/Scripts/jquery.toastmessage.js"></script>
+    <script type="text/javascript">
+        var clientSiteId = @Model.ClientSiteId;
+        var userId = @Model.UserId;
+    </script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/TemperatureLog.Mobile.js")
+}

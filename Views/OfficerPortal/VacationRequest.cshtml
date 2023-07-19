@@ -1,0 +1,78 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Vacation Request";
+}
+
+<form id="incident-form">
+<div style="padding:10px 0 26px 10px;">
+    <div class="logo-heading clearfix">
+        <div class="logo-top">
+            <img src="~/Images/logo.png" height="40">
+        </div>
+        <div style="float:left;">
+            <h1>Vacation Request</h1>
+        </div>
+    </div>
+    <div class="report-separator">
+        Officer and Site
+    </div>
+    <div class="form-row row-tight clearfix">
+        <div class="form-label"><label>Officer:</label></div>
+        <div class="form-field"><span>@Model.FirstName @Model.LastName</span></div>
+    </div>
+    <div class="form-row row-tight clearfix">
+        <div class="form-label"><label>Client:</label></div>
+        <div class="form-field"><span>@Model.ClientName</span></div>
+    </div>
+    <div class="form-row row-tight clearfix">
+        <div class="form-label"><label>Site:</label></div>
+        <div class="form-field"><span>@Model.SiteName</span></div>
+    </div>
+    <div class="report-separator">
+        Contact Info and Vacation Request
+    </div>
+    <div class="form-row clearfix">
+        <div class="form-label"><label for="phone">Phone:</label></div>
+        <div class="form-field"><input id="phone" name="phone" type="text" maxlength="50" class="k-textbox standard-width" data-bind="value: report.phone" /></div>
+    </div>
+    <div class="form-row clearfix">
+        <div class="form-label"><label for="email">Email:</label></div>
+        <div class="form-field">
+            <input id="email" name="email" type="email" maxlength="100" class="k-textbox standard-width" data-bind="value: report.emailAddress" />
+        </div>
+    </div>
+    <div class="form-row clearfix">
+        <div class="form-label"><label for="start-date">Start Date:</label><span class="required-indicator">*</span></div>
+        <div class="form-field">
+            <input id="start-date" name="start-date" data-bind="value: report.startDate" required data-required-msg="Please enter the Start Date." />
+            <span class="k-invalid-msg" data-for="start-date"></span>
+        </div>
+    </div>
+    <div class="form-row clearfix">
+        <div class="form-label"><label for="end-date">End Date:</label><span class="required-indicator">*</span></div>
+        <div class="form-field">
+            <input id="end-date" name="start-date" data-bind="value: report.endDate" required data-required-msg="Please enter the End Date." />
+            <span class="k-invalid-msg" data-for="end-date"></span>
+        </div>
+    </div>
+	<div class="form-row clearfix">
+		<div class="form-label"><label for="reason">Reason:</label><span class="required-indicator">*</span></div>
+		<div class="form-field">
+            <textarea id="reason" name="reason" maxlength="1000" class="k-textbox" data-bind="value: report.comments" required data-required-msg="Please enter the Reason."></textarea>
+		</div>
+	</div>
+	<div class="form-row clearfix">
+		<div class="form-label">&nbsp;</div>
+		<div class="form-field"><button class="k-button" data-bind="click: submit" style="width:140px; font-weight:bold; font-family: Verdana;">Submit</button></div>
+	</div>
+</div>
+</form>
+
+@section Scripts {
+	<script type="text/javascript">
+	    var officerPhone = '@Model.Phone';
+	    var officerEmailAddress ='@Model.EmailAddress';
+	</script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/VacationRequest.js")
+}

@@ -1,0 +1,151 @@
+﻿@{
+    ViewBag.Title = "Payment";
+}
+
+<div class="inner_page_content_box">
+    <div class="inner_page_content_box_left">
+        <p>&nbsp;</p>
+        <div class="inner_page_content_box_left1555">
+            <div style="float: left; position: relative; width: 428px; border: 3px solid #cc6600;">
+                <h1>Payment</h1>
+                <div style="clear:both; padding: 10px;">
+                    <h3>
+                        <strong>
+                        ...
+                        </strong>
+                    </h3>
+                    <hr style="background-color: #cccccc; border: 0 none; height:1px; margin-top:16px; margin-bottom: 16px;">
+                    <form id="payment-form">
+                        <p>
+                            <label for="amount">Amount</label><span class="required-indicator">*</span><br />
+                            <input id="amount" name="amount" style="width:180px;" type="text" class="k-textbox" data-bind="value: paymentModel.amount" required data-required-msg="Please enter the Amount"/>
+                        </p>
+                        <p>
+                            <label for="address-1">Address 1</label><span class="required-indicator">*</span><br />
+                            <input id="address-1" name="address-1" style="width:180px;" type="text" class="k-textbox" data-bind="value: paymentModel.address1"  required data-required-msg="Please enter Address 1" />
+                        </p>
+                        <p>
+                            <label for="address-2">Address 2</label><br />
+                            <input id="address-2" style="width:180px;" type="text" class="k-textbox" data-bind="value: paymentModel.address2" />
+                        </p>
+                        <p>
+                            <label for="city">City</label><span class="required-indicator">*</span><br />
+                            <input id="city" name="city" style="width:180px;" type="text" class="k-textbox" data-bind="value: paymentModel.city" required data-required-msg="Please enter City" />
+                        </p>
+                        <p>
+                            <label for="state">State/Province/Region</label><span class="required-indicator">*</span><br />
+                            <input id="state" name="state" style="width:180px;" type="text" class="k-textbox" data-bind="value: paymentModel.state" required data-required-msg="Please enter State/Province/Region" />
+                        </p>
+                        <p>
+                            <label for="postal-code">Postal Code</label><span class="required-indicator">*</span><br />
+                            <input id="postal-code" name="postal-code" style="width:180px;" type="text" class="k-textbox" data-bind="value: paymentModel.postalCode" required data-required-msg="Please enter Postal Code" />
+                        </p>
+                        <p>
+                            <label for="country">Country</label><span class="required-indicator">*</span><br />
+                            <select id="country" name="country" size="1" data-role="dropdownlist" data-bind="value: paymentModel.country" data-value-primitive="true">
+                            <option value="US" selected="selected">United States</option>
+                            <option value="CA">Canada</option>
+                            <option value="GB">United Kingdom</option>
+                            </select>
+                        </p>
+                        <p>
+                            <label for="first-name">First Name</label><span class="required-indicator">*</span><br />
+                            <input id="first-name" name="first-name" style="width:180px;" type="text" class="k-textbox" data-bind="value: paymentModel.firstName" required data-required-msg="Please enter your First Name"/>
+                        </p>
+                        <p>
+                            <label for="last-name">Last Name</label><span class="required-indicator">*</span><br />
+                            <input id="last-name" name="last-name" style="width:180px;" type="text" class="k-textbox" data-bind="value: paymentModel.lastName" required data-required-msg="Please enter your LastName"/>
+                        </p>
+                        <p>
+                            <label for="card-number">Card Number</label><span class="required-indicator">*</span><br />
+                            <input id="card-number" name="card-number" style="width:180px;" type="text" class="k-textbox" data-bind="value: paymentModel.cardNumber" required data-required-msg="Please enter the Credit Card number" />
+                        </p>
+                        <p>
+                            <label for="card-type">Card Type</label><span class="required-indicator">*</span><br />
+                            <select id="card-type" name="card-type" size="1" data-role="dropdownlist" data-bind="value: paymentModel.cardType" data-value-primitive="true">
+                                <option value="amex">American Express</option>
+                                <option value="discover">Discover</option>
+                                <option value="mastercard">Mastercard</option>
+                                <option value="visa" selected="selected">Visa</option>
+                            </select>
+                        </p>
+                        <p>
+                            <label for="cvv2">Security Code</label><span class="required-indicator">*</span><br />
+                            <input id="cvv2" name="cvv2" style="width:180px;" type="text" class="k-textbox" data-bind="value: paymentModel.cvv2" required data-required-msg="Please enter the Security Code"/>
+                        </p>
+                        <p>
+                            <label>Expiration</label><span class="required-indicator">*</span><br />
+                            <select id="expire-month" name="expire-month" size="1" data-role="dropdownlist" data-bind="value: paymentModel.expireMonth" data-value-primitive="true">
+                                <option value="1" selected="selected">01</option>
+                                <option value="2">02</option>
+                                <option value="3">03</option>
+                                <option value="4">04</option>
+                                <option value="5">05</option>
+                                <option value="6">06</option>
+                                <option value="7">07</option>
+                                <option value="8">08</option>
+                                <option value="9">09</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                            </select>
+                            <select id="expire-year" name="expire-year" size="1" data-role="dropdownlist" data-bind="value: paymentModel.expireYear" data-value-primitive="true">
+                                <option value="2014" selected="selected">2014</option>
+                                <option value="2015">2015</option>
+                                <option value="2016">2016</option>
+                                <option value="2017">2017</option>
+                                <option value="2018">2018</option>
+                                <option value="2019">2019</option>
+                                <option value="2020">2020</option>
+                                <option value="2021">2021</option>
+                                <option value="2022">2022</option>
+                                <option value="2023">2023</option>
+                                <option value="2024">2024</option>
+                            </select>
+                        </p>
+                        <p>
+                            <label for="email">Email Address</label><span class="required-indicator">*</span><br />
+                            <input id="email" name="email" style="width:180px;" type="email" class="k-textbox" data-bind="value: paymentModel.emailAddress" required data-required-msg="Please enter your Email Address" data-email-msg="Please enter a valid Email Address." />
+                        </p>
+                        <hr style="background-color: #cccccc; border: 0 none; height:1px; margin-top:16px; margin-bottom: 16px;">
+                        <p>
+                            <button class="k-button" data-bind="click: submit" style="font-family: Verdana;">Submit</button>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="inner_page_content_box_left111">
+        </div>
+    </div>
+    <div class="body_three_boxes22">
+        <p>&nbsp;</p>
+    </div>
+</div>
+
+@section Head {
+    <style type="text/css">
+        #payment-form p {
+            margin-bottom:6px;
+        }
+        payment-form label {
+            font-size: 14px;
+            font-family: Verdana;
+        }
+        span.k-tooltip {
+            margin-left: 6px;
+            vertical-align:top;
+        }
+        .inner_page_content_box_left p {
+            float:none;
+        }
+        .inner_page_content_box p a {
+            float:none;
+            font: normal 13px Arial, Helvetica, sans-serif;
+        }
+    </style>
+}
+
+@section Scripts {
+    @Html.VersionedJsUrl("/Scripts/app/Home/Payment.js")
+}

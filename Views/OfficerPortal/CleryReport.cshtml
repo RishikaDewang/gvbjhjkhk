@@ -1,0 +1,195 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Clery Report";
+}
+
+<form id="report-form">
+<div style="padding:10px 0 26px 10px;">
+    <div class="logo-heading clearfix">
+        <div class="logo-top">
+            <img src="~/Images/logo.png" height="40">
+        </div>
+        <div style="float:left;">
+            <h1>Clery Report</h1>
+        </div>
+    </div>
+    <div class="report-separator">
+        Officer and Site
+    </div>
+    <div class="form-row row-tight clearfix">
+        <div class="form-label"><label>Officer:</label></div>
+        <div class="form-field">@Model.FirstName @Model.LastName</div>
+    </div>
+    <div class="form-row row-tight clearfix">
+        <div class="form-label"><label>Client:</label></div>
+        <div class="form-field">@Model.ClientName</div>
+    </div>
+    <div class="form-row row-tight clearfix">
+        <div class="form-label"><label>Site:</label></div>
+        <div class="form-field">@Model.SiteName</div>
+    </div>
+    <div class="report-separator">
+        Overview
+    </div>
+    <div class="form-row clearfix">
+        <div class="form-label"><label for="incident-report-number">Incident Report #:</label></div>
+        <div class="form-field"><input id="incident-report-number" name="incident-report-number" type="text" class="k-input k-textbox standard-width" data-bind="value: report.incidentReportNumber" /></div>
+    </div>
+    <div class="form-row clearfix">
+        <div class="form-label"><label for="incident-date">Date and Time of Incident:</label><span class="required-indicator">*</span></div>
+        <div class="form-field">
+            <!-- data-role="datetimepicker" -->
+            <input id="incident-date" name="incident-date" data-bind="value: report.incidentDate" required data-required-msg="Please enter the Date/Time of the Incident." />
+            <span class="k-invalid-msg" data-for="incident-date"></span>
+        </div>
+    </div>
+    <div class="form-row clearfix">
+        <div class="form-label"><label for="incident-type">Clery Report Type:</label><span class="required-indicator">*</span></div>
+        <div class="form-field">
+            <select id="incident-type" name="incident-type" class="standard-width" disabled="disabled" data-role="dropdownlist" data-option-label="-- Select Report Type --" data-value-field="CleryIncidentTypeId" data-text-field="IncidentTypeName" data-bind="source: incidentTypeDataSource, value: report.cleryIncidentTypeId" data-value-primitive="true" required data-required-msg="Please select Clery Report Type."></select>
+            <span class="k-invalid-msg" data-for="incident-type"></span>
+        </div>
+    </div>
+    <div class="form-row clearfix">
+        <div class="form-label"><label for="incident-sub-type" class="disabled-label">Incident Type:</label><span class="required-indicator">*</span></div>
+        <div class="form-field">
+            <select id="incident-sub-type" name="incident-sub-type" class="standard-width" disabled="disabled" data-role="dropdownlist" data-option-label="-- Select Incident Type --" data-value-field="CleryIncidentSubTypeId" data-text-field="IncidentSubTypeName" data-bind="source: incidentSubTypeDataSource, value: report.cleryIncidentSubTypeId" data-value-primitive="true" required data-required-msg="Please select Incident Type."></select>
+            <span class="k-invalid-msg" data-for="incident-sub-type"></span>
+        </div>
+    </div>
+    <div class="form-row clearfix">
+        <div class="form-label"><label class="disabled-label hate-crime-label">Hate Related?:</label><span class="required-indicator disabled-label hate-crime-label">*</span></div>
+        <div class="form-field">
+            <div style="display:inline-block;">
+                <div style="float:left;">
+                    <input type="radio" id="hate-crime-yes" name="radio-hate-crime" value="true" data-bind="checked:report.isHateCrime" disabled />
+                    <label for="hate-crime-yes" class="disabled-label hate-crime-label">Yes</label>
+                </div>
+                <div style="float:left;margin-left:12px;margin-right:4px;">
+                    <input type="radio" id="hate-crime-no" name="radio-hate-crime" value="false" data-bind="checked:report.isHateCrime" disabled />
+                    <label for="hate-crime-no" class="disabled-label hate-crime-label">No</label>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            <span class="k-invalid-msg" data-for="radio-hate-crime"></span>
+        </div>
+    </div>
+    <div class="form-row clearfix">
+        <div class="form-label"><label class ="disabled-label hate-type-label">Type of Hate:</label><span class="required-indicator disabled-label hate-type-label">*</span></div>
+        <div class="form-field">
+            <div style="display:inline-block;">
+                <div data-bind="source: hateTypeDataSource" data-template="hate-select-template"></div>
+            </div>
+            <span class="k-invalid-msg" data-for="checkbox-hate-type"></span>
+        </div>
+    </div>
+    <div class="form-row clearfix">
+        <div class="form-label"><label>Incident Location:</label><span class="required-indicator">*</span></div>
+        <div class="form-field">
+            <div style="display:inline-block;">
+                <div data-bind="source: incidentLocationDataSource" data-template="location-select-template"></div>
+            </div>
+            <span class="k-invalid-msg" data-for="radio-location"></span>
+        </div>
+    </div>
+    <div class="form-row clearfix">
+        <div class="form-label"><label for="victim-name">Victim Name(s):</label></div>
+        <div class="form-field"><input id="victim-name" type="text" maxlength="250" class="k-textbox standard-width" data-bind="value: report.victimName" /></div>
+    </div>
+    <div class="form-row clearfix">
+        <div class="form-label"><label for="suspect-names">Suspect Name(s):</label></div>
+        <div class="form-field"><input id="suspect-names" type="text" maxlength="250" class="k-textbox standard-width" data-bind="value: report.suspectNames" /></div>
+    </div>
+    <div class="form-row clearfix">
+        <div class="form-label"><label for="witness-names">Witness Name(s):</label></div>
+        <div class="form-field"><input id="witness-names" type="text" maxlength="250" class="k-textbox standard-width" data-bind="value: report.witnessNames" /></div>
+    </div>
+    <div class="form-row clearfix">
+        <div class="form-label"><label for="witness-info">Witness Contact Info:</label></div>
+        <div class="form-field"><input id="witness-info" type="text" maxlength="250" class="k-textbox standard-width" data-bind="value: report.witnessContactInfo" /></div>
+    </div>
+    <div class="form-row clearfix">
+        <div class="form-label"><label for="incident-summary">Incident Summary:</label><span class="required-indicator">*</span></div>
+        <div class="form-field"><textarea id="incident-summary" name="incident-summary" maxlength="1000" class="k-textbox" data-bind="value: report.incidentSummary" required data-required-msg="Please enter the Incident Summary."></textarea></div>
+    </div>
+    <div class="report-separator">
+        Responder Info
+    </div>
+    <div class="form-row clearfix">
+        <div class="form-label"><label for="police-called">Police Called:</label><span class="required-indicator">*</span></div>
+        <div class="form-field">
+            <select id="police-called" name="police-called" data-role="dropdownlist" data-option-label="-- Select Yes or No --" data-bind="value: report.policeCalled" data-value-primitive="true" required data-required-msg="Please select Yes or No for Police Called.">
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+            </select>
+            <span class="k-invalid-msg" data-for="police-called"></span>
+        </div>
+    </div>
+    <div class="form-row clearfix">
+        <div class="form-label"><label for="why-not-called">If Not, Why?:</label></div>
+        <div class="form-field"><input id="why-not-called" type="text" maxlength="250" class="k-textbox standard-width" data-bind="value: report.whyPoliceNotCalled" /></div>
+    </div>
+    <div class="form-row clearfix">
+        <div class="form-label"><label for="police-info">Police Name(s) & Badge(s):</label></div>
+        <div class="form-field"><textarea id="police-info" maxlength="500" class="k-textbox" data-bind="value: report.policeInfo"></textarea></div>
+    </div>
+    <div class="form-row clearfix">
+        <div class="form-label"><label for="fire-truck-num">Fire Truck Number:</label></div>
+        <div class="form-field"><input id="fire-truck-num" type="text" maxlength="100" class="k-textbox standard-width" data-bind="value: report.fireTruckNumber" /></div>
+    </div>
+    <div class="form-row clearfix">
+        <div class="form-label"><label for="ambulance-num">Ambulance Number:</label></div>
+        <div class="form-field"><input id="ambulance-num" type="text" maxlength="100" class="k-textbox standard-width" data-bind="value: report.ambulanceNumber" /></div>
+    </div>
+    <div class="report-separator">
+        Details
+    </div>
+    <div class="form-row clearfix">
+        <div class="form-label"><label for="incident-details">Who, What, When, etc.:</label><span class="required-indicator">*</span></div>
+        <div class="form-field"><textarea id="incident-details" name="incident-details" class="k-textbox" data-bind="value: report.incidentDetails" required data-required-msg="Please enter the Incident Details."></textarea></div>
+    </div>
+    <div class="report-separator">
+        Photos, Videos, Audio
+    </div>
+    <div style="width:90%; max-width:780px;">
+        <div style="margin-bottom:6px;"><button id="btn-add-photo" class="k-button" type="button" style="width:140px;font-weight:bold; font-family: Verdana;">+ Add Photo, Video, or Audio</button></div>
+        <div id="upload-progress-wrapper" style="width:100%;"></div>
+        <div style="height: 0;width:0; overflow:hidden;"><input name="fileUpload" id="fileUpload" type="file" /></div>
+        <div id="photo-list" style="margin-top:8px;"></div>
+        <div id="media-list" style="margin-top:8px;"></div>
+        <div id="attachment-list" style="margin-top:8px;"></div>
+    </div>
+    <div class="report-separator">
+        Officer Actions
+    </div>
+    <div class="form-row clearfix">
+        <div class="form-label"><label for="officer-actions">Details:</label><span class="required-indicator">*</span></div>
+        <div class="form-field"><textarea id="officer-actions" name="officer-actions" maxlength="3000" class="k-textbox" data-bind="value: report.officerActions" required data-required-msg="Please enter Officer Actions."></textarea></div>
+    </div>
+    <div class="form-row clearfix">
+        <div class="form-label">&nbsp;</div>
+        <div class="form-field"><button class="k-button" data-bind="click: submit" style="width:140px; font-weight:bold; font-family: Verdana;">Submit</button></div>
+    </div>
+</div>
+</form>
+
+@section Scripts {
+    <!-- find a different way to set clientSiteId -->
+    <script type="text/javascript">
+        var clientSiteId = @Model.ClientSiteId;
+    </script>
+    <script id="location-select-template" type="text/x-kendo-template">
+        <div style="padding-bottom:5px;">
+            <input type="radio" name="radio-location" id="location-#: kendo.toString(get('CleryIncidentLocationId')) #" data-bind="attr:{value:CleryIncidentLocationId}, checked:report.cleryIncidentLocationId" />
+            <label for="location-#: kendo.toString(get('CleryIncidentLocationId')) #" data-bind="text:IncidentLocationName"></label>
+        </div>
+    </script>
+    <script id="hate-select-template" type="text/x-kendo-template">
+        <div style="padding-bottom:5px;">
+            <input type="checkbox" name="checkbox-hate-type" id="hate-type-#: kendo.toString(get('CleryHateTypeId')) #" data-bind="attr:{value:CleryHateTypeId}, checked: report.hateTypeIds" disabled />
+            <label for="hate-type-#: kendo.toString(get('CleryHateTypeId')) #" data-bind="text:HateTypeName" class="disabled-label hate-type-label"></label>
+        </div>
+    </script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/CleryIncidentReport.js")
+}

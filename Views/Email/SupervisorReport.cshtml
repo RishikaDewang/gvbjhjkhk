@@ -1,0 +1,172 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    <div id="main-area" style="font-family:Arial;font-size:12px;"></div>
+
+    <script id="report-template" type="text/x-kendo-template">
+        # var isFirstSeparator = true; #
+        # for (var i = 0; i < data.definition.ReportDefinition.formItems.length; i++) { #
+            # if (data.definition.ReportDefinition.formItems[i].type === 'separator') { #
+                # if (!isFirstSeparator) { #
+                    </table>
+                # } else { isFirstSeparator = false; } #
+                <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+                <b>#= data.definition.ReportDefinition.formItems[i].html #</b>
+                <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+                <table class="label-value">
+            # } else { #
+                <tr>
+                    <td>#= data.definition.ReportDefinition.formItems[i].label #</td>
+                    <td>
+                        # if (data.definition.ReportDefinition.formItems[i].id === 'InspectedOfficer') { debugger; #
+                            #= nullToString(data.report.InspectedOfficerName) #
+                        # } else if (data.definition.ReportDefinition.formItems[i].type === 'datetime') { #
+                            #= kendo.toString(moment(data.report.report_data[data.definition.ReportDefinition.formItems[i].id], "YYYY-MM-DDTHH:mm:ss").toDate(), "g") #
+                        # } else if ((data.definition.ReportDefinition.formItems[i].type === 'kendoMultiSelect') || (data.definition.ReportDefinition.formItems[i].type === 'checkBoxList')) { #
+                            # if (data.report.report_data[data.definition.ReportDefinition.formItems[i].id]) { #
+                                # for (var j =0; j < data.report.report_data[data.definition.ReportDefinition.formItems[i].id].length; j++) { #
+                                    #= data.report.report_data[data.definition.ReportDefinition.formItems[i].id][j] #<br /> 
+                                # } #
+                            # } #
+                        # } else if (data.definition.ReportDefinition.formItems[i].type === 'radioBoolean') { #
+                            # if (data.report.report_data[data.definition.ReportDefinition.formItems[i].id] !== null) { #
+                                # if (!data.definition.ReportDefinition.formItems[i].hasOwnProperty('displayFunction')) { #
+                                    # if (data.report.report_data[data.definition.ReportDefinition.formItems[i].id] === true) { #
+                                        #= data.definition.ReportDefinition.formItems[i].options.trueLabel #
+                                    # } else { #
+                                        #= data.definition.ReportDefinition.formItems[i].options.falseLabel #
+                                    # } #
+                                # } else { # 
+                                    #= window[data.definition.ReportDefinition.formItems[i].displayFunction](data.report.report_data[data.definition.ReportDefinition.formItems[i].id]) #
+                                # } #
+                            # } #
+                        # } else if (data.definition.ReportDefinition.formItems[i].type === 'checkBox') { #
+                            # if (data.report.report_data[data.definition.ReportDefinition.formItems[i].id] !== null) { #
+                                # if (data.report.report_data[data.definition.ReportDefinition.formItems[i].id] === true) { #
+                                    #= 'Yes' #
+                                # } else { #
+                                    #= 'No' #
+                                # } # 
+                            # } #
+                        # } else if ((data.definition.ReportDefinition.formItems[i].type === 'number') || (data.definition.ReportDefinition.formItems[i].type === 'kendoNumeric')) { #
+                            # if (data.report.report_data[data.definition.ReportDefinition.formItems[i].id] !== null) { #
+                                #= data.report.report_data[data.definition.ReportDefinition.formItems[i].id] #
+                            # } #
+                        # } else if (data.definition.ReportDefinition.formItems[i].type === 'upload') { #
+                            # var fieldValue = data.report.report_data[data.definition.ReportDefinition.formItems[i].id]; console.log('--------- upload id: ' + data.definition.ReportDefinition.formItems[i].id + ' - num photos: ' + fieldValue.Photos.length); #
+                            <div>
+                                # for (var j = 0; j < fieldValue.Photos.length; j++) { #
+                                    <div style="margin-bottom:2px;">
+                                    <img src="#= data.report.SiteBaseUrl ##= getUploadFolder(fieldValue.Photos[j].UploadFolder) #/#= fieldValue.Photos[j].PhotoMedium + '?' + (new Date()).getTime() #" />
+                                    # if (fieldValue.Photos[j].Description) { #
+                                    <div style="margin-bottom:10px;">#= addBreaks(fieldValue.Photos[j].Description) #</div>
+                                    # } #
+                                    </div>
+                                # } #
+                            </div>
+                            # if (fieldValue.Videos.length > 0) { #
+                            <div>
+                                <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+                                Number of Video Files Uploaded: #= fieldValue.Videos.length #
+                            </div>
+                            # } #
+                            # if (fieldValue.AudioFiles.length > 0) { #
+                            <div>
+                                <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+                                Number of Audio Files Uploaded: #= fieldValue.AudioFiles.length #
+                            </div>
+                            # } #
+                        # } else  { #
+                            # if (!data.definition.ReportDefinition.formItems[i].hasOwnProperty('displayFunction')) { #
+                                #= addBreaks(data.report.report_data[data.definition.ReportDefinition.formItems[i].id]) #
+                            # } else { #
+                                #= window[data.definition.ReportDefinition.formItems[i].displayFunction](data.report.report_data[data.definition.ReportDefinition.formItems[i].id]) #
+                            # } #
+                        # } #
+                    </td>
+                </tr>
+            # } #
+        # } #
+        </table>
+    </script>
+    <script src="~/Scripts/jquery.min.js"></script>
+    @Html.VersionedJsUrl("/Scripts/kendoui/v2016.1.322/kendo.all.min.js")
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/Scripts/moment-timezone.min.js"></script>
+    <script src="~/Scripts/moment-timezone-data.min.js"></script>
+    @Html.VersionedJsUrl("/Scripts/app/internal-templateloader.js")
+    <script src="~/Scripts/purl.js"></script>
+    <script id="report_header_override" type="text/x-kendo-template">
+        # if (data.report.LogoSmall) { #
+            <p style="margin-bottom:10px"><img src="#= data.report.SiteBaseUrl #Upload/#= data.report.LogoSmall #" style="max-height:70px;" alt="Logo" /></p>
+        # } #
+        <p style="font-size:18px;margin-bottom:12px;">
+            <b>#= data.definition.ReportNameSingular #</b>
+        </p>
+        <p>
+            <b>Time Zone: #= data.report.TimeZoneDisplayName #</b>
+        </p>
+        <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+        <b>ID, DATE, CLIENT, &amp; SITE<b/>
+        <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+        <table class="label-value">
+            <tr>
+                <td>Internal ID:</td>
+                <td>#= data.report.report_id #</td>
+            </tr>
+            <tr>
+                <td>Date Entered:</td>
+                <td>#= kendo.toString(moment(data.report.created_date_site, "YYYY-MM-DDTHH:mm:ss").toDate(), "g") #</td>
+            </tr>
+            <tr>
+                <td>Client:</td>
+                <td>#= data.report.ClientName #</td>
+            </tr>
+            <tr>
+                <td>Site:</td>
+                <td>#= data.report.SiteName #</td>
+            </tr>
+        </table>
+        <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+        <b>OFFICER<b/>
+        <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+        <table class="label-value">
+            <tr>
+                <td>Officer Name:</td>
+                <td>#= nullToString(data.report.OfficerFullName) #</td>
+            </tr>
+        </table>
+    </script>
+    <script type="text/javascript">
+        var url = $.url();
+        var reportId = url.param('reportId');
+        var entityId = url.param('entityId');
+        var siteBaseUrl = '@ORWeb.Classes.Shared.App.SiteBaseUrl';
+
+        function getUploadFolder(value) {
+            return (value) ? value : 'Upload';
+        }
+        
+        $(function () {
+            reportHeaderTemplateId = '#report_header_override';
+            documentReady = true;
+            logMessage('set documentReady to true');
+
+            templateLoader.loadExtTemplate("/Templates/_reportPageTemplatesEmail.tmpl.htm?@System.Guid.NewGuid().ToString()");
+            $(document).bind("TEMPLATE_LOADED", function (e, path) {
+                logMessage('Templates loaded');
+                refreshReport();
+            });
+        });
+    </script>
+    @Html.VersionedJsUrl("/Scripts/app/Email/supervisor-report.js")
+</body>
+</html>

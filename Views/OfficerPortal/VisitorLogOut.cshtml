@@ -1,0 +1,83 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Visitor Check-Out";
+}
+
+<div style="padding:10px 0 26px 10px;">
+    <div class="logo-heading clearfix">
+        <div class="logo-top">
+            <img src="~/Images/logo.png" height="40">
+        </div>
+        <div style="float:left;">
+            <h1>Visitor Check-Out</h1>
+        </div>
+    </div>
+    <div class="report-separator">
+        Officer and Site
+    </div>
+    <div class="form-row row-tight clearfix">
+        <div class="form-label"><label>Officer:</label></div>
+        <div class="form-field"><span>@Model.FirstName @Model.LastName</span></div>
+    </div>
+    <div class="form-row row-tight clearfix">
+        <div class="form-label"><label>Client:</label></div>
+        <div class="form-field"><span>@Model.ClientName</span></div>
+    </div>
+    <div class="form-row row-tight clearfix">
+        <div class="form-label"><label>Site:</label></div>
+        <div class="form-field"><span>@Model.SiteName</span></div>
+    </div>
+
+    <div class="report-separator">
+        Visitors
+    </div>
+    <div id="visitor-list" class="bootstrap-scope"></div>
+</div>
+
+@section Scripts {
+    <script id="list-template" type="text/x-kendo-template">
+        <div style="width:96%; max-width:1200px;">
+        # for (var i = 0; i < data.length; i++) { #
+            <a class="btn btn-default btn-lg btn-block details-link" data-log-id="#= data[i].VisitorLogId #">
+            <b>Visitor Name:</b> #= data[i].VisitorName #<br />
+            <b>Date:</b> #= kendo.toString(moment.utc(data[i].InDate, "YYYY-MM-DDTHH:mm:ss").local().toDate(), "g") #<br />
+            <b>Company:</b> #= nullToString(data[i].Company) #<br />
+            <b>Destination:</b> #= data[i].Destination #
+            </a>
+        # } #
+        </div>
+    </script>
+    <script id="details-template" type="text/x-kendo-template">
+        <div>
+            <div class="form-row clearfix">
+                <div class="form-label">Visitor Name:</div>
+                <div class="form-field">#= data.VisitorName #</div>
+            </div>
+            <div class="form-row clearfix">
+                <div class="form-label">Date/Time In:</div>
+                <div class="form-field">#= kendo.toString(moment.utc(data.InDate, "YYYY-MM-DDTHH:mm:ss").local().toDate(), "g") #</div>
+            </div>
+            <div class="form-row clearfix">
+                <div class="form-label">Company:</div>
+                <div class="form-field">#= nullToString(data.Company) #</div>
+            </div>
+            <div class="form-row clearfix">
+                <div class="form-label">Destination:</div>
+                <div class="form-field">#= data.Destination #</div>
+            </div>
+            <div class="form-row clearfix">
+                <div class="form-label"><label for="out-notes">Notes on Exit:</label></div>
+                <div class="form-field"><textarea id="out-notes" style="height: 200px;" maxlength="2000" class="k-input k-textbox"></textarea></div>              
+            </div>
+            <div class="form-row clearfix">
+                <div class="form-label">&nbsp;</div>
+                <div class="form-field"><button id="btnUpdate" type="button" data-role="button" data-log-id="#= data.VisitorLogId #">Check Out</button></div>
+            </div>
+        </div>
+    </script>
+    <script type="text/javascript">
+        var clientSiteId = @Model.ClientSiteId;
+    </script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/VisitorLogOut.js")
+}

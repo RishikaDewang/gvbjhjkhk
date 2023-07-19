@@ -1,0 +1,207 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    <div id="main-area" style="font-family:Arial;font-size:12px;"></div>
+    <script id="report-template" type="text/x-kendo-template">
+        <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+        <b>
+            DAILY ACTIVITY REPORT<b />
+            <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+            <table class="label-value">
+                <tr>
+                    <td>Shift/Post:</td>
+                    <td>#= data.report.PostShift #</td>
+                </tr>
+                <tr>
+                    <td>Special Instructions:</td>
+                    <td>#= nullToString(data.report.SpecialInstructions) #</td>
+                </tr>
+                <tr>
+                    <td>Post Items Received:</td>
+                    <td>#= nullToString(data.report.PostItemsReceived) #</td>
+                </tr>
+            </table>
+
+            <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+            @*<b>
+                OBSERVATIONS<b />
+                <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+                <table class="label-value">
+                    <tr>
+                        <td>Observation Type Name:</td>
+                        <td>
+                            # for (var i = 0; i < data.observations.length; i++) { #
+                            #: nullToString(data.observations[i].ObservationTypeName) #
+                            <br />
+                            # } #
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Observation:</td>
+                        <td>
+                            # for (var i = 0; i < data.observations.length; i++) { #
+                            #: nullToString(data.observations[i].Observation) #
+                            <br /> <br />
+                            # } #
+                        </td>
+                    </tr>
+                </table>*@
+
+
+            <div class="panel panel-default">
+                <div class="panel-heading"><b>OBSERVATIONS</b></div>
+                <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width:5%;">\\#</th>
+                            <th style="width:15%;">Type</th>
+                            <th style="width:18%;">Time</th>
+                            <th style="width:62%;">Comments</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        # for (var i = 0; i < data.observations.length; i++) { #
+                        <tr class="observation-#= i + 1 #">
+                            <td>#= i + 1 #</td>
+                            <td>#= nullToString(data.observations[i].ObservationTypeName) #</td>
+                            <td>#= kendo.toString(new Date(moment.utc(data.observations[i].ObservationDate, "YYYY-MM-DDTHH:mm:ss").tz(data.report.TimeZoneName).format("YYYY-MM-DD HH:mm")), "g") #</td>
+                            <td>#= addBreaks(data.observations[i].Observation) #</td>
+                        </tr>
+                        # } #
+                    </tbody>
+                </table>
+            </div>
+
+
+            <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+            <b>
+                RELIEVING OFFICER INFORMATION<b />
+                <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+                <table class="label-value">
+                    <tr>
+                        <td>Relieving Officer First Name:</td>
+                        <td>#= nullToString(data.report.RelievingOfficerFirstName) #</td>
+                    </tr>
+                    <tr>
+                        <td>Relieving Officer Last Name:</td>
+                        <td>#= nullToString(data.report.RelievingOfficerLastName) #</td>
+                    </tr>
+                </table>
+
+                <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+                <b>
+                    ADDITIONAL NOTES <b />
+                    <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+                    <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+                    <table class="label-value">
+                        <tr>
+                            <td>Additional Notes:</td>
+                            <td>#= addBreaks(data.report.AdditionalNotes) #</td>
+                        </tr>
+                    </table>
+    </script>
+    <script src="~/Scripts/jquery.min.js"></script>
+    @Html.VersionedJsUrl("/Scripts/kendoui/v2016.1.322/kendo.all.min.js")
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/Scripts/moment-timezone.min.js"></script>
+    <script src="~/Scripts/moment-timezone-data.min.js"></script>
+    @Html.VersionedJsUrl("/Scripts/app/internal-templateloader.js")
+    @Html.VersionedJsUrl("/Scripts/app/internal-report-email.js")
+    <script src="~/Scripts/purl.js"></script>
+    <script id="report_header_override" type="text/x-kendo-template">
+        # if (data.report.LogoSmall) { #
+        <p style="margin-bottom:10px"><img src="#= data.report.SiteBaseUrl #Upload/#= data.report.LogoSmall #" style="max-height:70px;" alt="Logo" /></p>
+        # } #
+        <p style="font-size:18px;margin-bottom:12px;">
+            <b>#= data.report.ReportTitle #</b>
+        </p>
+        <p>
+            <b>Time Zone: #= data.report.TimeZoneDisplayName #</b>
+        </p>
+        <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+        <b>
+            ID, DATE, CLIENT, &amp; SITE<b />
+            <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+            <table class="label-value">
+                <tr>
+                    <td>Internal ID:</td>
+                    <td>#= data.report.DailyActivityReportId #</td>
+                </tr>
+                <tr>
+                    <td>Date Entered:</td>
+                    <td>#= kendo.toString(new Date(moment.utc(data.report.CreatedDate, "YYYY-MM-DDTHH:mm:ss").tz(data.report.TimeZoneName).format("YYYY-MM-DD HH:mm")), "g") #</td>
+                </tr>
+                <tr>
+                    <td>Client:</td>
+                    <td>#= data.report.ClientName #</td>
+                </tr>
+                <tr>
+                    <td>Site:</td>
+                    <td>#= data.report.SiteName #</td>
+                </tr>
+            </table>
+            <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+            <b>
+                OFFICER / ENTERED BY<b />
+                <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+                <table class="label-value">
+                    <tr>
+                        <td>Officer Name:</td>
+                        <td>#= nullToString(data.report.OfficerFullName) #</td>
+                    </tr>
+                    <tr>
+                        <td>Entered By:</td>
+                        <td>#= data.report.OfficerFullName #</td>
+                    </tr>
+                </table>
+    </script>
+    <script type="text/javascript">
+
+        var url = $.url();
+        var entityId = url.segment(-1);
+        var entityTypeId = 1;
+        var siteBaseUrl = '@ORWeb.Classes.Shared.App.SiteBaseUrl';
+        var reportBaseUrl = "/api/Utility/GetDailyActivityReport/";
+        var reportTitle = "Daily Activity Report";
+
+        $(function () {
+            
+            reportHeaderTemplateId = '#report_header_override';
+            documentReady = true;
+            logMessage('set documentReady to true');
+
+            
+
+            templateLoader.loadExtTemplate("/Templates/_reportPageTemplatesEmail.tmpl.htm?@System.Guid.NewGuid().ToString()");
+            $(document).bind("TEMPLATE_LOADED", function (e, path) {
+                logMessage('Templates loaded');
+                refreshReport();
+                
+                notifyParent();
+            });
+
+
+            function notifyParent() {
+                var url1 = $.url();
+                var entityId1 = url1.segment(-1);
+                
+                window.parent.postMessage("resize:"+entityId1,url1.data.attr.base);
+                
+            }
+
+        });
+    </script>
+</body>
+</html>

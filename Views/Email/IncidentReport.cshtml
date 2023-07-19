@@ -1,0 +1,186 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    <div id="main-area" style="font-family:Arial;font-size:12px;"></div>
+    <script id="report-template" type="text/x-kendo-template">
+        <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+        <b>OVERVIEW<b/>
+        <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+        <table class="label-value">
+            <tr>
+                <td>Incident Report \\#:</td>
+                <td>#= nullToString(data.report.IncidentReportNumber) #</td>
+            </tr>
+            <tr>
+                <td>Date and Time of Incident:</td>
+                <td>#= kendo.toString(new Date(moment.utc(data.report.IncidentDate, "YYYY-MM-DDTHH:mm:ss").tz(data.report.TimeZoneName).format("YYYY-MM-DD HH:mm")), "g") #</td>
+            </tr>
+            <tr>
+                <td>Incident Type:</td>
+                <td>#= data.report.IncidentTypeName #</td>
+            </tr>
+            <tr>
+                <td>If Other, What Type:</td>
+                <td>#= nullToString(data.report.IncidentOtherType) #</td>
+            </tr>
+            <tr>
+                <td>Victim Name(s):</td>
+                <td>#= nullToString(data.report.VictimName) #</td>
+            </tr>
+            <tr>
+                <td>Victim Contact Info:</td>
+                <td>#= nullToString(data.report.VictimContactInfo) #</td>
+            </tr>
+            <tr>
+                <td>Suspect Name(s):</td>
+                <td>#= nullToString(data.report.SuspectNames) #</td>
+            </tr>
+            <tr>
+                <td>Suspect Contact Info:</td>
+                <td>#= nullToString(data.report.SuspectContactInfo) #</td>
+            </tr>
+            <tr>
+                <td>Witness Name(s):</td>
+                <td>#= nullToString(data.report.WitnessNames) #</td>
+            </tr>
+            <tr>
+                <td>Witness Contact Info:</td>
+                <td>#= nullToString(data.report.WitnessContactInfo) #</td>
+            </tr>
+            <tr>
+                <td>Incident Location:</td>
+                <td>#= nullToString(data.report.IncidentLocation) #</td>
+            </tr>
+            <tr>
+                <td>Incident Summary:</td>
+                <td>#= addBreaks(data.report.IncidentSummary) #</td>
+            </tr>
+        </table>
+        <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+        <b>RESPONDER INFO<b/>
+        <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+        <table class="label-value">
+            <tr>
+                <td>Police Called:</td>
+                <td>#= boolToYesNo(data.report.PoliceCalled) #</td>
+            </tr>
+            <tr>
+                <td>If Not, Why?:</td>
+                <td>#= nullToString(data.report.WhyPoliceNotCalled) #</td>
+            </tr>
+            <tr>
+                <td>Police Name(s) & Badge(s):</td>
+                <td>#= addBreaks(data.report.PoliceInfo) #</td>
+            </tr>
+            <tr>
+                <td>Fire Truck Number:</td>
+                <td>#= nullToString(data.report.FireTruckNumber) #</td>
+            </tr>
+            <tr>
+                <td>Ambulance Number:</td>
+                <td>#= nullToString(data.report.AmbulanceNumber) #</td>
+            </tr>
+        </table>
+        <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+        <b>DETAILS<b/>
+        <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+        <table class="label-value">
+            <tr class="incident-details">
+                <td>Who, What, When, etc.:</td>
+                <td>#= addBreaks(data.report.IncidentDetails) #</td>
+            </tr>
+        </table>
+        <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+        <b>OFFICER ACTIONS<b/>
+        <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+        <table class="label-value">
+            <tr class="officer-actions">
+                <td>Details.:</td>
+                <td>#= addBreaks(data.report.OfficerActions) #</td>
+            </tr>
+        </table>
+    </script>
+
+    <script src="~/Scripts/jquery.min.js"></script>
+    @Html.VersionedJsUrl("/Scripts/kendoui/v2016.1.322/kendo.all.min.js")
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/Scripts/moment-timezone.min.js"></script>
+    <script src="~/Scripts/moment-timezone-data.min.js"></script>
+    @Html.VersionedJsUrl("/Scripts/app/internal-templateloader.js")
+    @Html.VersionedJsUrl("/Scripts/app/internal-report-email.js")
+    <script src="~/Scripts/purl.js"></script>
+    <script id="report_header_override" type="text/x-kendo-template">
+        # if (data.report.LogoSmall) { #
+            <p style="margin-bottom:10px"><img src="#= data.report.SiteBaseUrl #Upload/#= data.report.LogoSmall #" style="max-height:70px;" alt="Logo" /></p>
+        # } #
+        <p style="font-size:18px;margin-bottom:12px;">
+            <b>#= data.report.ReportTitle #</b>
+        </p>
+        <p>
+            <b>Time Zone: #= data.report.TimeZoneDisplayName #</b>
+        </p>
+        <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+        <b>ID, DATE, CLIENT, &amp; SITE<b/>
+        <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+        <table class="label-value">
+            <tr>
+                <td>Internal ID:</td>
+                <td>#= data.report.IncidentReportId #</td>
+            </tr>
+            <tr>
+                <td>Date Entered:</td>
+                <td>#= kendo.toString(new Date(moment.utc(data.report.CreatedDate, "YYYY-MM-DDTHH:mm:ss").tz(data.report.TimeZoneName).format("YYYY-MM-DD HH:mm")), "g") #</td>
+            </tr>
+            <tr>
+                <td>Client:</td>
+                <td>#= data.report.ClientName #</td>
+            </tr>
+            <tr>
+                <td>Site:</td>
+                <td>#= data.report.SiteName #</td>
+            </tr>
+        </table>
+        <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+        <b>OFFICER / ENTERED BY<b/>
+        <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+        <table class="label-value">
+            <tr>
+                <td>Officer Name:</td>
+                <td>#= nullToString(data.report.OfficerFullName) #</td>
+            </tr>
+            <tr>
+                <td>Entered By:</td>
+                <td>#= data.report.EnteredByFullName #</td>
+            </tr>
+        </table>
+    </script>
+    <script type="text/javascript">
+        var url = $.url();
+        var entityId = url.segment(-1);
+        var entityTypeId = 2;
+        var siteBaseUrl = '@ORWeb.Classes.Shared.App.SiteBaseUrl';
+        var reportBaseUrl = "/api/Utility/GetIncidentReport/";
+        var reportTitle = "Incident Report";
+
+        $(function () {
+            reportHeaderTemplateId = '#report_header_override';
+            documentReady = true;
+            logMessage('set documentReady to true');
+
+            templateLoader.loadExtTemplate("/Templates/_reportPageTemplatesEmail.tmpl.htm?@System.Guid.NewGuid().ToString()");
+            $(document).bind("TEMPLATE_LOADED", function (e, path) {
+                logMessage('Templates loaded');
+                refreshReport();
+            });
+        });
+    </script>
+</body>
+</html>

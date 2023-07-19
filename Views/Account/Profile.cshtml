@@ -1,0 +1,73 @@
+﻿@{
+    ViewBag.Title = "Profile";
+}
+
+<div class="inner_page_content_box">
+    <div class="inner_page_content_box_left">
+        <h1>Profile</h1>
+        <hr style="background-color: #cccccc; border: 0 none; height:1px;">
+    </div>
+    <div class="body_three_boxes22" style="margin-top:18px; margin-bottom:20px;">
+        <form id="profile-form">
+            <p>
+                <label for="first-name">First Name</label><span class="required-indicator">*</span><br />
+                <input id="first-name" name="first-name" style="width:180px;" type="text" class="k-textbox" data-bind="value: profile.FirstName" required data-required-msg="Please enter your First Name"/>
+            </p>
+            <p>
+                <label for="last-name">Last Name</label><span class="required-indicator">*</span><br />
+                <input id="last-name" name="last-name" style="width:180px;" type="text" class="k-textbox" data-bind="value: profile.LastName" required data-required-msg="Please enter your LastName"/>
+            </p>
+            <p>
+                <label for="telephone">Contact Telephone Number</label><span class="required-indicator">*</span><br />
+                <input id="telephone" name="telephone" style="width:180px;" type="text" class="k-textbox" data-bind="value: profile.Phone" required data-required-msg="Please enter your Contact Telephone Number"/>
+            </p>
+            <p>
+                <label for="email">Email Address</label><span class="required-indicator">*</span><br />
+                <input id="email" name="email" style="width:180px;" type="email" class="k-textbox" data-bind="value: profile.EmailAddress" required data-required-msg="Please enter your Email Address" data-email-msg="Please enter a valid Email Address." />
+            </p>
+            <p>
+                <label for="address-1">Address 1</label><span class="required-indicator">*</span><br />
+                <input id="address-1" name="address-1" style="width:180px;" type="text" class="k-textbox" data-bind="value: profile.Address1"  required data-required-msg="Please enter Address 1" />
+            </p>
+            <p>
+                <label for="address-2">Address 2</label><br />
+                <input id="address-2" style="width:180px;" type="text" class="k-textbox" data-bind="value: profile.Address2" />
+            </p>
+            <p>
+                <label for="city">City</label><span class="required-indicator">*</span><br />
+                <input id="city" name="city" style="width:180px;" type="text" class="k-textbox" data-bind="value: profile.City" required data-required-msg="Please enter City" />
+            </p>
+            <p>
+                <label for="state">State/Province/Region</label><span class="required-indicator">*</span><br />
+                <input id="state" name="state" style="width:180px;" type="text" class="k-textbox" data-bind="value: profile.State" required data-required-msg="Please enter State/Province/Region" />
+            </p>
+            <p>
+                <label for="postal-code">Postal Code</label><span class="required-indicator">*</span><br />
+                <input id="postal-code" name="postal-code" style="width:180px;" type="text" class="k-textbox" data-bind="value: profile.PostalCode" required data-required-msg="Please enter Postal Code" />
+            </p>
+            <p>
+                <button class="k-button" data-bind="click: submit" style="font-family: Verdana;">Submit</button>
+            </p>
+        </form>
+    </div>
+</div>
+
+@section Head {
+    <style type="text/css">
+        form p {
+            padding-bottom:10px;
+        }
+        form label {
+            font-size: 12px;
+            font-family: Verdana;
+        }
+        span.k-tooltip {
+            margin-left: 6px;
+            vertical-align:top;
+        }
+    </style>
+}
+
+@section Scripts {
+@Html.VersionedJsUrl("/Scripts/app/Account/Profile.js")
+}

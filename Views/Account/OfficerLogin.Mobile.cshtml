@@ -1,0 +1,279 @@
+@model ORWeb.Models.LoginModel
+@{
+    Layout = null;
+    ViewBag.Title = "Sign In | OfficerReports";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <title>Officer Portal Sign In</title>
+    <meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="shortcut icon" type="image/x-icon" href="~/Images/favicon.ico" />
+    <meta name="apple-mobile-web-app-capable" content="no"/>
+    <meta name="apple-mobile-web-app-title" content="Portal">
+    <link rel="apple-touch-icon" href="~/Images/icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="~/Images/icon-72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="~/Images/icon_at_2x.png" />
+    <link href="~/Content/kendoui/v2016.1.322/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/Content/kendoui/v2016.1.322/kendo.uniform.min.css" rel="stylesheet" />
+    <link href="~/Content/kendoui/v2016.1.322/kendo.mobile.all.min.css" rel="stylesheet" />
+    <link href="~/Content/mobile-page.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Content/offlinejs/themes/offline-theme-chrome-indicator.css" />
+    <link rel="stylesheet" href="~/Content/offlinejs/themes/offline-language-english.css" />
+    @Html.GetNonSPAThemeFromUrl()
+    <style>
+        /*input.password-field {
+             -webkit-text-security: disc;
+        }*/
+
+        body {
+            background-color: white;
+        }
+        #main-view .km-content,
+        #main-view .km-list>li {
+            background-color: white;
+        }
+        a:hover {
+            color: rgb(76, 83, 86);
+        }
+        #main-view .km-state-active {
+            background-color: #b3b3b3;
+            color: rgb(76, 83, 86);
+        }
+        .k-input, input.k-textbox {
+            color: #000000;
+        }
+        .k-scheduler-footer {
+            display:none !important;
+        }
+        #schedule-view.k-window-content {
+            overflow-y: hidden;
+        }
+        .km-root .km-pane .km-view .km-listview input:not([type='file']), .km-root .km-pane .km-view .km-listview select:not([multiple]), .km-root .km-pane .km-view .km-listview .k-dropdown, .km-root .km-pane .km-view .km-listview textarea, .km-root .km-pane .km-view .km-listview .k-dropdown-wrap, .k-window .km-listview input:not([type='file']), .k-window .km-listview select:not([multiple]), .k-window .km-listview .k-dropdown, .k-window .km-listview textarea, .k-window .km-listview .k-dropdown-wrap {
+            position: relative;
+            width: 97%;
+            right: 0;
+            margin-top: 0;
+            top: 0;
+            border: 1px solid #c5c5c5;
+        }
+        .k-scheduler-toolbar:nth-of-type(1) {
+            display:none;
+        }
+
+        /* fix scrolling on mobile 
+        .k-scheduler,
+        .k-scheduler-content,
+        .k-scheduler-times
+        {
+            height: auto !important;
+        }
+
+        .k-scheduler-content
+        {
+            overflow-y: scroll !important;
+        }
+        */
+
+        /* 
+            fix for date format display bug in v2015.2.720 on mobile devices - wrong format displayed.
+            check if required in next version
+        */
+        .k-scheduler .k-scheduler-toolbar li.k-nav-current .k-sm-date-format {
+            display:none !important;
+        }
+        .k-scheduler .k-scheduler-toolbar li.k-nav-current .k-lg-date-format {
+            display:inline !important;
+        }
+    </style>
+    
+</head>
+<body>
+    <div id="main-view" data-role="view" data-title="Officer Portal Sign In" data-use-native-scrolling="true">
+        <div style="width:100%;text-align:left;">
+            <div id="theme-logo" style="margin:0 0 0 28px;"></div>
+        </div>
+        <div id="login-controls" style="display:none;">
+            <h2>Officer Portal Sign In</h2>
+
+            <div id="login-form">
+                <ul data-role="listview" data-style="inset">
+                    <li>
+                        <label for="UserName">
+                            User Name
+                            <input id="UserName" name="UserName" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" class="k-input k-textbox" required data-required-msg="Please enter your User Name" />
+                        </label>
+                    </li>
+                    <li>
+                        <label for="Password">
+                            Password
+                            <input id="Password" name="Password" type="password" autocomplete="off" autocorrect="off" autocapitalize="off" class="k-input k-textbox password-field" required data-required-msg="Please enter your Password" />
+                        </label>
+                    </li>
+                    <li>
+                        <ul class="submit-buttons">
+                            <li><a id="btnSubmitLogin" data-role="button">Submit</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div id="cookies-disabled" style="text-align:center;padding: 10px 20px;display:none;">
+            <b>Cookies Disabled</b><br /><br />
+            OfficerReports requires that browser cookies are enabled.  Please enable cookies on your browser or device and refresh the page.
+        </div>
+        <br />
+        <div class="message-log" style="display:none;"></div>
+    </div>
+
+    <div id="site-selection-view" data-role="view" data-title="Site Selection" data-use-native-scrolling="true" style="display:none;">
+        <header data-role="header">
+            <div data-role="navbar">
+                <a class="nav-button" data-align="right" data-role="backbutton">Back</a>
+                <span data-role="view-title"></span>
+            </div>
+        </header>
+
+        <h2>Site Selection</h2>
+
+        <div id="site-list">
+
+
+        </div>
+    </div>
+
+    <div id="schedule-option-view" data-role="view" data-title="Options" data-use-native-scrolling="true" style="display:none;">
+        <header data-role="header">
+            <div data-role="navbar">
+                <a class="nav-button" data-align="right" data-role="backbutton">Back</a>
+                <span data-role="view-title"></span>
+            </div>
+        </header>
+
+        <h2>Options</h2>
+
+        <ul data-role="listview" data-style="inset">
+            <li>
+                <ul class="submit-buttons">
+                    <li><a id="btnGoToSchedule" data-role="button">View Schedule</a></li>
+                </ul>
+            </li>
+            <li>
+                <ul class="submit-buttons">
+                    <li><a id="btnAccessSite" data-role="button">Select Work Site</a></li>
+                </ul>
+            </li>
+        </ul>
+
+        <div class="message-log" style="display:none;"></div>
+    </div>
+
+    <div id="schedule-view" data-role="view" data-title="Schedule" data-use-native-scrolling="true" style="display:none;">
+        <header data-role="header">
+            <div data-role="navbar">
+                <a class="nav-button" data-align="right" data-role="backbutton">Back</a>
+                <span data-role="view-title"></span>
+            </div>
+        </header>
+        <div id="scheduler"></div>
+    </div>
+
+    <div data-role="modalview" id="geo-continue-prompt" style="width:auto; height:auto; display:none;">
+        <div data-role="header">
+            <div data-role="navbar">
+                <span id="Location Detection Error"></span>
+            </div>
+        </div>
+        <div style="text-align: center;padding-bottom: 10px;">
+            <p>
+                <b><span id="location-continue-msg">Geolocation failed.</span></b><br/><br/>
+                <span id="geo-retry-instr" style="display:none;">Click the <b>Retry</b> button to attempt Geolocation again<br /></span>
+                Click the <b>Continue</b> button to access sites that you supervise or are unrestriced (other sites will not be available).
+            </p>
+            <a id="geo-retry-button" data-role="button">Retry</a><a id="geo-continue-button" data-role="button">Continue</a>
+        </div>
+    </div>
+
+    <div data-role="modalview" id="msg-view" style="width:auto; height:auto; display:none;">
+        <div data-role="header">
+            <div data-role="navbar">
+                <span id="msg-title"></span>
+            </div>
+        </div>
+        <div style="text-align: center;padding-bottom: 10px;">
+            <p id="msg-text"></p>
+            <a id="msg-ok-button" data-role="button">OK</a>
+        </div>
+    </div>
+
+    <div data-role="modalview" id="wait-indicator" style="width:auto; height:auto; display:none;">
+        <div data-role="header">
+            <div data-role="navbar">
+                <span id="wait-title">Please Wait...</span>
+            </div>
+        </div>
+        <div style="text-align:center;width:170px; height:70px;">
+            <div class="k-loading-image"></div>
+        </div>
+    </div>
+
+    @Html.VersionedJsUrl("/Scripts/bundles/portal.js")
+    @Html.VersionedJsUrl("/Scripts/app/internal-portal.js")
+    @Html.VersionedJsUrl("/Scripts/app/cookie-check.min.js")
+    <script src="~/Scripts/jstz.min.js"></script>
+    <script id="list-template" type="text/x-kendo-template">
+        <ul id="log-list-view" data-role="listview" data-style="inset">
+        # for (var i = 0; i < data.length; i++) { #
+            <li>
+                Client: #= data[i].CompanyName #<br />
+                Site: #= data[i].SiteName #<br />
+                # if (data[i].Address1) { #
+                    #= data[i].Address1 #<br />
+                    # if (data[i].Address2) { #
+                        #= data[i].Address2 #<br />
+                    # } #
+                    #= data[i].City #, #= data[i].State # #= data[i].PostalCode #<br />
+                # } #
+                <div class="submit-buttons">
+                    <a id="btnSubmitLogin" data-role="button" class="site-button" data-site-id="#= data[i].ClientSiteId #">Select This Site</a>
+                </div>
+            </li>
+        # } #
+        </ul>
+    </script>
+    <script id="agenda-event-template" type="text/x-kendo-template">   
+        #: title #
+        #if (resources[0]) { #
+            <div style="margin-bottom:4px">
+                <span style="font-weight:bold;">Site:</span><br />
+                #: resources[0].text #
+            </div>
+        # } #
+        <div>
+            <span style="font-weight:bold;">Officers:</span><br />
+            # for (var i = 1; i < resources.length; i++) { #
+            #: resources[i].text #<br />
+            # } #
+        </div>
+    </script>
+    <script type="text/javascript">
+        var deviceType = '@Request.GetDeviceType()';
+        if ((window.applicationCache) && (navigator.userAgent.match(/(iPad|iPhone|iPod)/i))) {
+            document.title = document.getElementsByName('apple-mobile-web-app-title')[0].content;
+        }
+        $(function () {
+            if (checkCookiesEnabled()) {
+                $('#login-controls').show();
+            }
+            else {
+                $('#cookies-disabled').show();
+            }
+            //FastClick.attach(document.body);
+        });
+    </script>
+    @Html.VersionedJsUrl("/Scripts/app/Account/OfficerLogin.Mobile.js")
+    <!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDBmfxrZF_QQPpGB_pZj3vlf2di-KQCFOc&sensor=false&libraries=geometry"></script> -->
+</body>
+</html>

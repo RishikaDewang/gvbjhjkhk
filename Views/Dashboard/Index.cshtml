@@ -1,0 +1,665 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Officer Reports Dashboard</title>
+    <link href="~/Content/kendoui/v2016.1.322/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/Content/kendoui/v2016.1.322/kendo.silver.min.css" rel="stylesheet" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial;
+            font-size: 12px;
+        }
+
+        .labels {
+            color: red;
+            background-color: white;
+            font-family: "Lucida Grande", "Arial", sans-serif;
+            font-size: 10px;
+            font-weight: bold;
+            text-align: center;
+            width: 30px;
+            /*width: 60px;*/
+            border: 2px solid black;
+            white-space: nowrap;
+        }
+
+        .hidden-labels {
+            width: 0;
+            height:0;
+            border-width:0;
+            display:none;
+        }
+
+        .map-list-item {
+            padding: 0;
+            border: 1px solid lightgray;
+        }
+
+        .map-list-item:hover {
+            background-color: #f6f6f6;
+            cursor: pointer;
+            border: 1px solid darkgray;
+        }
+
+        .list-item-header {
+            background-color: #686868;
+            color: white;
+            padding: 3px 4px;
+            font-weight: bold;
+            font-size:13px;
+        }
+
+        .list-item-info {
+            padding: 2px 4px;
+        }
+
+        .menu-instruction {
+            font-weight: bold;
+            padding: 2px 0 5px 0;
+        }
+
+        label.checkbox-label,
+        label.radiobutton-label {
+            margin-bottom:1px;
+        }
+
+        label.checkbox-label input[type=checkbox],
+        label.radiobutton-label input[type=radio] {
+            position: relative;
+            vertical-align: middle;
+            bottom: 2px;
+        }
+
+        #clear-button {
+            padding: 1px 7px 1px 7px;
+        }
+
+        .disconnected {
+            color: red;
+        }
+
+        .connected {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div style="background-color:#F5F5F6">
+        <ul id="menu" style="float:left;visibility:hidden;">
+            <li>
+                Sites
+                <ul>
+                    <li>
+                        <div style="padding:5px; width:580px;">
+                            <div class="menu-instruction">Select Sites to Monitor</div>
+                            <div id="site-grid"></div>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                Activities
+                <ul>
+                    <li>
+                        <div style="padding:10px; width:380px;">
+                            <div class="menu-instruction">Select Activities to Monitor</div>
+                            <div>
+                                <div style="margin: 0 0 0 4px;">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="activity-cbx" value="1" checked="checked" /> Officer Sign In
+                                    </label>
+                                </div>
+                                <div style="margin: 0 0 0 4px;">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="activity-cbx" value="2" checked="checked" /> Tour Stop Scan
+                                    </label>
+                                </div>
+                                <div style="margin: 0 0 0 4px;">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="activity-cbx" value="3,4" checked="checked" /> Clock In / Out
+                                    </label>
+                                </div>
+                                <div style="margin: 0 0 0 4px;">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="activity-cbx" value="5" checked="checked" /> Incident Report
+                                    </label>
+                                </div>
+                                <div style="margin: 0 0 0 4px;">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="activity-cbx" value="6" checked="checked" /> Daily Activity Report
+                                    </label>
+                                </div>
+                                <div style="margin: 0 0 0 4px;">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="activity-cbx" value="7" checked="checked" /> Maintenance Request
+                                    </label>
+                                </div>
+                                <div style="margin: 0 0 0 4px;">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="activity-cbx" value="8" checked="checked" /> Parking Violation
+                                    </label>
+                                </div>
+                                <div style="margin: 0 0 0 4px;">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="activity-cbx" value="9" checked="checked" /> Pass On Log
+                                    </label>
+                                </div>
+                                <div style="margin: 0 0 0 4px;">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="activity-cbx" value="10" checked="checked" /> Temperature Log
+                                    </label>
+                                </div>
+                                <div style="margin: 0 0 0 4px;">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="activity-cbx" value="11" checked="checked" /> Truck Log
+                                    </label>
+                                </div>
+                                <div style="margin: 0 0 0 4px;">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="activity-cbx" value="12" checked="checked" /> Visitor Log
+                                    </label>
+                                </div>
+                                <div style="margin: 0 0 0 4px;">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="activity-cbx" value="13" checked="checked" /> Field Inspection
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                Options
+                <ul>
+                    <li>
+                        <div style="padding:10px; width:380px;">
+                            <div class="menu-instruction">Set Options</div>
+
+                            Items to keep on map:<br />
+                            <input id="max-map-items" style="width:72px;" />
+                        </div>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <div style="float:right;padding:0 4px 0 0;">
+            <div style="float:left;padding-top:8px;margin-right:24px;">
+                Status: <span id="connection-status" style="font-weight:bold;"></span>
+            </div>
+            <div style="float:left;padding-top:8px;margin-right:24px;">
+                Activity Since: <span id="start-time" style="font-weight:bold;"></span>
+            </div>
+            <div style="float:left;margin:2px 12px 0 0;">
+                <button id="clear-button" type="button" class="k-primary">Clear</button>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+    <div id="map-container" style="width:100%;padding:0;margin:0;overflow:hidden;">
+        <div id="map-list" style="width:250px;overflow-y:auto;float:right;padding:0;margin:0;"></div>
+        <div id="map-c2">
+            <div id="map" style="float:left;padding:0;margin:0;height:70%;  clear:left;"></div>
+            <div id="gridcont" style="float:left;height:30%; clear:left;">
+                <div id="gridSchedule"></div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+
+    <script type="text/x-kendo-template" id="sign-in-tooltip-template">
+        <div>
+            ID:  #= activityId #<br />
+            <span style="font-weight:bold;font-size:13px;">
+                # if (!isTourTracker) { #
+                Portal Sign In
+                # } else { #
+                Tour Tracker Sign In
+                # } #
+            </span><br />
+            Time: #= kendo.toString(date, 'g') #<br />
+            Site: #= siteName #<br />
+            Officer: #= fullName #<br />
+            Distance From Site: #= distanceText #<br />
+            Accurate Within: #= accuracyText #
+        </div>
+    </script>
+    <script id="row-template-sch" type="text/x-kendo-tmpl">
+        <tr class="k-alt" data-uid="#: ScheduleExpandedId #" style=" #= rowColor(ClockedIn, ClockedOut) # ">
+            <td>#: CompanyName #</td>
+            <td>#: SiteName #</td>
+            <td>#: FirstName #</td>
+            <td>#: LastName #</td>
+            <td>#: ClockedIn #</td>
+            <td>#: ClockedOut #</td>
+            <td>
+                #= nullToString(kendo.toString(InTime, "g")) #
+            </td>
+            <td>
+                #= nullToString(kendo.toString(OutTime, "g")) #
+            </td>
+
+            <td>
+                <a class="k-button k-button-icontext k-grid-Details" href="\\#"><span class=""></span>Details</a>
+            </td>
+        </tr>
+    </script>
+
+    <script type="text/x-kendo-template" id="sign-in-list-template">
+        <div class="map-list-item" data-activity-number="#= activityId #">
+            <div class="list-item-header">
+                <div style="float:left;">
+                    # if (!isTourTracker) { #
+                    Portal Sign In
+                    # } else { #
+                    Tour Tracker Sign In
+                    # } #
+                </div>
+                <div style="float:right;">
+                    #= activityId #
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            <div class="list-item-info">
+                Time: <b>#= kendo.toString(date, 'g') #</b><br />
+                Site: <b>#= siteName #</b><br />
+                Officer: #= fullName #
+                # if (hasLocationInfo) { #
+                <br />
+                Distance From Site: #= distanceText #<br />
+                Accurate Within: #= accuracyText #
+                # } #
+            </div>
+        </div>
+    </script>
+    <script type="text/x-kendo-template" id="clock-in-tooltip-template">
+        <div>
+            ID:  #= activityId #<br />
+            <span style="font-weight:bold;font-size:13px;">Clock In</span><br />
+            Time: #= kendo.toString(InDate, 'g') #<br />
+            Site: #= InSiteName #<br />
+            Officer: #= OfficerFullName #<br />
+            Distance From Site: #= distanceText #<br />
+            Accurate Within: #= accuracyText #
+        </div>
+    </script>
+    <script type="text/x-kendo-template" id="clock-in-list-template">
+        <div class="map-list-item" data-activity-number="#= activityId #">
+            <div class="list-item-header">
+                <div style="float:left;">
+                    Clock In
+                </div>
+                <div style="float:right;">
+                    #= activityId #
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            <div class="list-item-info">
+                Time: <b>#= kendo.toString(InDate, 'g') #</b><br />
+                Site: <b>#= InSiteName #</b><br />
+                Officer: #= OfficerFullName #<br />
+                Type:
+                # if (InClockTypeId == 1) { #
+                <img src="/images/IconShift.png" style="height:16px;margin-right:6px;" />
+                # } else if (InClockTypeId == 2) { #
+                <img src="/images/IconLunch.png" style="height:16px;margin-right:6px;" />
+                # } else if (InClockTypeId == 3) { #
+                <img src="/images/IconBreak.png" style="height:16px;margin-right:6px;" />
+                # } #
+                #= InClockTypeName #<br />
+                # if (InIsByPhone) { #
+                Clocked In By: <img src="/images/Phone_20.png" style="height:16px;margin-right:6px;" /> Phone<br />
+                From Number: #= InFromNumber #
+                # } else { #
+                Clocked In By: <img src="/images/Application_20.png" style="height:16px;margin-right:6px;" /> Application
+                # if (InHasLocationInfo) { #
+                <br />
+                Distance From Site: #= distanceText #<br />
+                Accurate Within: #= accuracyText #
+                # } #
+                # } #
+            </div>
+        </div>
+    </script>
+    <script type="text/x-kendo-template" id="clock-out-tooltip-template">
+        <div>
+            ID:  #= activityId #<br />
+            <span style="font-weight:bold;font-size:13px;">Clock Out</span><br />
+            Time: #= kendo.toString(OutDate, 'g') #<br />
+            Site: #= OutSiteName #<br />
+            Officer: #= OfficerFullName #<br />
+            Distance From Site: #= distanceText #<br />
+            Accurate Within: #= accuracyText #
+        </div>
+    </script>
+    <script type="text/x-kendo-template" id="clock-out-list-template">
+        <div class="map-list-item" data-activity-number="#= activityId #">
+            <div class="list-item-header">
+                <div style="float:left;">
+                    Clock Out
+                </div>
+                <div style="float:right;">
+                    #= activityId #
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            <div class="list-item-info">
+                In Time: #= kendo.toString(InDate, 'g') #<br />
+                Out Time: <b>#= kendo.toString(OutDate, 'g') #</b><br />
+                Site: <b>#= OutSiteName #</b><br />
+                Officer: #= OfficerFullName #<br />
+                Type:
+                # if (OutClockTypeId == 1) { #
+                <img src="/images/IconShift.png" style="height:16px;margin-right:6px;" />
+                # } else if (OutClockTypeId == 2) { #
+                <img src="/images/IconLunch.png" style="height:16px;margin-right:6px;" />
+                # } else if (OutClockTypeId == 3) { #
+                <img src="/images/IconBreak.png" style="height:16px;margin-right:6px;" />
+                # } #
+                #= OutClockTypeName #<br />
+                # if (InIsByPhone) { #
+                Clocked Out By: <img src="/images/Phone_20.png" style="height:16px;margin-right:6px;" /> Phone<br />
+                From Number: #= OutFromNumber #
+                # } else { #
+                Clocked Out By: <img src="/images/Application_20.png" style="height:16px;margin-right:6px;" /> Application
+                # if (OutHasLocationInfo) { #
+                <br />
+                Distance From Site: #= distanceText #<br />
+                Accurate Within: #= accuracyText #
+                # } #
+                # } #
+            </div>
+        </div>
+    </script>
+    <script type="text/x-kendo-template" id="scan-tooltip-template">
+        <div>
+            ID:  #= activityId #<br />
+            <span style="font-weight:bold;font-size:13px;">
+                Tour Stop Scan
+            </span><br />
+            Time: #= kendo.toString(ScanDate, 'g') #<br />
+            Site: #= SiteName #<br />
+            Officer: #= OfficerFullName #<br />
+            Stop: #= TourStopName #<br />
+            Type: #= TourStopType #<br />
+            Rating: #= RatingName #
+        </div>
+    </script>
+    <script type="text/x-kendo-template" id="scan-list-template">
+        <div class="map-list-item" data-activity-number="#= activityId #">
+            <div class="list-item-header">
+                <div style="float:left;">
+                    Tour Stop Scan
+                </div>
+                <div style="float:right;">
+                    #= activityId #
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            <div class="list-item-info">
+                Time: <b>#= kendo.toString(ScanDate, 'g') #</b><br />
+                Site: <b>#= SiteName #</b><br />
+                Officer: #= OfficerFullName #<br />
+                Stop: #= TourStopName #<br />
+                Type: #= TourStopType #<br />
+                Last Scan at Site: #= kendo.format("{0:n0}", LastSiteScanMinutes) # mins.<br />
+                Last Scan this Stop: #= kendo.format("{0:n0}", LastScanMinutes) # mins.<br />
+                Accurate Within: #= accuracyText #<br />
+                Distance From Site: #= distanceText #<br />
+                <div>
+                    <div style="float:left;">Rating:</div><div style="width:30px;height:15px;background-color:#= RatingColor #;float:left;margin-left:6px;"></div><div style="float:left;margin-left:6px;">#= RatingName #</div><div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/x-kendo-template" id="ir-list-template">
+        <div class="map-list-item" data-activity-number="#= activityId #">
+            <div class="list-item-header">
+                <div style="float:left;">
+                    Incident Report
+                </div>
+                <div style="float:right;">
+                    #= activityId #
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            <div class="list-item-info">
+                Time: <b>#= kendo.toString(CreatedDate, 'g') #</b><br />
+                Incident Date: <b>#= kendo.toString(IncidentDate, 'g') #</b><br />
+                Site: <b>#= SiteName #</b><br />
+                Officer: #= OfficerFullName #<br />
+                Type: #= IncidentTypeName #<br />
+                # if (IncidentOtherType) { #
+                Other Type: #= IncidentOtherType #
+                # } #
+            </div>
+        </div>
+    </script>
+
+    <script type="text/x-kendo-template" id="mr-list-template">
+        <div class="map-list-item" data-activity-number="#= activityId #">
+            <div class="list-item-header">
+                <div style="float:left;">
+                    Maintenance Request
+                </div>
+                <div style="float:right;">
+                    #= activityId #
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            <div class="list-item-info">
+                Time: <b>#= kendo.toString(CreatedDate, 'g') #</b><br />
+                Site: <b>#= SiteName #</b><br />
+                Officer: #= OfficerFullName #<br />
+                Type: #= MaintenanceTypeName #<br />
+                # if (TypeIfOther) { #
+                Other Type: #= TypeIfOther #
+                # } #
+            </div>
+        </div>
+    </script>
+
+    <script type="text/x-kendo-template" id="dar-list-template">
+        <div class="map-list-item" data-activity-number="#= activityId #">
+            <div class="list-item-header">
+                <div style="float:left;">
+                    Daily Activity
+                </div>
+                <div style="float:right;">
+                    #= activityId #
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            <div class="list-item-info">
+                Time: <b>#= kendo.toString(CreatedDate, 'g') #</b><br />
+                Site: <b>#= SiteName #</b><br />
+                Officer: #= OfficerFullName #
+            </div>
+        </div>
+    </script>
+
+    <script type="text/x-kendo-template" id="pol-list-template">
+        <div class="map-list-item" data-activity-number="#= activityId #">
+            <div class="list-item-header">
+                <div style="float:left;">
+                    Pass On Log
+                </div>
+                <div style="float:right;">
+                    #= activityId #
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            <div class="list-item-info">
+                Time: <b>#= kendo.toString(CreatedDate, 'g') #</b><br />
+                Site: <b>#= SiteName #</b><br />
+                Entered By: #= OfficerFullName #
+            </div>
+        </div>
+    </script>
+
+    <script type="text/x-kendo-template" id="pv-list-template">
+        <div class="map-list-item" data-activity-number="#= activityId #">
+            <div class="list-item-header">
+                <div style="float:left;">
+                    Parking Violation
+                </div>
+                <div style="float:right;">
+                    #= activityId #
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            <div class="list-item-info">
+                Time: <b>#= kendo.toString(CreatedDate, 'g') #</b><br />
+                Site: <b>#= SiteName #</b><br />
+                Officer: #= OfficerFullName #<br />
+                Type: #= ViolationTypeName #<br />
+                # if (TypeIfOther) { #
+                Other Type: #= TypeIfOther #<br />
+                # } #
+            </div>
+        </div>
+    </script>
+
+    <script type="text/x-kendo-template" id="templog-list-template">
+        <div class="map-list-item" data-activity-number="#= activityId #">
+            <div class="list-item-header">
+                <div style="float:left;">
+                    Temperature Log
+                </div>
+                <div style="float:right;">
+                    #= activityId #
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            <div class="list-item-info">
+                Time: <b>#= kendo.toString(CreatedDate, 'g') #</b><br />
+                Site: <b>#= SiteName #</b><br />
+                Officer: #= OfficerFullName #<br />
+                Equipment Type: #= EquipmentTypeName #<br />
+                # if (TypeIfOther) { #
+                Other Type: #= TypeIfOther #<br />
+                # } #
+                Temperature: #= Temperature #<br />
+                # if (Humidity) { #
+                Humidity: #= Humidity #<br />
+                # } #
+                # if (FuelLevel) { #
+                FuelLevel: #= FuelLevel #
+                # } #
+            </div>
+        </div>
+    </script>
+
+    <script type="text/x-kendo-template" id="trucklog-list-template">
+        <div class="map-list-item" data-activity-number="#= activityId #">
+            <div class="list-item-header">
+                <div style="float:left;">
+                    Truck Log
+                </div>
+                <div style="float:right;">
+                    #= activityId #
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            <div class="list-item-info">
+                Time: <b>#= kendo.toString(CreatedDate, 'g') #</b><br />
+                Site: <b>#= SiteName #</b><br />
+                Officer: #= OfficerFullName #<br />
+                Company: #= Company #<br />
+                Driver: #= InDriver #<br />
+                Tractor \\#: #= TractorNumber #<br />
+                # if (InTrailerNumber) { #
+                Trailer \\#: #= InTrailerNumber #<br />
+                # } #
+                # if (InSealNumber) { #
+                InSealNumber \\#: #= InSealNumber #
+                # } #
+            </div>
+        </div>
+    </script>
+
+    <script type="text/x-kendo-template" id="vl-list-template">
+        <div class="map-list-item" data-activity-number="#= activityId #">
+            <div class="list-item-header">
+                <div style="float:left;">
+                    Visitor Log
+                </div>
+                <div style="float:right;">
+                    #= activityId #
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            <div class="list-item-info">
+                Time: <b>#= kendo.toString(CreatedDate, 'g') #</b><br />
+                Site: <b>#= SiteName #</b><br />
+                Officer: #= OfficerFullName #<br />
+                Company: #= Company #<br />
+                VisitorName: #= VisitorName #<br />
+                ID Type: #= VisitorIdTypeName #<br />
+                # if (VisitorIdOther) { #
+                Other Type: #= VisitorIdOther #<br />
+                # } #
+            </div>
+        </div>
+    </script>
+
+    <script type="text/x-kendo-template" id="fi-tooltip-template">
+        <div>
+            ID:  #= activityId #<br />
+            <span style="font-weight:bold;font-size:13px;">Field Inspection</span><br />
+            Time: #= kendo.toString(created_date_utc, 'g') #<br />
+            Site: #= sitename #<br />
+            Officer: #= OfficerFullName #<br />
+            Inspected Officer: #= InspectedOfficerName #<br />
+            Distance From Site: #= distanceText #<br />
+            Accurate Within: #= accuracyText #
+        </div>
+    </script>
+
+    <script type="text/x-kendo-template" id="fi-list-template">
+        <div class="map-list-item" data-activity-number="#= activityId #">
+            <div class="list-item-header">
+                <div style="float:left;">
+                    Field Inspection
+                </div>
+                <div style="float:right;">
+                    #= activityId #
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+            <div class="list-item-info">
+                Time: <b>#= kendo.toString(created_date_utc, 'g') #</b><br />
+                Site: <b>#= sitename #</b><br />
+                Officer: #= OfficerFullName #<br />
+                Inspected Officer: #= InspectedOfficerName #
+                # if (created_has_loc_info) { #
+                <br />
+                Distance From Site: #= distanceText #<br />
+                Accurate Within: #= accuracyText #
+                # } #
+            </div>
+        </div>
+    </script>
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/jquery.throttledresize.min.js"></script>
+    @Html.VersionedJsUrl("/Scripts/kendoui/v2016.1.322/kendo.all.min.js")
+    @Html.GetCultureScript()
+    <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    @Html.VersionedJsUrl("/Scripts/app/Dashboard/Index.js")
+    <script src="~/Scripts/angularapp/js/app/util.js"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=@(ORWeb.Classes.Shared.App.GoogleAPIKey)&sensor=false&libraries=geometry&callback=loadMarkerWithLabel"></script>
+</body>
+</html>

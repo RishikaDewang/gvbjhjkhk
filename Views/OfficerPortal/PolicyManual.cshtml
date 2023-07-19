@@ -1,0 +1,84 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Policy Manual";
+}
+
+<div style="padding:10px 0 26px 10px;">
+    <div class="logo-heading clearfix">
+        <div class="logo-top">
+            <img src="~/Images/logo.png" height="40">
+        </div>
+        <div style="float:left;">
+            <h1>Policy Manual</h1>
+        </div>
+    </div>
+    <div class="report-separator">
+        Officer and Site
+    </div>
+    <div class="form-row row-tight clearfix">
+        <div class="form-label"><label>Officer:</label></div>
+        <div class="form-field"><span>@Model.FirstName @Model.LastName</span></div>
+    </div>
+    <div class="form-row row-tight clearfix">
+        <div class="form-label"><label>Client:</label></div>
+        <div class="form-field"><span>@Model.ClientName</span></div>
+    </div>
+    <div class="form-row row-tight clearfix">
+        <div class="form-label"><label>Site:</label></div>
+        <div class="form-field"><span>@Model.SiteName</span></div>
+    </div>
+
+    <div id="policy-manual-list" class="bootstrap-scope"></div>
+</div>
+
+@section Scripts {
+    <script id="manual-list-template" type="text/x-kendo-template">
+        # for (var i = 0; i < data.length; i++) { #
+            <div class="report-separator">
+				#= data[i].CategoryName #
+			</div>
+            <div style="width: 96%; max-width:800px;" class="form-row">
+            # for (var j = 0; j < data[i].PolicyManualSubCategories.length; j++) { #
+                # for (var k = 0; k < data[i].PolicyManualSubCategories[j].PolicyManualEntries.length; k++) { #
+                    # var entry = data[i].PolicyManualSubCategories[j].PolicyManualEntries[k]; #
+                    # if (!entry.IsDeleted) { #
+                    <a class="btn btn-default btn-lg btn-block details-link" data-entry-id="#= entry.PolicyManualEntryId #">#= entry.Title #</a> 
+                    # } #
+                # } #
+            # } #
+            </div>
+        # } #
+    </script>
+    <script id="manual-details-template" type="text/x-kendo-template">
+        <div class="container bootstrap-scope">
+            <div class="form-row clearfix">
+                <div class="form-label">Date:</div>
+                <div class="form-field">#= kendo.toString(moment.utc(data.CreatedDate, "YYYY-MM-DDTHH:mm:ss").local().toDate(), "g") #</div>
+            </div>
+            <div class="form-row clearfix">
+                <div class="form-label">Category:</div>
+                <div class="form-field">#= data.CategoryName #</div>
+            </div>
+            <div class="form-row clearfix">
+                <div class="form-label">Subcategory:</div>
+                <div class="form-field">#= data.SubCategoryName #</div>
+            </div>
+            <div class="form-row clearfix">
+                <div class="form-label">Title:</div>
+                <div class="form-field">#= data.Title #</div>
+            </div>
+            <div class="form-row clearfix">
+                <div class="form-label">Details:</div>
+                <div class="form-field">#= replaceBreaks(data.Details) #</div>
+            </div>
+            # if (data.FileName) { # 
+            <div class="form-row clearfix">
+                <div class="form-label">File Attachment:</div>
+                <div class="form-field"><a href="/Upload/#= data.FileName #" download="#= data.OriginalFileName #">#= data.OriginalFileName #</a></div>
+            </div>
+            # } #
+        </div>
+    </script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/PolicyManual.js")
+}

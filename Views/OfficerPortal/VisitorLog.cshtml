@@ -1,0 +1,119 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Visitor Log";
+}
+
+<form id="report-form">
+    <div style="padding:10px 0 26px 10px;">
+        <div class="logo-heading clearfix">
+            <div class="logo-top">
+                <img src="~/Images/logo.png" height="40">
+            </div>
+            <div style="float:left;">
+                <h1>Visitor Log</h1>
+            </div>
+        </div>
+        <div class="report-separator">
+            Officer and Site
+        </div>
+        <div class="form-row row-tight clearfix">
+            <div class="form-label"><label>Officer:</label></div>
+            <div class="form-field"><span>@Model.FirstName @Model.LastName</span></div>
+        </div>
+        <div class="form-row row-tight clearfix">
+            <div class="form-label"><label>Client:</label></div>
+            <div class="form-field"><span>@Model.ClientName</span></div>
+        </div>
+        <div class="form-row row-tight clearfix">
+            <div class="form-label"><label>Site:</label></div>
+            <div class="form-field"><span>@Model.SiteName</span></div>
+        </div>
+        <div class="report-separator">
+            Visitor Information
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="visitor-name">Visitor Name:</label><span class="required-indicator">*</span></div>
+            <div class="form-field"><input id="visitor-name" name="visitor-name" type="text" maxlength="50" class="k-textbox standard-width" data-bind="value: report.visitorName" required data-required-msg="Please enter the Visitor Name." /></div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="destination">Destination:</label><span class="required-indicator">*</span></div>
+            <div class="form-field"><input id="destination" name="destination" type="text" maxlength="250" class="k-textbox standard-width" data-bind="value: report.destination" required data-required-msg="Please enter the Destination." /></div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="visitor-id-type">Type of ID:</label><span class="required-indicator">*</span></div>
+            <div class="form-field">
+                <select id="visitor-id-type" name="visitor-id-type" class="standard-width" data-role="dropdownlist" data-option-label="-- Select Type --" data-value-field="VisitorIdTypeId" data-text-field="VisitorIdTypeName" data-bind="source: visitorIdTypeDataSource, value: report.visitorIdTypeId" data-value-primitive="true" required data-required-msg="Please select Type of ID."></select>
+            </div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="type-other">If Other, What Type:</label></div>
+            <div class="form-field"><input id="type-other" type="text" maxlength="50" class="k-textbox standard-width" data-bind="value: report.visitorIdOther" /></div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="badge-mark">Badge #:</label></div>
+            <div class="form-field"><input id="badge-mark" name="badge-mark" maxlength="50" type="text" class="k-textbox standard-width" data-bind="value: report.badgeNumber" /></div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="lp_number">LP #:</label></div>
+            <div class="form-field"><input id="lp_number" name="lp_number" maxlength="50" type="text" class="k-textbox standard-width" data-bind="value: report.LPNumber" /></div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="temperature">Temperature:</label></div>
+            <div class="form-field">
+                <input id="temperature" name="temperature" type="number" maxlength="3" style="width:100px;" min="-10000" max="10000" data-bind="value: report.temperature" />
+                
+            </div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="face-covering">Face Covering:</label></div>
+            <div class="form-field">
+                <select id="face-covering" name="face-covering"   class="standard-width" data-role="dropdownlist" data-option-label="-- N/A --" data-bind="value: report.faceCovering" data-value-primitive="true" >
+
+                    <option value="1">Yes</option>
+                    <option value="2">No</option>
+                </select>
+                
+            </div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="company">Company:</label></div>
+            <div class="form-field"><input id="company" type="text" maxlength="50" class="k-textbox standard-width" data-bind="value: report.company" /></div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="entry-notes">Entry Notes:</label></div>
+            <div class="form-field"><textarea id="entry-notes" maxlength="1000" class="k-textbox" data-bind="value: report.inNotes"></textarea></div>
+        </div>
+        <div class="report-separator">
+            Photos, Videos, Audio
+        </div>
+        <div style="width:90%; max-width:780px;">
+            <div style="margin-bottom:6px;"><button id="btn-add-photo" class="k-button" type="button" style="width:140px;font-weight:bold; font-family: Verdana;">+ Add Photo, Video, or Audio</button></div>
+            <div id="upload-progress-wrapper" style="width:100%;"></div>
+            <div style="height: 0;width:0; overflow:hidden;"><input name="fileUpload" id="fileUpload" type="file" /></div>
+            <div id="photo-list" style="margin-top:8px;"></div>
+            <div id="media-list" style="margin-top:8px;"></div>
+            <div id="attachment-list" style="margin-top:8px;"></div>
+        </div>
+        <div class="row" style="margin-top:12px;">
+            <div class="form-label">&nbsp;</div>
+            <div class="form-field">
+                <button class="k-button" data-bind="click: submit" style="width:140px; font-weight:bold; font-family: Verdana;">Submit</button>
+                <button class="k-button" data-bind="click: clearForm" style="width:140px; font-weight:bold; font-family: Verdana;">Clear Form</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Head {
+    <link href="~/Content/toastmessage/css/jquery.toastmessage.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <script type="text/javascript" src="/Scripts/jquery.toastmessage.js"></script>
+    <script type="text/javascript">
+        var clientSiteId = @Model.ClientSiteId;
+        var userId = @Model.UserId;
+    </script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/VisitorLog.js")
+}

@@ -1,0 +1,93 @@
+﻿@{
+    ViewBag.Title = "Errors";
+}
+
+<div id="divClearButtons" class="bootstrap-scope" style="margin: 0 0 12px 0">
+	<div style="float:left;">
+		<button id="btnClearElmahErrors" class="btn btn-danger">Clear All Error Entries</button>
+	</div>
+	<div style="float:left; margin-left:10px">
+		<button id="btnClearElmahErrorsPortion" class="btn btn-danger">Clear All Error Entries except Last 200</button>
+	</div>
+	<div style="clear:both"></div>
+</div>
+<div id="elmahContent"></div>
+
+@section Head {
+	<link rel="Stylesheet" href="@Href("~/Content/jqueryui/themes/base/jquery.ui.all.css")" />
+}
+
+@section Scripts {
+	<script type="text/javascript" src="@Href("~/Scripts/jquery-ui-1.9.2.min.js")"></script>
+	<script type="text/javascript" src="@Href("~/Scripts/jquery.blockUI.min.js")"></script>
+	@Html.VersionedJsUrl("/Scripts/app/internal-util.js")
+	<script type="text/javascript" src="@Href("~/Scripts/sammy-latest.min.js")"></script>
+	<script type="text/javascript">
+		var gotoErrorRoot = function () {
+			if (location.hash == '#/elmah.axd') {
+				location.reload();
+			}
+			else {
+				location.hash = encodeURIComponent('/elmah.axd');
+			}
+		}
+
+		$(function () {
+			if (typeof String.prototype.startsWith != 'function') {
+			  String.prototype.startsWith = function (str){
+				return this.slice(0, str.length) == str;
+			  };
+			}
+
+			$('#btnClearElmahErrors').click(function () {
+				var id = null;
+				PerformOperation("Delete Confirmation", "Are you sure that you want to Clear All Error Entries",
+					'Log', 'ClearElmahErrors', 'Continue', 'Cancel', id, gotoErrorRoot);
+			});
+
+			$('#btnClearElmahErrorsPortion').click(function () {
+				var id = 200;
+				PerformOperation("Delete Confirmation", "Are you sure that you want to Clear All Error Entries except Last 200",
+					'Log', 'ClearElmahErrorsPortion', 'Continue', 'Cancel', id, gotoErrorRoot);
+			});
+
+			$.sammy(function () {
+				this.get('#:theUrl', function () {
+					loadUrl(this.params.theUrl);
+				});
+			}).run('#' + encodeURIComponent('/elmah.axd'));
+		});
+
+		function loadUrl(url) {
+			var decodedUrl = decodeURIComponent(url);
+			$('#elmahContent').load(decodedUrl, function () {
+				console.log('new url: ' + decodedUrl);
+				if ((decodedUrl == '/elmah.axd') || (decodedUrl.startsWith('/elmah.axd?page'))) {
+					$('#divClearButtons').show();
+				}
+				else {
+					$('#divClearButtons').hide();
+				}
+
+				$('#elmahContent a').each(function (index) {
+					var href = $(this).attr('href');
+					if (href.startsWith('xml?id') || href.startsWith('json?id')) {
+						$(this).attr('href', '/elmah.axd/' + href).attr('target', '_blank');
+					}
+					else if (href.startsWith('http')) {
+						$(this).attr('target', '_blank');
+					}
+					else if ((href == '/elmah.axd/download') || (href == '/elmah.axd/rss') || (href == '/elmah.axd/digestrss')) {
+						// do nothing
+					}
+					else {
+						$(this).click(function (event) {
+							event.preventDefault();
+							location.hash = encodeURIComponent($(this).attr('href'));
+						});
+					}
+				});
+			});
+		}
+	</script>
+}

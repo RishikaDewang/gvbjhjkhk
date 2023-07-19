@@ -1,0 +1,104 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Read POL";
+}
+
+<div id="main-view" data-role="view" data-title="Pass On Log" data-use-native-scrolling="true">
+    <header data-role="header">
+        <div data-role="navbar">
+            <a data-align="right" data-icon="mymenuicon" data-role="button" href="#report-menu">Report Menu</a>
+        </div>
+    </header>
+    <div id="logo" style="text-align:center; margin-top:20px;">
+        <img src="~/Images/logo.png" width="310" height="65">
+    </div>
+    <h1>Pass On Log</h1>
+
+    <div id="log-list"></div>
+</div>
+<div id="details-view" data-role="view" data-title="POL Entry Details" data-use-native-scrolling="true">
+    <header data-role="header">
+        <div data-role="navbar">
+            <a class="nav-button" data-align="right" data-role="backbutton">Back</a>
+            <span data-role="view-title"></span>
+        </div>
+    </header>
+
+    <h2>POL Entry Details</h2>
+
+    <div id="log-detail"></div>
+</div>
+
+<div data-role="modalview" id="msg-view" style="width:auto; height:auto; display:none;">
+    <div data-role="header">
+        <div data-role="navbar">
+            <span id="msg-title"></span>
+        </div>
+    </div>
+    <div style="text-align: center;padding-bottom: 10px;">
+        <p id="msg-text"></p>
+        <a id="msg-ok-button" data-role="button">OK</a>
+    </div>
+</div>
+
+<div data-role="modalview" id="wait-indicator" style="width:auto; height:auto; display:none;">
+    <div data-role="header">
+        <div data-role="navbar">
+            <span id="wait-title">Please Wait...</span>
+        </div>
+    </div>
+    <div style="text-align:center;width:170px; height:70px;">
+        <div class="k-loading-image"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <script id="list-template" type="text/x-kendo-template">
+        <ul id="log-list-view" data-role="listview" data-style="inset">
+        # for (var i = 0; i < data.length; i++) { #
+            <li>
+                <a class="details-link" data-log-id="#= data[i].PassOnLogId #">
+                Date: #= kendo.toString(moment.utc(data[i].CreatedDate, "YYYY-MM-DDTHH:mm:ss").local().toDate(), "g") #<br />
+                Post/Shift: #= data[i].PostShift #<br />
+                Note: #= replaceBreaks(data[i].Note) #
+                # if (!data[i].IsRead) { #
+                    <br /><b>Unread</b>
+                # } #
+                </a>
+            </li>
+        # } #
+        </ul>
+    </script>
+    <script id="details-template" type="text/x-kendo-template">
+        <ul id="manual-list-view" data-role="listview" data-style="inset">
+            <li>
+                <b>Date:</b><br />
+                #= kendo.toString(moment.utc(data.CreatedDate, "YYYY-MM-DDTHH:mm:ss").local().toDate(), "g") #
+            </li>
+            <li>
+                <b>Post/Shift:</b><br />
+                #= data.PostShift #
+            </li>
+            <li>
+                <b>Entered By:</b><br />
+                #= nullToString(data.LastName + ', ' + data.FirstName) #
+            </li>
+            <li>
+                <b>Note:</b><br />
+                #= replaceBreaks(data.Note) #
+            </li>
+            # if (!data.IsRead) { #
+            <li id="mark-as-read">
+                <ul class="submit-buttons">
+                    <li><a id="btnMarkAsRead" data-role="button" data-log-id="#= data.PassOnLogId #">Mark as Read</a></li>
+                </ul>
+            </li>
+            # } #
+        </ul>
+    </script>
+    <script type="text/javascript">
+        var clientSiteId = @Model.ClientSiteId;
+    </script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/PassOnLogRead.Mobile.js")
+}

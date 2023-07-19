@@ -1,0 +1,96 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Visitor Log";
+}
+
+<div id="forms" data-role="view" data-title="Visitor Log" data-use-native-scrolling="true">
+    <header data-role="header">
+        <div data-role="navbar">
+            <a data-align="right" data-icon="mymenuicon" data-role="button" href="#report-menu">Report Menu</a>
+        </div>
+    </header>
+    <div id="logo" style="text-align:center; margin-top:20px;">
+        <img src="~/Images/logo.png" width="310" height="65">
+    </div>
+    <h2>Visitor Log</h2>
+
+    <ul data-role="listview" data-style="inset" data-type="group">
+        <li>
+            <ul>
+                <li>Officer: <span class="list-value">@Model.FirstName @Model.LastName</span></li>
+                <li>Client: <span class="list-value">@Model.ClientName</span></li>
+                <li>Site: <span class="list-value">@Model.SiteName</span></li>
+            </ul>
+        </li>
+    </ul>
+
+    <form>
+        <ul data-role="listview" data-style="inset">
+            <li class="report-separator">
+                Visitor Information
+            </li>
+            <li>
+                <label for="visitor-name">Visitor Name<span class="required-indicator">*</span>
+                <input id="visitor-name" name="visitor-name" type="text" maxlength="50" class="k-input k-textbox" data-bind="value: report.visitorName" required data-required-msg="Please enter the Visitor Name." />
+                </label>
+            </li>
+            <li>
+                <label for="destination">Destination<span class="required-indicator">*</span>
+                <input id="destination" name="destination" type="text" maxlength="250" class="k-input k-textbox" data-bind="value: report.destination" required data-required-msg="Please enter the Destination." />
+                </label>
+            </li>
+            <li>
+                <label for="visitor-id-type">Type of ID<span class="required-indicator">*</span>
+                    <select id="visitor-id-type" name="visitor-id-type" data-value-field="VisitorIdTypeId" data-text-field="VisitorIdTypeName" data-bind="source: visitorIdTypes, value: report.visitorIdTypeId" data-value-primitive="true" required data-required-msg="Please select Type of ID."></select>
+                <span class="k-invalid-msg" data-for="visitor-id-type"></span>
+                </label>
+            </li>
+            <li>
+                <label for="type-other">If Other, What Type
+                <input id="type-other" type="text" maxlength="50" class="k-input k-textbox" data-bind="value: report.visitorIdOther" />
+                </label>
+            </li>
+            <li>
+                <label for="company">Company
+                <input id="company" type="text" maxlength="50" class="k-input k-textbox" data-bind="value: report.company" />
+                </label>
+            </li>
+            <li>
+                <label for="entry-notes">Entry Notes<span class="required-indicator">*</span>
+                <textarea id="entry-notes" maxlength="1000" class="k-input k-textbox" data-bind="value: report.inNotes"></textarea>
+                </label>
+            </li>
+            <li class="report-separator">
+                Photos, Videos, Audio
+            </li>
+            <li>
+                <div style="margin-bottom:6px;"><button id="btn-add-photo" class="k-button" type="button" style="width:140px;font-weight:bold; font-family: Verdana;">+ Add Photo, Video, or Audio</button></div>
+                <div id="upload-progress-wrapper" style="width:100%;"></div>
+                <div style="height: 0;width:0; overflow:hidden;"><input name="fileUpload" id="fileUpload" type="file" style="width:0;height:0;" /></div>
+                <div id="photo-list" style="margin-top:8px;"></div>
+                <div id="media-list" style="margin-top:8px;"></div>
+                <div id="attachment-list" style="margin-top:8px;"></div>
+            </li>
+            <li>
+                <ul class="submit-buttons">
+                    <li><a data-role="button" data-bind="click: submit">Submit</a></li>
+                </ul>
+            </li>
+        </ul>
+    </form>
+    <br /><br />
+</div>
+
+@section Head {
+    <link href="~/Content/toastmessage/css/jquery.toastmessage.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <script type="text/javascript" src="/Scripts/jquery.toastmessage.js"></script>
+    <script type="text/javascript">
+        var clientSiteId = @Model.ClientSiteId;
+        var userId = @Model.UserId;
+    </script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/VisitorLog.Mobile.js")
+}

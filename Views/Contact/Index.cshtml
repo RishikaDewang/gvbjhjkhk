@@ -1,0 +1,89 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutDotCom.cshtml";
+    ViewBag.Title = "Contact Us | OfficerReports.com";
+    ViewBag.MetaDescription = "If you have questions about our Web Based Security Officer Reporting Software, please feel free to call us at 312-489-8003 or use the contact form below to contact us.";
+    ViewBag.MetaKeywords = "Contact Us, Demo, Pricing, Billing";
+}
+
+<div>
+    <div>
+        <h1>Contact Us</h1>
+        <div style="margin:10px 0 0 20px;">
+            <h3>Phone:</h3>
+            (888) 511-9811<br /><br />
+        </div>
+        <hr style="background-color: #cccccc; border: 0 none; height:1px;">
+    </div>
+    <div style="margin-top:18px; margin-bottom:20px;">
+        <form>
+            <p>
+                <label for="subject">Subject:</label><span class="required-indicator">*</span><br />
+                <select id="subject" name="subject" style="width:250px;" data-role="dropdownlist" data-option-label="-Choose-" data-value-field="ContactEntrySubjectId" data-text-field="Subject" data-bind="source: contactEntrySubjects, value: selectedSubject" required data-required-msg="Please choose the Subject"></select>
+                <span class="k-invalid-msg" data-for="subject"></span>
+            </p>
+            <p>
+                <label for="first-name">First Name</label><br />
+                <input id="first-name" style="width:180px;" type="text" class="k-textbox" data-bind="value: contactEntry.firstName" />
+            </p>
+            <p>
+                <label for="last-name">Last Name</label><br />
+                <input id="last-name" style="width:180px;" type="text" class="k-textbox" data-bind="value: contactEntry.lastName" />
+            </p>
+            <p>
+                <label for="company">Company</label><span class="required-indicator">*</span><br />
+                <input id="company" name="company" style="width:180px;" type="text" class="k-textbox" data-bind="value: contactEntry.company" required data-required-msg="Please enter your Company" />
+            </p>
+            <p>
+                <label for="telephone">Telephone</label><br />
+                <input id="telephone" style="width:180px;" type="text" class="k-textbox" data-bind="value: contactEntry.phone" />
+            </p>
+            <p>
+                <label for="email">Email Address</label><span class="required-indicator">*</span><br />
+                <input id="email" name="email" style="width:180px;" type="email" class="k-textbox" data-bind="value: contactEntry.emailAddress" required data-required-msg="Please enter your Email Address" data-email-msg="Please enter a valid Email Address." />
+            </p>
+            <p>
+                <label for="message">Message</label><span class="required-indicator">*</span><br />
+                <textarea id="message" name="message" style="width:260px; height:150px;" maxlength="1000" class="k-textbox" data-bind="value: contactEntry.message" required data-required-msg="Please enter a Message"></textarea>
+            </p>
+            <p>
+                <button class="k-button" data-bind="click: submit" style="font-family: Verdana;">Submit</button>
+            </p>
+        </form>
+    </div>
+</div>
+
+@section Head {
+    <style type="text/css">
+        form p {
+            padding-bottom: 10px;
+        }
+
+        form label {
+            font-size: 12px;
+            font-family: Verdana;
+        }
+
+        span.k-tooltip {
+            margin-left: 6px;
+            vertical-align: top;
+        }
+        /*.required-indicator {
+            font-family: Verdana;
+            display:inline-block;
+            padding-left: 4px;
+            color: Red;
+            font-size: 18px;
+        }*/
+    </style>
+}
+
+@section Scripts {
+    <script id="message-received" type="text/x-kendo-template">
+        <p>Your message has been received.</p>
+        <hr style="background-color: #cccccc; border: 0 none; height:1px; margin-top:16px; margin-bottom: 16px;">
+        <div style="text-align:center;">
+            <button class="ok-button k-button">OK</button>
+        </div>
+    </script>
+    @Html.VersionedJsUrl("/Scripts/app/Contact/Index.js")
+}

@@ -1,0 +1,58 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Officer Reports</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" /> 
+    <meta name="apple-mobile-web-app-capable" content="no"/>
+    <meta name="apple-mobile-web-app-title" content="Portal">
+    <meta name="robots" content="noindex, nofollow">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+    <link rel="shortcut icon" type="image/x-icon" href="~/Images/favicon.ico">
+    <link rel="apple-touch-icon" href="~/Images/icon.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="~/Images/icon-72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="~/Images/icon_at_2x.png" />
+    <link href="~/Content/bootstrap/css/bootstrap-scope.css" rel="stylesheet" />
+    @Html.GetNonSPAThemeFromUrl()
+    <style>
+        body {
+            font-family: Arial;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content bootstrap-scope" style="width:100%;">
+        <div style="width:100%;margin:18px 0 28px 0;">
+            <div id="theme-logo"></div>
+        </div>
+        <div id="login-controls" style="width:100%;padding:0 20px 0 20px;display:none;">
+            <a href='@Url.Action("OfficerLogin", "Account")' class="btn btn-primary btn-lg btn-block" style="padding: 16px 0 16px 0; font-size:20px;">Enter Officer Portal</a>
+            <a href='@Url.Action("Login", "Account")' class="btn btn-primary btn-lg btn-block" style="padding: 16px 0 16px 0; font-size:20px;">Enter Main Site</a>
+        </div>
+        <div id="cookies-disabled" style="text-align:center;display:none;">
+            <b>Cookies Disabled</b><br /><br />
+            OfficerReports requires that browser cookies are enabled.  Please enable cookies on your browser or device and refresh the page.
+        </div>
+    </div>
+    <script src="~/Scripts/jquery.min.js"></script>
+    <script src="~/Scripts/jquery.cookie.min.js"></script>
+    <script src="~/Scripts/app/cookie-check.min.js"></script>
+    <script type="text/javascript">
+        if ((window.applicationCache) && (navigator.userAgent.match(/(iPad|iPhone|iPod)/i))) {
+            document.title = document.getElementsByName('apple-mobile-web-app-title')[0].content;
+        }
+        $(function () {
+            if (checkCookiesEnabled()) {
+                $('#login-controls').show();
+            }
+            else {
+                $('#cookies-disabled').show();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,386 @@
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Officer Portal</title>
+<meta name="viewport" content="width=device-width, minimal-ui, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <link rel="shortcut icon" type="image/x-icon" href="~/Images/favicon.ico" />
+    <link href="~/Content/kendoui/v2016.1.322/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/Content/kendoui/v2016.1.322/kendo.default.min.css" rel="stylesheet" />
+    <link href="~/Content/kendoui/v2016.1.322/kendo.mobile.all.min.css" rel="stylesheet" />
+
+    <!--clean up css -->
+    <link href="~/Content/bootstrap/css/bootstrap-scope.css" rel="stylesheet" />
+    <link href="~/Content/styleMain.css" rel="stylesheet" />
+
+    <link href="~/Content/style-mobileapp.css" rel="stylesheet" />
+    <link href="~/Content/mobile-page.css" rel="stylesheet" />
+
+@if (Request.IsSecureConnection)
+{
+    <link href="https://fonts.googleapis.com/css?family=Economica:400,700,400italic,700italic&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css" />
+}
+else
+{
+    <link href="http://fonts.googleapis.com/css?family=Economica:400,700,400italic,700italic&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css" />
+}
+    <style>
+        body {
+            font: normal 13px Arial, Helvetica, sans-serif;
+        }
+
+        .plet {
+            width: 100%;
+        }
+        table.recent-clock-records {
+            border-collapse: collapse;
+        }
+        table.recent-clock-records, table.recent-clock-records th, table.recent-clock-records td {
+            border: 1px solid black;
+        }
+        table.recent-clock-records th, table.recent-clock-records td {
+            padding: 5px;
+        }
+        table.recent-clock-records th {
+            background-color: lightgray;
+        }
+
+        .km-root .km-pane .km-view .km-listview input:not([type='file']):not([type='radio']):not([type='checkbox']),
+        .km-root .km-pane .km-view .km-listview select:not([multiple]),
+        .km-root .km-pane .km-view .km-listview .k-dropdown,
+        .km-root .km-pane .km-view .km-listview textarea, 
+        .km-root .km-pane .km-view .km-listview .k-dropdown-wrap, 
+        .k-window .km-listview input:not([type='file']):not([type='radio']):not([type='checkbox']), 
+        .k-window .km-listview select:not([multiple]),
+        .k-window .km-listview .k-dropdown, 
+        .k-window .km-listview textarea, 
+        .k-window .km-listview .k-dropdown-wrap {
+            position: relative;
+            width: 98%;
+            right: 0;
+            margin-top: 0;
+            top: 0;
+            border: 1px solid #c5c5c5;
+        }
+        .km-flat .km-list textarea {
+            /* padding: .4em; */
+            padding: .3em .2em;
+        }
+        .clock-img-btn {
+            width: 100px;
+        }
+    </style>
+<!--[if gte IE 9]>
+  <style type="text/css">
+    .gradient {
+       filter: none;
+    }
+  </style>
+<![endif]-->
+</head>
+<body>
+    <div id="main-view" data-role="view" data-title="Officer Portal" data-use-native-scrolling="true">
+        <div id="main-div">
+            <div id="logo"><img src="~/Images/logo.png" width="310" height="65"></div>
+            <a href="#" id="clock-link" class="clock-ui" style="display:none;">
+                <div class="plet">
+                    <h3>Clock In / Out</h3>
+                    <img src="~/Images/icon_clock.png" width="50" height="50">
+                    <div class="clear"></div>
+                </div>
+            </a>
+            <div id="custom-report-links">
+            </div>
+            <a href="~/OfficerPortal/DailyActivityReport" target="_blank" class="ui-2" style="display:none;">
+                <div class="plet">
+                    <h3>Daily Activity Report</h3>
+                    <img src="~/Images/a.png" width="50" height="50">
+                    <div class="clear"></div>
+                </div>
+            </a>
+            <a href="~/OfficerPortal/DynamicReport/supervisor_report" target="_blank" class="ui-15" style="display:none;">
+                <div class="plet">
+                    <h3>Field Inspection</h3>
+                    <img src="~/Images/a.png" width="50" height="50">
+                    <div class="clear"></div>
+                </div>
+            </a>
+            <a href="~/OfficerPortal/IncidentReport" target="_blank" class="ui-3" style="display:none;">
+                <div class="plet">
+                    <h3>Incident Report</h3>
+                    <img src="~/Images/b.png" width="50" height="50">
+                    <div class="clear"></div>
+                </div>
+            </a>
+            <a href="~/OfficerPortal/CleryReport" target="_blank" class="ui-14" style="display:none;">
+                <div class="plet">
+                    <h3>Clery Report</h3>
+                    <img src="~/Images/b.png" width="50" height="50">
+                    <div class="clear"></div>
+                </div>
+            </a>
+            <a href="~/OfficerPortal/IncidentChecklist" target="_blank" class="ui-4" style="display:none;">
+                <div class="plet">
+                    <h3>Incident Checklist</h3>
+                    <img src="~/Images/d.png" width="50" height="50">
+                    <div class="clear"></div>
+                </div>
+            </a>
+            <a href="~/OfficerPortal/MaintenanceRequest" target="_blank" class="ui-5" style="display:none;">
+                <div class="plet">
+                    <h3>Maintenance Report</h3>
+                    <img src="~/Images/c.png" width="50" height="50">
+                    <div class="clear"></div>
+                </div>
+            </a>
+            <a href="~/OfficerPortal/ParkingViolation" target="_blank" class="ui-6" style="display:none;">
+                <div class="plet">
+                    <h3>Parking Violation</h3>
+                    <img src="~/Images/j.png" width="50" height="50">
+                    <div class="clear"></div>
+                </div>
+            </a>
+            <a href="~/OfficerPortal/PassOnLog" target="_blank" class="ui-7" style="display:none;">
+                <div class="plet">
+                    <h3>Pass on Log - Write</h3>
+                    <img src="~/Images/e.png" width="50" height="50">
+                    <div class="clear"></div>
+                </div>
+            </a>
+            <a href="~/OfficerPortal/PassOnLogRead" target="_blank" class="ui-7" style="display:none;">
+                <div class="plet">
+                    <h3>Pass on Log - Read</h3>
+                    <img src="~/Images/f.png" width="50" height="50">
+                    <div class="clear"></div>
+                </div>
+            </a>
+            <a href="~/OfficerPortal/PolicyManual" target="_blank" class="ui-8" style="display:none;">
+                <div class="plet">
+                    <h3>Policy	Manual</h3>
+                    <img src="~/Images/policy-manual.png" width="50" height="50">
+                    <div class="clear"></div>
+                </div>
+            </a>
+            <a href="~/OfficerPortal/PostOrders" target="_blank" class="ui-9" style="display:none;">
+                <div class="plet">
+                    <h3>Post Orders</h3>
+                    <img src="~/Images/Orders.png" width="50" height="50">
+                    <div class="clear"></div>
+                </div>
+            </a>
+            <a href="~/OfficerPortal/TemperatureLog" target="_blank" class="ui-10" style="display:none;">
+                <div class="plet">
+                    <h3>Temperature Log</h3>
+                    <img src="~/Images/k.png" width="50" height="50">
+                    <div class="clear"></div>
+                </div>
+            </a>
+            <a href="~/OfficerPortal/TruckLog" target="_blank" class="ui-11" style="display:none;">
+                <div class="plet">
+                    <h3>Truck Check-In</h3>
+                    <img src="~/Images/g.png" width="50" height="50">
+                    <div class="clear"></div>
+                </div>
+            </a>
+            <a href="~/OfficerPortal/TruckLogOut" target="_blank" class="ui-11" style="display:none;">
+                <div class="plet">
+                    <h3>Truck Check-Out</h3>
+                    <img src="~/Images/h.png" width="50" height="50">
+                    <div class="clear"></div>
+                </div>
+            </a>
+            <a href="~/OfficerPortal/VacationRequest" target="_blank" class="ui-12" style="display:none;">
+                <div class="plet">
+                    <h3>Vacation Request</h3>
+                    <img src="~/Images/vacation-request.png" width="50" height="50">
+                    <div class="clear"></div>
+                </div>
+            </a>
+            <a href="~/OfficerPortal/VacationRequestRead" target="_blank" class="ui-12" style="display:none;">
+                <div class="plet">
+                    <h3>Vacation Review</h3>
+                    <img src="~/Images/vacation.png" width="50" height="50">
+                    <div class="clear"></div>
+                </div>
+            </a>
+            <a href="~/OfficerPortal/VisitorLog" target="_blank" class="ui-13" style="display:none;">
+                <div class="plet">
+                    <h3>Visitor	Check In</h3>
+                    <img src="~/Images/visitor-login.png" width="50" height="50">
+                    <div class="clear"></div>
+                </div>
+            </a>
+            <a href="~/OfficerPortal/VisitorLogOut" target="_blank" class="ui-13" style="display:none;">
+                <div class="plet">
+                    <h3>Visitor	Check	Out</h3>
+                    <img src="~/Images/visitor-logout.png" width="50" height="50">
+                    <div class="clear"></div>
+                </div>
+            </a>
+            <a href='@Url.Action("LogOff", "Account")'>
+                <div class="plet">
+                    <h3>Sign Out</h3>
+                    <img src="~/images/i.png" width="50" height="50">
+                    <div class="clear"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div id="clock-view" data-role="view" data-title="Clock In / Out" data-use-native-scrolling="true">
+        <header data-role="header">
+            <div data-role="navbar">
+                <a class="nav-button" data-align="right" data-role="backbutton">Back</a>
+                <span data-role="view-title"></span>
+            </div>
+        </header>
+        <div id="clock-div"></div>
+    </div>
+    <div data-role="modalview" id="wait-indicator" style="width:auto; height:auto; display:none;">
+        <div data-role="header">
+            <div data-role="navbar">
+                <span id="wait-title">Please Wait...</span>
+            </div>
+        </div>
+        <div style="text-align:center;width:170px; height:70px;">
+            <div class="k-loading-image"></div>
+        </div>
+    </div>
+    <div data-role="modalview" id="yes-no-prompt-view" style="width:auto; height:auto; display:none;">
+        <div data-role="header">
+            <div data-role="navbar">
+                <span id="yes-no-title"></span>
+            </div>
+        </div>
+        <div style="text-align: center;padding-bottom: 10px;">
+            <p id="yes-no-text"></p>
+            <a id="yes-button" data-role="button">Yes</a><a id="no-button" data-role="button" style="margin-left:10px;">No</a>
+        </div>
+    </div>
+    <div data-role="modalview" id="msg-view" style="width:auto; height:auto; display:none;">
+        <div data-role="header">
+            <div data-role="navbar">
+                <span id="msg-title"></span>
+            </div>
+        </div>
+        <div style="text-align: center;padding-bottom: 10px;">
+            <p id="msg-text"></p>
+            <a id="msg-ok-button" data-role="button">OK</a>
+        </div>
+    </div>
+
+    <script id="clock-template" type="text/x-kendo-template">
+        <div>
+            <div id="clock-out-controls" style="display:none;">
+                <ul id="clock-out-form" data-role="listview" data-style="inset">
+                    <li>
+                        <span>You are Currently</span><br />
+                        <span style="font-weight:bold;font-size:24px">Clocked In</span>
+                    </li>
+                    <li>
+                        <b>Last Clock In Date:</b><br />
+                        #= (CurrentClockRecord.InDate ? kendo.toString(moment.utc(CurrentClockRecord.InDate, "YYYY-MM-DDTHH:mm:ss").local().toDate(), "g") : '') #
+                    </li>
+                    <li>
+                        <label for="out-comment" style="font-weight:bold;">Clock Out Comment:</label><br />
+                        <textarea id="out-comment" style="height: 60px;" maxlength="500" class="k-input k-textbox"></textarea>
+                    </li>
+                    <li>
+                        <div>
+                            <div style="float:left;margin-right:8px;">
+                                <img src="/Images/BreakGo.png" class="clock-img-btn" data-bind="events:{click:clockOutBreak}" />
+                            </div>
+                            <div style="float:left;margin-right:8px;">
+                                <img src="/Images/LunchGo.png" class="clock-img-btn" data-bind="events:{click:clockOutLunch}" />
+                            </div>
+                            <div style="float:left;">
+                                <img src="/Images/ShiftEnd.png" class="clock-img-btn" data-bind="events:{click:clockOutShift}" />
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div id="clock-in-controls" style="display:none;">
+                <ul id="clock-in-form" data-role="listview" data-style="inset">
+                    <li>
+                        <span>You are Currently</span><br />
+                        <span style="font-weight:bold;font-size:26px">Clocked Out</span>
+                    </li>
+                    <li>
+                        <label for="in-comment" style="font-weight:bold;">Clock In Comment:</label><br />
+                        <textarea id="in-comment" style="height: 60px;" maxlength="500" class="k-input k-textbox"></textarea>
+                    </li>
+                    <li>
+                        <div>
+                            <div id="clock-in-break" style="display:none;float:left;margin-right:8px;">
+                                <img src="/Images/BreakReturn.png" class="clock-img-btn" data-bind="events:{click:clockInBreak}" />
+                            </div>
+                            <div id="clock-in-lunch" style="display:none;float:left;margin-right:8px;">
+                                <img src="/Images/LunchReturn.png" class="clock-img-btn" data-bind="events:{click:clockInLunch}" />
+                            </div>
+                            <div id="clock-in-shift" style="display:none;float:left;">
+                                <img src="/Images/ShiftStart.png" class="clock-img-btn" data-bind="events:{click:clockInShift}" />
+                            </div>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </li>
+                    <li id="clock-in-display-msg" style="display:none;">
+                        <ul class="submit-buttons">
+                            <li><a data-role="button" data-bind="events{click: displayAllClockInOptions}">Display All Clock In Options</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            # if (RecentClockRecords.length > 0) { #
+            <ul id="record-list-view" data-role="listview" data-style="inset">
+                <li style="font-weight:bold;">
+                    Recent Activity
+                </li>
+                # for (var i = 0; i < RecentClockRecords.length; i++) { #
+                <li>
+                    <div style="float:left;width:164px;">
+                        #: (RecentClockRecords[i].InDate ? kendo.toString(moment.utc(RecentClockRecords[i].InDate, "YYYY-MM-DDTHH:mm:ss").local().toDate(), "g") : '') #
+                    </div>
+                    <div style="float:left;width:164px;">
+                        #: (RecentClockRecords[i].OutDate ? kendo.toString(moment.utc(RecentClockRecords[i].OutDate, "YYYY-MM-DDTHH:mm:ss").local().toDate(), "g") : '') #<br />
+                    </div>
+                    <div style="float:left;">
+                        # if (RecentClockRecords[i].MinutesBetween !== null) {
+                        if (RecentClockRecords[i].MinutesBetween > 60) { #
+                        #: Math.floor(RecentClockRecords[i].MinutesBetween / 60) # hrs,
+                        #: RecentClockRecords[i].MinutesBetween % 60 # min
+                        # } else { #
+                        #: RecentClockRecords[i].MinutesBetween # min
+                        # }
+                        } #
+                    </div>
+                </li>
+                # } #
+            </ul>
+            # } #
+        </div>
+    </script>
+    <script id="menu-link-template" type="text/x-kendo-tmpl">
+        <a href="/OfficerPortal/CustomReport?id=#: CustomReportId #" target="_blank">
+            <div class="plet">
+                <h3>#: ReportNameSingular #</h3>
+                <img src="/Images/a.png" width="50" height="50">
+                <div class="clear"></div>
+            </div>
+        </a>
+    </script>
+
+    @Html.VersionedJsUrl("/Scripts/bundles/portal.js")
+    @Html.VersionedJsUrl("/Scripts/app/internal-portal.js")
+    <script type="text/javascript">
+        var clientSiteId = @Model.ClientSiteId;
+        var deviceType = '@Request.GetDeviceType()';
+    </script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/Index.Mobile.js")
+</body>
+</html>

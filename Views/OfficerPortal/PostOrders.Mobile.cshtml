@@ -1,0 +1,106 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Post Orders";
+}
+
+<div id="main" data-role="view" data-title="Post Orders" data-use-native-scrolling="true">
+    <header data-role="header">
+        <div data-role="navbar">
+            <a data-align="right" data-icon="mymenuicon" data-role="button" href="#report-menu">Report Menu</a>
+        </div>
+    </header>
+    <div id="logo" style="text-align:center; margin-top:20px;">
+        <img src="~/Images/logo.png" width="310" height="65">
+    </div>
+    <h2>Post Orders</h2>
+
+    <ul data-role="listview" data-style="inset" data-type="group">
+        <li>
+            <ul>
+                <li>Officer: <span class="list-value">@Model.FirstName @Model.LastName</span></li>
+                <li>Client: <span class="list-value">@Model.ClientName</span></li>
+                <li>Site: <span class="list-value">@Model.SiteName</span></li>
+            </ul>
+        </li>
+    </ul>
+
+    <div id="post-orders"></div>
+    <br /><br />
+</div>
+
+@section Head {
+    <style>
+        .km-listview-link:after {
+            content:none;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script id="post-orders-template" type="text/x-kendo-template">
+        <ul data-role="listview" data-style="inset">
+			<li class="report-separator">
+                Address
+            </li>
+            <li>
+                # if (data.Address1) { #
+                    #= data.Address1 #<br />
+                    # if (data.Address2) { #
+                        #= data.Address2 #<br />
+                    # } #
+                    #= data.City #, #= data.State # #= data.PostalCode #
+                # } else { #
+                    --
+                # } #
+            </li>
+			<li class="report-separator">
+                Client Contact
+            </li>
+            <li>
+                #= nullToString(data.ClientContact) #<br />
+                <b>Phone</b><br />
+                #= nullToString(data.ClientContactPhone) #
+            </li>
+			<li class="report-separator">
+                Maintenance
+            </li>
+            <li>
+                #= nullToString(data.MaintenanceContact) #<br />
+                <b>Phone</b><br />
+                #= nullToString(data.MaintenancePhone) #
+            </li>
+			<li class="report-separator">
+                Police
+            </li>
+            <li>
+                #= nullToString(data.PoliceContact) #<br />
+                <b>Phone</b><br />
+                #= nullToString(data.PolicePhone) #
+            </li>
+			<li class="report-separator">
+                Towing Company
+            </li>
+            <li>
+                #= nullToString(data.TowingContact) #<br />
+                <b>Phone</b><br />
+                #= nullToString(data.TowingPhone) #
+            </li>
+			<li class="report-separator">
+                Comments
+            </li>
+            <li>
+                #= replaceBreaks(data.PostOrderComments) #
+            </li>
+            # if (data.POFileName) { #
+			    <li class="report-separator">
+                    File Attachment
+                </li> 
+                <li>
+                    <a href="/Upload/#= data.POFileName #" data-rel="external" target="_blank" download="#= data.POOriginalFileName #">#= data.POOriginalFileName #</a>
+                </li>
+            # } #
+        </ul>
+    </script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/PostOrders.Mobile.js")
+}

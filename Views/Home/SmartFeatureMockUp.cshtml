@@ -1,0 +1,171 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Smart Feature Mockup</title>
+    <link href="~/Content/kendoui/v2016.1.322/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/Content/kendoui/v2016.1.322/kendo.silver.min.css" rel="stylesheet" />
+    <style>
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 9pt;
+    }
+    .k-edit-form-container {
+        width: 300px;
+        height:30px;
+        margin-left:12px;
+    }
+    .k-edit-field {
+        float:left;
+        padding: 0 0 .6em .8em;
+        width:30%;
+    }
+    .k-edit-label {
+        width:60%;
+    }
+    </style>
+</head>
+<body>
+    <div style="margin:20px;">
+        <div>
+            <div style="margin-bottom:10px;">
+                <input type="checkbox" id="cbxCheckSign" /> Check for Sign In
+            </div>
+            <div style="border:1px solid #cccccc; padding:14px;">
+                <div style="margin: 6px 0;font-weight:bold;">Define Sign In Window</div>
+                <div class="k-edit-form-container">
+                    <div class="k-edit-label">
+                        <label for="sign-in-window-before">Minutes Before Start Time</label>
+                    </div>
+                    <div data-container-for="sign-in-window-before" class="k-edit-field">
+                        <input id="sign-in-window-before" type="number" style="width:60px;" value="15" min="5" max="30" />
+                    </div>
+                </div>
+                <div class="k-edit-form-container">
+                    <div class="k-edit-label">
+                        <label for="sign-in-window-after">Minutes After Start Time</label>
+                    </div>
+                    <div data-container-for="sign-in-window-after" class="k-edit-field">
+                        <input id="sign-in-window-after" type="number" style="width:60px;" value="15" min="5" max="30" />
+                    </div>
+                </div>
+            </div>
+            <div style="margin-bottom:10px;margin-top:16px;">
+                <input type="checkbox" id="cbxCheckOTTScans" /> Check Tour Tracker Scan Activity
+            </div>
+            <div style="border:1px solid #cccccc; padding:14px;">
+                <div style="margin: 6px 0;font-weight:bold;"></div>
+                <div class="k-edit-form-container">
+                    <div class="k-edit-label">
+                        <label for="scans-check-interval">Minutes Between Checks</label>
+                    </div>
+                    <div data-container-for="scans-check-interval" class="k-edit-field">
+                        <input id="scans-check-interval" type="number" style="width:60px;" value="45" min="30" max="120" />
+                    </div>
+                </div>
+                <div class="k-edit-form-container">
+                    <div class="k-edit-label">
+                        <label for="minumum-scan-count">Minimum Total Scans</label>
+                    </div>
+                    <div data-container-for="minumum-scan-count" class="k-edit-field">
+                        <input id="minumum-scan-count" type="number" style="width:60px;" value="5" min="1" max="100" />
+                    </div>
+                </div>
+                <div class="k-edit-form-container">
+                    <div class="k-edit-label">
+                        <label for="minumum-stops-scanned">Minimum Unique Stops Scanned</label>
+                    </div>
+                    <div data-container-for="minumum-stops-scanned" class="k-edit-field">
+                        <input id="minumum-stops-scanned" type="number" style="width:60px;" value="5" min="1" max="100" />
+                    </div>
+                </div>
+            </div>
+            <div style="margin-bottom:10px;margin-top:16px;">
+                <input type="checkbox" id="cbxCheckClockInOut" /> Check for Clock In / Out
+            </div>
+            <div style="border:1px solid #cccccc; padding:14px;">
+                <div style="margin: 6px 0;font-weight:bold;">Define Clock In Window</div>
+                <div class="k-edit-form-container">
+                    <div class="k-edit-label">
+                        <label for="clock-in-window-before">Minutes Before Start Time</label>
+                    </div>
+                    <div data-container-for="clock-in-window-before" class="k-edit-field">
+                        <input id="clock-in-window-before" type="number" style="width:60px;" value="15" min="5" max="30" />
+                    </div>
+                </div>
+                <div class="k-edit-form-container">
+                    <div class="k-edit-label">
+                        <label for="clock-in-window-after">Minutes After Start Time</label>
+                    </div>
+                    <div data-container-for="clock-in-window-after" class="k-edit-field">
+                        <input id="clock-in-window-after" type="number" style="width:60px;" value="15" min="5" max="30" />
+                    </div>
+                </div>
+                <hr />
+                <div style="margin: 6px 0 6px 0;font-weight:bold;">Define Clock Out Window</div>
+                
+                <div class="k-edit-form-container">
+                    <div class="k-edit-label">
+                        <label for="clock-out-window-before">Minutes Before End Time</label>
+                    </div>
+                    <div data-container-for="clock-out-window-before" class="k-edit-field">
+                        <input id="clock-out-window-before" type="number" style="width:60px;" value="15" min="5" max="30" />
+                    </div>
+                </div>
+                <div class="k-edit-form-container">
+                    <div class="k-edit-label">
+                        <label for="clock-out-window-after">Minutes After End Time</label>
+                    </div>
+                    <div data-container-for="clock-out-window-after" class="k-edit-field">
+                        <input id="clock-out-window-after" type="number" style="width:60px;" value="15" min="5" max="30" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/jquery.throttledresize.min.js"></script>
+    @Html.VersionedJsUrl("/Scripts/kendoui/v2016.1.322/kendo.all.min.js")
+    <script>
+        $(function () {
+            $("#sign-in-window-before").kendoNumericTextBox({
+                format: "n0"
+            });
+            $("#sign-in-window-after").kendoNumericTextBox({
+                format: "n0"
+            });
+            $("#scans-check-interval").kendoNumericTextBox({
+                format: "n0"
+            });
+            $("#minumum-scan-count").kendoNumericTextBox({
+                format: "n0"
+            });
+            $("#minumum-stops-scanned").kendoNumericTextBox({
+                format: "n0"
+            });
+            $("#clock-in-window-before").kendoNumericTextBox({
+                format: "n0"
+            });
+            $("#clock-in-window-after").kendoNumericTextBox({
+                format: "n0"
+            });
+            $("#clock-out-window-before").kendoNumericTextBox({
+                format: "n0"
+            });
+            $("#clock-out-window-after").kendoNumericTextBox({
+                format: "n0"
+            });
+        });
+    </script>
+</body>
+</html>

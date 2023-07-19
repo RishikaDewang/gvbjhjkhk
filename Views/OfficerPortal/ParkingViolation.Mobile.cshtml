@@ -1,0 +1,119 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Parking Violation";
+}
+
+<div id="forms" data-role="view" data-title="Parking Violation" data-use-native-scrolling="true">
+    <header data-role="header">
+        <div data-role="navbar">
+            <a data-align="right" data-icon="mymenuicon" data-role="button" href="#report-menu">Report Menu</a>
+        </div>
+    </header>
+    <div id="logo" style="text-align:center; margin-top:20px;">
+        <img src="~/Images/logo.png" width="310" height="65">
+    </div>
+    <h2>Parking Violation</h2>
+
+    <ul data-role="listview" data-style="inset" data-type="group">
+        <li>
+            <ul>
+                <li>Officer: <span class="list-value">@Model.FirstName @Model.LastName</span></li>
+                <li>Client: <span class="list-value">@Model.ClientName</span></li>
+                <li>Site: <span class="list-value">@Model.SiteName</span></li>
+            </ul>
+        </li>
+    </ul>
+
+    <form>
+        <ul data-role="listview" data-style="inset">
+            <li class="report-separator">
+                Parking Violation Info
+            </li>
+            <li>
+                <label for="violator-first-name">Violator First Name
+                <input id="violator-first-name" name="violator-first-name" maxlength="50" type="text" class="k-input k-textbox" data-bind="value: report.violatorFirstName" />
+                </label>
+            </li>
+            <li>
+                <label for="violator-last-name">Violator Last Name
+                <input id="violator-last-name" name="violator-last-name" maxlength="50" type="text" class="k-input k-textbox" data-bind="value: report.violatorLastName" />
+                </label>
+            </li>
+            <li>
+                <label for="vehicle-make">Vehicle Make<span class="required-indicator">*</span>
+                <input id="vehicle-make" name="vehicle-make" type="text" maxlength="50" class="k-input k-textbox" data-bind="value: report.vehicleMake" required data-required-msg="Please enter the Vehicle Make."/>
+                </label>
+            </li>
+            <li>
+                <label for="vehicle-model">Model<span class="required-indicator">*</span>
+                <input id="vehicle-model" name="vehicle-model" type="text" maxlength="50" class="k-input k-textbox" data-bind="value: report.vehicleModel" required data-required-msg="Please enter the Vehicle Model."/>
+                </label>
+            </li>
+            <li>
+                <label for="license-plate">LP#<span class="required-indicator">*</span>
+                <input id="license-plate" name="license-plate" type="text" maxlength="20" class="k-input k-textbox" data-bind="value: report.licensePlateNumber" required data-required-msg="Please enter the License Plate Number." />
+                </label>
+            </li>
+            <li>
+                <label for="vehicle-color">Vehicle Color
+                <input id="vehicle-color" name="vehicle-color" type="text" maxlength="50" class="k-input k-textbox" data-bind="value: report.vehicleColor" />
+                </label>
+            </li>
+            <li>
+                <label for="violation-type">Violation Type<span class="required-indicator">*</span>
+                    <select id="violation-type" name="violation-type" data-value-field="ParkingViolationTypeId" data-text-field="ViolationTypeName" data-bind="source: parkingViolationTypes, value: report.parkingViolationTypeId" data-value-primitive="true" required data-required-msg="Please select Type of Violation."></select>
+                <span class="k-invalid-msg" data-for="violation-type"></span>
+                </label>
+            </li>
+            <li>
+                <label for="type-other">If Other, What Type
+                <input id="type-other" type="text" maxlength="50" class="k-input k-textbox" data-bind="value: report.typeIfOther" />
+                </label>
+            </li>
+            <li>
+                <label for="location">Location<span class="required-indicator">*</span>
+                <input id="location" name="location" maxlength="250" type="text" class="k-input k-textbox" data-bind="value: report.location" required data-required-msg="Please enter the Location." />
+                </label>
+            </li>
+            <li>
+                <label for="detail">Detail
+                <textarea id="detail" name="detail" maxlength="2000" class="k-input k-textbox" data-bind="value: report.detail"></textarea>
+                </label>
+            </li>
+            <li class="report-separator">
+                Photos, Videos, Audio
+            </li>
+            <li>
+                <div style="margin-bottom:6px;"><button id="btn-add-photo" class="k-button" type="button" style="width:140px;font-weight:bold; font-family: Verdana;">+ Add Photo, Video, or Audio</button></div>
+                <div id="upload-progress-wrapper" style="width:100%;"></div>
+                <div style="height: 0;width:0; overflow:hidden;"><input name="fileUpload" id="fileUpload" type="file" style="width:0;height:0;" /></div>
+                <div id="photo-list" style="margin-top:8px;"></div>
+                <div id="media-list" style="margin-top:8px;"></div>
+                <div id="attachment-list" style="margin-top:8px;"></div>
+            </li>
+            <li>
+                <ul class="submit-buttons">
+                    <li><a data-role="button" data-bind="click: submit">Submit</a></li>
+                </ul>
+                <ul id="clear-form-ul" class="submit-buttons" style="display:none;">
+                    <li><br /><a data-role="button" data-bind="click: clearForm">Clear Form</a></li>
+                </ul>
+            </li>
+        </ul>
+    </form>
+    <br /><br />
+</div>
+
+@section Head {
+    <link href="~/Content/toastmessage/css/jquery.toastmessage.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <script type="text/javascript" src="/Scripts/jquery.toastmessage.js"></script>
+    <script type="text/javascript">
+        var clientSiteId = @Model.ClientSiteId;
+        var userId = @Model.UserId;
+    </script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/ParkingViolation.Mobile.js")
+}

@@ -1,0 +1,382 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>New Incident Report</title>
+    <link href="/Content/kendoui/v2016.1.322/kendo.uniform.min.css" rel="stylesheet"/>
+    <link href="/Content/kendoui/v2016.1.322/kendo.common.min.css" rel="stylesheet"/>
+    <link href="/Content/styleMain.css" rel="stylesheet"/>
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+        dt {
+            /* display: inline-block; */
+            /* text-align: right; */
+            /* width: 190px; */
+            font-weight: bold;
+            vertical-align:top;
+            /* margin-right: 10px; */
+            margin-bottom: 2px;
+        }
+        dd {
+            /* display: inline-block; */
+            margin: 0;
+            text-align: left;
+            width: auto;
+        }
+        dl {
+            /*margin: 0 0 4px 0; */
+            margin: 0 0 10px 0; 
+        }
+        .disabled-label {
+            color: lightgray;
+        }
+        .disabled-input {
+            background-color: #F6F6F6 !important;
+            border-color: #dbdbde !important;
+        }
+        .standard-width {
+            width:250px;
+        }
+        textarea.k-textbox {
+            width : 400px;
+            height : 150px;
+        }
+        /* maybe? */
+        .k-widget.k-tooltip-validation {
+            vertical-align: top;
+        }
+        .report-separator {
+            background-color: #084e8a;
+            color: #ffffff;
+            font-weight: bold;
+            max-width: 800px;
+            width:94%;
+            padding: 6px 0 6px 6px;
+            border-radius:10px;
+            margin-bottom:8px;
+        }
+        .k-list-container {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        .k-dropdown .k-input {
+            color: #000000;
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+    <form id="incident-form">
+        <div style="margin:10px 0 26px 10px;">
+            <h1>New Incident Report</h1>
+            <div class="report-separator">
+                Officer and Site
+            </div>
+            <dl>
+                <dt>
+                    <label for="officer">Officer:</label>
+                </dt>
+                <dd>
+                    <select id="officer" name="officer" class="standard-width" data-role="dropdownlist" data-option-label="-- No Officer --" data-value-field="UserId" data-text-field="FullName" data-bind="source: officerDataSource, value: report.userId" data-value-primitive="true"></select>
+                    <span class="k-invalid-msg" data-for="officer"></span>
+                </dd>
+            </dl>
+            <dl>
+                <dt>
+                    <label for="client">Client:</label><span class="required-indicator">*</span>
+                </dt>
+                <dd>
+                    <select id="client" name="client" class="standard-width" data-role="dropdownlist" data-option-label="-- Select Client --" data-value-field="ClientId" data-text-field="CompanyName" data-bind="source: clientDataSource, value: report.clientId" data-value-primitive="true" required data-required-msg="Please select the Client"></select>
+                    <span class="k-invalid-msg" data-for="client"></span>
+                </dd>
+            </dl>
+            <dl>
+                <dt>
+                    <label for="site" class="disabled-label">Site:</label><span class="required-indicator">*</span>
+                </dt>
+                <dd>
+                    <select id="site" name="site" class="standard-width" disabled="disabled" data-role="dropdownlist" data-option-label="-- Select Site --" data-value-field="ClientSiteId" data-text-field="SiteName" data-bind="source: siteDataSource, value: report.clientSiteId" data-value-primitive="true" required data-required-msg="Please select the Site"></select>
+                    <span class="k-invalid-msg" data-for="site"></span>
+                </dd>
+            </dl>
+            <div class="report-separator">
+                Overview
+            </div>
+            <dl>
+                <dt>
+                    <label for="incident-report-number">Incident Report #:</label>
+                </dt>
+                <dd>
+                    <input id="incident-report-number" name="incident-report-number" type="text" maxlength="50" class="k-textbox standard-width" data-bind="value: report.incidentReportNumber" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>
+                    <label for="incident-date">Date and Time of Incident:</label><span class="required-indicator">*</span>
+                </dt>
+                <dd>
+                    <!-- data-role="datetimepicker" -->
+                    <input id="incident-date" name="incident-date" data-bind="value: report.incidentDate" required data-required-msg="Please enter the Date/Time of the Incident." />
+                    <span class="k-invalid-msg" data-for="incident-date"></span>
+                </dd>
+            </dl>
+            <dl>
+                <dt>
+                    <label for="incident-type" class="disabled-label">Incident Type:</label><span class="required-indicator">*</span>
+                </dt>
+                <dd>
+                    <div style="float:left;">
+                        <select id="incident-type" name="incident-type" class="standard-width" disabled="disabled" data-role="dropdownlist" data-option-label="-- Select Incident Type --" data-value-field="IncidentTypeId" data-text-field="IncidentTypeName" data-bind="source: incidentDataSource, value: report.incidentTypeId" data-value-primitive="true" required data-required-msg="Please select Type of Incident."></select>
+                        <span class="k-invalid-msg" data-for="incident-type"></span>
+                    </div>
+                    <div id="incident-type-activity" style="margin-left:6px;margin-top:6px;float:left;display:none;"><img src="/Content/kendoui/v2016.1.322/Silver/loading.gif" /></div>
+                    <div style="clear:both;"></div>
+                </dd>
+            </dl>
+            <dl>
+                <dt>
+                    <label for="incident-type-other">If Other, What Type:</label>
+                </dt>
+                <dd>
+                    <input id="incident-type-other" type="text" maxlength="100" class="k-textbox standard-width" data-bind="value: report.incidentOtherType" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>
+                    <label for="victim-name">Victim Name(s):</label>
+                </dt>
+                <dd>
+                    <input id="victim-name" type="text" maxlength="250" class="k-textbox standard-width" data-bind="value: report.victimName" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>
+                    <label for="victim-info">Victim Contact Info:</label>
+                </dt>
+                <dd>
+                    <input id="victim-info" type="text" maxlength="250" class="k-textbox standard-width" data-bind="value: report.victimContactInfo" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>
+                    <label for="suspect-names">Suspect Name(s):</label>
+                </dt>
+                <dd>
+                    <input id="suspect-names" type="text" maxlength="250" class="k-textbox standard-width" data-bind="value: report.suspectNames" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>
+                    <label for="suspect-info">Suspect Contact Info:</label>
+                </dt>
+                <dd>
+                    <input id="suspect-info" type="text" maxlength="250" class="k-textbox standard-width" data-bind="value: report.suspectContactInfo" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>
+                    <label for="witness-names">Witness(es):</label>
+                </dt>
+                <dd>
+                    <input id="witness-names" type="text" maxlength="250" class="k-textbox standard-width" data-bind="value: report.witnessNames" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>
+                    <label for="witness-info">Witness Contact Info:</label>
+                </dt>
+                <dd>
+                    <input id="witness-info" type="text" maxlength="250" class="k-textbox standard-width" data-bind="value: report.witnessContactInfo" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>
+                    <label for="incident-location">Incident Location:</label><span class="required-indicator">*</span>
+                </dt>
+                <dd>
+                    <input id="incident-location" name="incident-location" maxlength="250" type="text" class="k-textbox standard-width" data-bind="value: report.incidentLocation" required data-required-msg="Please enter the Location of the Incident." />
+                </dd>
+            </dl>
+            <dl>
+                <dt>
+                    <label for="incident-summary">Incident Summary:</label><span class="required-indicator">*</span>
+                </dt>
+                <dd>
+                    <textarea id="incident-summary" name="incident-summary" maxlength="1000" class="k-textbox" data-bind="value: report.incidentSummary" required data-required-msg="Please enter the Incident Summary."></textarea>
+                </dd>
+            </dl>
+            <div class="report-separator">
+                Responder Info
+            </div>
+            <dl>
+                <dt>
+                    <label for="police-called">Police Called:</label><span class="required-indicator">*</span>
+                </dt>
+                <dd>
+                    <select id="police-called" name="police-called" data-role="dropdownlist" data-option-label="-- Select Yes or No --" data-bind="value: report.policeCalled" data-value-primitive="true" required data-required-msg="Please select Yes or No for Police Called.">
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
+                    <span class="k-invalid-msg" data-for="police-called"></span>
+                </dd>
+            </dl>
+            <dl>
+                <dt>
+                    <label for="why-not-called">If Not, Why?:</label>
+                </dt>
+                <dd>
+                    <input id="why-not-called" type="text" maxlength="250" class="k-textbox standard-width" data-bind="value: report.whyPoliceNotCalled" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>
+                    <label for="police-info">Police Name(s) & Badge(s):</label>
+                </dt>
+                <dd>
+                    <textarea id="police-info" maxlength="500" class="k-textbox" data-bind="value: report.policeInfo"></textarea>
+                </dd>
+            </dl>
+            <dl>
+                <dt>
+                    <label for="fire-truck-num">Fire Truck Number:</label>
+                </dt>
+                <dd>
+                    <input id="fire-truck-num" type="text" maxlength="100" class="k-textbox standard-width" data-bind="value: report.fireTruckNumber" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>
+                    <label for="ambulance-num">Ambulance Number:</label>
+                </dt>
+                <dd>
+                    <input id="ambulance-num" type="text" maxlength="100" class="k-textbox standard-width" data-bind="value: report.ambulanceNumber" />
+                </dd>
+            </dl>
+            <div class="report-separator">
+                Details
+            </div>
+            <dl>
+                <dt>
+                    <label for="incident-details">Who, What, When, etc.:</label><span class="required-indicator">*</span>
+                </dt>
+                <dd>
+                    <textarea id="incident-details" name="incident-details" class="k-textbox" data-bind="value: report.incidentDetails" required data-required-msg="Please enter the Incident Details."></textarea>
+                </dd>
+            </dl>
+            <div class="report-separator">
+                Photos, Videos, Audio
+            </div>
+            <dl>
+                <dt>Uploads:</dt>
+                <dd style="width:90%; max-width:780px;">
+                    <div style="margin-bottom:6px;"><button id="btn-add-photo" class="k-button" type="button" style="width:140px;font-weight:bold; font-family: Verdana;">+ Add Photo, Video, or Audio</button></div>
+                    <div id="upload-progress-wrapper" style="width:100%;"></div>
+                    <div style="height: 0;width:0; overflow:hidden;"><input name="fileUpload" id="fileUpload" type="file" /></div>
+                    <div id="photo-list" style="margin-top:8px;"></div>
+                    <div id="media-list" style="margin-top:8px;"></div>
+                    <div id="attachment-list" style="margin-top:8px;"></div>
+                </dd>
+            </dl>
+            <div class="report-separator">
+                Officer Actions
+            </div>
+            <dl>
+                <dt>
+                    <label for="officer-actions">Details:</label><span class="required-indicator">*</span>
+                </dt>
+                <dd>
+                    <textarea id="officer-actions" name="officer-actions" maxlength="3000" class="k-textbox" data-bind="value: report.officerActions" required data-required-msg="Please enter Officer Actions."></textarea>
+                </dd>
+            </dl>
+            <dl style="margin-top:10px;">
+                <dt>
+
+                </dt>
+                <dd>
+                    <button class="k-button" data-bind="click: submit" style="width:140px; font-weight:bold; font-family: Verdana;">Submit</button>
+                </dd>
+            </dl>
+        </div>
+    </form>
+
+    <script id="message-template" type="text/x-kendo-template">
+        <p>#= message #</p>
+        <hr style="background-color: \\#cccccc; border: 0 none; height:1px; margin-top:16px; margin-bottom: 16px;">
+        <div style="text-align:center;">
+            <button class="ok-button k-button">OK</button>
+        </div>
+    </script>
+    <script id="wait-template" type="text/x-kendo-template">
+        <div style="text-align:center;width:170px; height:70px;">
+            <div class="k-loading-image"></div>
+        </div>
+    </script>
+    <script id="photo-list-template" type="text/x-kendo-tmpl">
+        # for (var i = 0; i < data.length; i++) { #
+        <div style="float:left; vertical-align:top; margin-right: 10px; margin-bottom: 3px;"><img src="#: data[i].SmallUrl #" /></div>
+        <div style="float:left; vertical-align:top;"><button type="button" data-icon="delete" class="k-button remove-photo" data-photo-id="#= data[i].PhotoSmall #">Remove</a></div>
+        <div style="clear:both;"></div>
+        <hr />
+        # } #
+    </script>
+    <script id="media-list-template" type="text/x-kendo-tmpl">
+        # for (var i = 0; i < data.length; i++) { #
+        <div style="float:left; vertical-align:top; margin-right: 10px; margin-bottom: 3px;">#: data[i].OriginalFileName #</div>
+        <div style="float:left; vertical-align:top;"><button type="button" data-icon="delete" class="k-button remove-media" data-media-id="#= data[i].FileName #">Remove</a></div>
+        <div style="clear:both;"></div>
+        <hr style="margin-top: 6px;" />
+        # } #
+    </script>
+    <script id="attachment-list-template" type="text/x-kendo-tmpl">
+        # for (var i = 0; i < data.length; i++) { #
+        <div style="float:left; vertical-align:top; margin-right: 10px; margin-bottom: 3px;">#: data[i].OriginalFileName #</div>
+        <div style="float:left; vertical-align:top;"><button type="button" data-icon="delete" class="k-button remove-attachment" data-attachment-id="#= data[i].FileName #">Remove</a></div>
+        <div style="clear:both;"></div>
+        <hr style="margin-top: 6px;" />
+        # } #
+    </script>
+    <script id="login-form-template" type="text/x-kendo-tmpl">
+        <form id="re-login-form">
+            <dl>
+                <dt>
+                    <label for="UserName">User Name</label>
+                </dt>
+                <dd>
+                    <input id="UserName" name="UserName" type="text" class="k-input k-textbox" required data-required-msg="Please enter your User Name" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>
+                    <label for="Password">Password</label>
+                </dt>
+                <dd>
+                    <input id="Password" name="Password" type="password" class="k-input k-textbox" required data-required-msg="Please enter your Password" />
+                </dd>
+            </dl>
+            <dl>
+                <dt>
+                </dt>
+                <dd>
+                    <button id="re-login" type="button" class="k-button">Submit</button>
+                </dd>
+            </dl>
+        </form>
+    </script>
+    <script type="text/javascript">
+        var userRoleId = @ViewBag.UserRoleId;
+    </script>
+
+    @Html.VersionedJsUrl("/Scripts/bundles/spa.js")
+    @Html.VersionedJsUrl("/Scripts/bundles/spa-internal.js")
+    @Html.VersionedJsUrl("/Scripts/app/internal-main-fileupload.js")
+    @Html.VersionedJsUrl("/Scripts/app/IncidentReport/Add.js")
+    @Html.GetCultureScript()
+</body>
+</html>

@@ -1,0 +1,329 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title</title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="robots" content="noindex, nofollow">
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" type="image/x-icon" href="~/Images/favicon.ico">
+
+    <link href="/Content/bootstrap/css/bootstrap-scope.css" rel="stylesheet"/>
+    <link href="/Content/kendoui/v2016.1.322/kendo.uniform.min.css" rel="stylesheet"/>
+    <link href="/Content/kendoui/v2016.1.322/kendo.common.min.css" rel="stylesheet"/>
+    <link href="/Content/smartmenus/jquery.smartmenus.bootstrap.css" rel="stylesheet"/>
+    <link href="/Content/styleMain.css" rel="stylesheet"/>
+
+    <style>
+
+    .divider-vertical {
+        height: 40px;
+    }
+
+    .bootstrap-scope .nav>li>a {
+        line-height: 40px;
+    }
+
+    .bootstrap-scope .navbar-toggle {
+        margin-top: 3px;
+    }
+
+    .bootstrap-scope .navbar-collapse {
+        border-top: 0px;
+    }
+
+    .bootstrap-scope .navbar {
+        min-height: 40px;
+    }
+
+    .bootstrap-scope .navbar-nav .dropdown-toggle .sub-arrow { /* prevent duplicate down arrow with smart menus */
+        display:none;
+    }
+    </style>
+
+    @RenderSection("Head", false)
+
+    <!--[if IE]>
+    <style>
+        /* start to fix for IE */
+        .bootstrap-scope .navbar-inverse .nav li.dropdown.open > .dropdown-toggle,
+        .bootstrap-scope .navbar-inverse .nav li.dropdown.active > .dropdown-toggle,
+        .bootstrap-scope .navbar-inverse .nav li.dropdown.open.active > .dropdown-toggle,
+        .bootstrap-scope .navbar,
+        .bootstrap-scope .navbar-inverse .navbar-inner {
+            filter: none !important;
+            background-color: #5091C8;
+            /* background-image: none; */
+        }
+
+        .bootstrap-scope .nav.navbar-nav,
+        .bootstrap-scope .nav > li.dropdown {
+            height: 40px;
+        }
+
+        /* .bootstrap-scope .nav > li.dropdown > a { */
+        .bootstrap-scope .nav>li>a {
+            height: 40px;
+            line-height: normal;
+            display: normal; 
+        }
+
+        .k-grid tbody .k-button {
+            /* min-width: 64px; */
+            min-width: 44px;
+        }
+    </style>
+    <script src="~/Scripts/json3.min.js"></script>
+    <script src="~/Scripts/html5shiv.js"></script>
+    <script src="~/Scripts/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="bootstrap-scope">
+        <div class="navbar navbar-inverse navbar-fixed-top" style="background-image:none; background-color:#83B1D9; height:45px;">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#"><img src="~/Images/logo_new.png" style="height:30px;border-width:0;" /></a>
+                </div>
+                <div class="collapse navbar-collapse" style="max-width:750px;">
+                    <p class="navbar-text navbar-right" style="color:#ffffff;">
+                        @if (Request.IsAuthenticated)
+                        {
+                            @:<b>Signed In: </b> @User.Identity.Name <span style="margin-left:5px;"> 
+                            if (User.IsInRole("Admin") || User.IsInRole("Customer")) {   
+                                 @:| </span> <a href="https://officerreports.desk.com/" target="_blank" style="color:white;">Support Center</a> <span> 
+                            }
+                            @:| </span> <a href="/Account/LogOff" style="color:white;">Sign Out</a>
+                        }
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="navbar navbar-inverse navbar-fixed-top" style="top:45px;">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="divider-vertical hidden-xs"></li>
+                        @if ((Request.IsAuthenticated) && (User.IsInRole("Admin")))
+                        {
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="~/Images/procedures.png" class="hidden-sm-2" style="height:24px;margin-right:4px;" /> Setup <b class="caret"></b></a>
+                                <ul class="dropdown-menu dropdown-no-hover">
+                                    <li>@Html.ActionLink("Customers", "Index", "Customer")</li>
+                                    <li>@Html.ActionLink("Clients", "Index", "Client")</li>
+                                    <li>@Html.ActionLink("Sites", "Index", "ClientSite")</li>
+                                    <li>@Html.ActionLink("Officers", "AdminList", "Officer")</li>
+                                    <li>@Html.ActionLink("Call Center Reps", "AdminList", "CCR")</li>
+                                    <li>@Html.ActionLink("Your Profile", "Profile", "Account")</li>
+                                </ul>
+                            </li>
+                            <li class="divider-vertical hidden-xs"></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="~/Images/reports.png" class="hidden-sm-2" style="height:24px;margin-right:4px;" /> Reports <b class="caret"></b></a>
+                                <ul class="dropdown-menu dropdown-no-hover" style="background-color: #F1F1F3;">
+                                    <li><a href="/DailyActivityReport/"><img src="~/Images/icon_pic_1.jpg" style="width:25px;margin-right:6px;" /> Daily Activity Reports</a></li>
+                                    <li><a href="/IncidentReport/"><img src="~/Images/icon_pic_2.jpg" style="width:25px;margin-right:6px;" /> Incident Reports</a></li>
+                                    <li><a href="/MaintenanceRequest/"><img src="~/Images/icon_pic_3.jpg" style="width:25px;margin-right:6px;" /> Maintenance Requests</a></li>
+                                    <li><a href="/ParkingViolation/"><img src="~/Images/parking.png" style="width:25px;margin-right:6px;" /> Parking Violations</a></li>
+                                    <li><a href="/PassOnLog/"><img src="~/Images/passon-log.jpg" style="width:25px;margin-right:6px;" /> Pass On Logs</a></li>
+                                    <li><a href="/LocationLog/"><img src="~/Images/spacer.gif" style="width:25px;margin-right:6px;" /> Sign In Log</a></li>
+                                    <li><a href="/TemperatureLog/"><img src="~/Images/temperature.png" style="width:25px;margin-right:6px;" /> Temperature Logs</a></li>
+                                </ul>
+                            </li>
+                            <li class="divider-vertical hidden-xs"></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="~/Images/site-access.png" class="hidden-sm-2" style="height:24px;margin-right:4px;" /> Site Access <b class="caret"></b></a>
+                                <ul class="dropdown-menu dropdown-no-hover" style="background-color: #F1F1F3;">
+                                    <li><a href="/VisitorLog/"><img src="~/Images/visitor-log.jpg" style="width:25px;margin-right:6px;" /> Vistor Log</a></li>
+                                    <li><a href="/TruckLog/"><img src="~/Images/trucklog2.jpg" style="width:25px;margin-right:6px;" /> Truck Log</a></li>
+                                </ul>
+                            </li>
+                            <li class="divider-vertical hidden-xs"></li>
+                            <li>@Html.ActionLink("Incident Analysis", "Analytics", "IncidentReport")</li>
+                            <li class="divider-vertical hidden-xs"></li>
+                            <li>@Html.ActionLink("Tour Tracking", "Index", "TourStopScan")</li>
+                            <li class="divider-vertical hidden-xs"></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Logs <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li>@Html.ActionLink("Message Log", "Index", "Log")</li>
+                                    <li>@Html.ActionLink("Error Log", "Errors", "Log")</li>
+                                </ul>
+                            </li>
+                        }
+                        else if ((Request.IsAuthenticated) && (User.IsInRole("Customer")))
+                        {
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="~/Images/procedures.png" class="hidden-sm-2" style="height:24px;margin-right:4px;" /> Setup <b class="caret"></b></a>
+                                <ul class="dropdown-menu dropdown-no-hover">
+                                    <li>@Html.ActionLink("Clients", "Index", "Client")</li>
+                                    <li>@Html.ActionLink("Sites", "Index", "ClientSite")</li>
+                                    <li>@Html.ActionLink("Officers", "Index", "Officer")</li>
+                                    <li>@Html.ActionLink("Call Center Reps", "Index", "CCR")</li>
+                                    <li>@Html.ActionLink("Schedule", "Index", "Schedule")</li>
+                                    <li>@Html.ActionLink("Policy Manual", "Index", "PolicyManualEntry")</li>
+                                    <li>@Html.ActionLink("Account Settings", "AccountSettings", "Customer")</li>
+                                    <li>@Html.ActionLink("Your Profile", "Profile", "Account")</li>
+                                </ul>
+                            </li>
+                            <li class="divider-vertical hidden-xs"></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="~/Images/reports.png" class="hidden-sm-2" style="height:24px;margin-right:4px;" /> Reports <b class="caret"></b></a>
+                                <ul class="dropdown-menu dropdown-no-hover" style="background-color: #F1F1F3;">
+                                    <li><a href="/DailyActivityReport/"><img src="~/Images/icon_pic_1.jpg" style="width:25px;margin-right:6px;" /> Daily Activity Reports</a></li>
+                                    <li><a href="#"><img src="~/Images/icon_pic_2.jpg" style="width:25px;margin-right:6px;" /> Incident Reports</a>
+                                      <ul class="dropdown-menu">
+                                        <li><a href="/IncidentReport/">List</a></li>
+                                        <li><a href="/IncidentReport/Add" target="_blank">New Incident Report</a></li>
+                                      </ul>
+                                    </li>
+                                    <li><a href="/MaintenanceRequest/"><img src="~/Images/icon_pic_3.jpg" style="width:25px;margin-right:6px;" /> Maintenance Requests</a></li>
+                                    <li><a href="/ParkingViolation/"><img src="~/Images/parking.png" style="width:25px;margin-right:6px;" /> Parking Violations</a></li>
+                                    <li><a href="/PassOnLog/"><img src="~/Images/passon-log.jpg" style="width:25px;margin-right:6px;" /> Pass On Logs</a></li>
+                                    <li><a href="/LocationLog/"><img src="~/Images/spacer.gif" style="width:25px;margin-right:6px;" /> Sign In Log</a></li>
+                                    <li><a href="/TemperatureLog/"><img src="~/Images/temperature.png" style="width:25px;margin-right:6px;" /> Temperature Logs</a></li>
+                                    <li><a href="/Clock/"><img src="~/Images/spacer.gif" style="width:25px;margin-right:6px;" /> Clock In/Out</a></li>
+                                </ul>
+                            </li>
+                            <li class="divider-vertical hidden-xs"></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="~/Images/site-access.png" class="hidden-sm-2" style="height:24px;margin-right:4px;" /> Site Access <b class="caret"></b></a>
+                                <ul class="dropdown-menu dropdown-no-hover" style="background-color: #F1F1F3;">
+                                    <li><a href="/VisitorLog/"><img src="~/Images/visitor-log.jpg" style="width:25px;margin-right:6px;" /> Vistor Log</a></li>
+                                    <li><a href="/TruckLog/"><img src="~/Images/trucklog2.jpg" style="width:25px;margin-right:6px;" /> Truck Log</a></li>
+                                </ul>
+                            </li>
+                            <li class="divider-vertical hidden-xs"></li>
+                            <li>@Html.ActionLink("Incident Analysis", "Analytics", "IncidentReport")</li>
+                            <li class="divider-vertical hidden-xs"></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Tour Tracking <b class="caret"></b></a>
+                                <ul class="dropdown-menu dropdown-no-hover">
+                                    <li>@Html.ActionLink("Exception Report", "ExceptionReport", "TourStopScan")</li>
+                                    <li>@Html.ActionLink("Tour Stops", "Index", "TourStopScan")</li>
+                                </ul>
+                            </li>
+                            <li class="divider-vertical hidden-xs"></li>
+                            <li><a href="/VacationRequest/"><img src="~/Images/vacation-request.png" class="hidden-sm-2" style="height:24px;margin-right:4px;" /> Vacation Requests</a></li>
+                        }
+                        else if ((Request.IsAuthenticated) && ((User.IsInRole("Client")) || (User.IsInRole("Site"))))
+                        {
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="~/Images/reports.png" class="hidden-sm-2" style="height:24px;margin-right:4px;" /> Reports <b class="caret"></b></a>
+                                <ul class="dropdown-menu dropdown-no-hover" style="background-color: #F1F1F3;">
+                                    <li><a href="/DailyActivityReport/"><img src="~/Images/icon_pic_1.jpg" style="width:25px;margin-right:6px;" /> Daily Activity Reports</a></li>
+                                    <li><a href="/IncidentReport/"><img src="~/Images/icon_pic_2.jpg" style="width:25px;margin-right:6px;" /> Incident Reports</a></li>
+                                    <li><a href="/MaintenanceRequest/"><img src="~/Images/icon_pic_3.jpg" style="width:25px;margin-right:6px;" /> Maintenance Requests</a></li>
+                                    <li><a href="/ParkingViolation/"><img src="~/Images/parking.png" style="width:25px;margin-right:6px;" /> Parking Violations</a></li>
+                                    <li><a href="/TemperatureLog/"><img src="~/Images/temperature.png" style="width:25px;margin-right:6px;" /> Temperature Logs</a></li>
+                                </ul>
+                            </li>
+                            <li class="divider-vertical hidden-xs"></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="~/Images/site-access.png" class="hidden-sm-2" style="height:24px;margin-right:4px;" /> Site Access <b class="caret"></b></a>
+                                <ul class="dropdown-menu dropdown-no-hover" style="background-color: #F1F1F3;">
+                                    <li><a href="/VisitorLog/"><img src="~/Images/visitor-log.jpg" style="width:25px;margin-right:6px;" /> Vistor Log</a></li>
+                                    <li><a href="/TruckLog/"><img src="~/Images/trucklog2.jpg" style="width:25px;margin-right:6px;" /> Truck Log</a></li>
+                                </ul>
+                            </li>
+                            <li class="divider-vertical hidden-xs"></li>
+                            <li>@Html.ActionLink("Tour Tracking", "Index", "TourStopScan")</li>
+                            <li class="divider-vertical hidden-xs"></li>
+                            <li>@Html.ActionLink("Your Profile", "Profile", "Account")</li>
+                        }
+                        else if ((Request.IsAuthenticated) && (User.IsInRole("Supervisor")))
+                        {
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="~/Images/procedures.png" class="hidden-sm-2" style="height:24px;margin-right:4px;" /> Setup <b class="caret"></b></a>
+                                <ul class="dropdown-menu dropdown-no-hover">
+                                    <li>@Html.ActionLink("Sites", "SupervisorList", "ClientSite")</li>
+                                    <li>@Html.ActionLink("Policy Manual", "Index", "PolicyManualEntry")</li>
+                                    <li>@Html.ActionLink("Your Profile", "Profile", "Account")</li>
+                                </ul>
+                            </li>
+                            <li class="divider-vertical hidden-xs"></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="~/Images/reports.png" class="hidden-sm-2" style="height:24px;margin-right:4px;" /> Reports <b class="caret"></b></a>
+                                <ul class="dropdown-menu dropdown-no-hover" style="background-color: #F1F1F3;">
+                                    <li><a href="/DailyActivityReport/"><img src="~/Images/icon_pic_1.jpg" style="width:25px;margin-right:6px;" /> Daily Activity Reports</a></li>
+                                    <li><a href="/SiteCheckReport/"><img src="~/Images/icon_pic_2.jpg" style="width:25px;margin-right:6px;" /> Site Check Report</a></li>
+                                    <!--<li><a href="/IncidentReport/"><img src="~/Images/icon_pic_2.jpg" style="width:25px;margin-right:6px;" /> Incident Reports</a></li>-->
+                                    <li><a href="#"><img src="~/Images/icon_pic_2.jpg" style="width:25px;margin-right:6px;" /> Incident Reports</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="/IncidentReport/">List</a></li>
+                                            <li><a href="/IncidentReport/Add" target="_blank">New Incident Report</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="/MaintenanceRequest/"><img src="~/Images/icon_pic_3.jpg" style="width:25px;margin-right:6px;" /> Maintenance Requests</a></li>
+                                    <li><a href="/ParkingViolation/"><img src="~/Images/parking.png" style="width:25px;margin-right:6px;" /> Parking Violations</a></li>
+                                    <li><a href="/PassOnLog/"><img src="~/Images/passon-log.jpg" style="width:25px;margin-right:6px;" /> Pass On Logs</a></li>
+                                    <li><a href="/LocationLog/"><img src="~/Images/spacer.gif" style="width:25px;margin-right:6px;" /> Sign In Log</a></li>
+                                    <li><a href="/TemperatureLog/"><img src="~/Images/temperature.png" style="width:25px;margin-right:6px;" /> Temperature Logs</a></li>
+                                </ul>
+                            </li>
+                            <li class="divider-vertical hidden-xs"></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="~/Images/site-access.png" class="hidden-sm-2" style="height:24px;margin-right:4px;" /> Site Access <b class="caret"></b></a>
+                                <ul class="dropdown-menu dropdown-no-hover" style="background-color: #F1F1F3;">
+                                    <li><a href="/VisitorLog/"><img src="~/Images/visitor-log.jpg" style="width:25px;margin-right:6px;" /> Vistor Log</a></li>
+                                    <li><a href="/TruckLog/"><img src="~/Images/trucklog2.jpg" style="width:25px;margin-right:6px;" /> Truck Log</a></li>
+                                </ul>
+                            </li>
+                            <li class="divider-vertical hidden-xs"></li>
+                            <li>@Html.ActionLink("Incident Analysis", "Analytics", "IncidentReport")</li>
+                            <li class="divider-vertical hidden-xs"></li>
+                            <li>@Html.ActionLink("Tour Tracking", "Index", "TourStopScan")</li>
+                            <li class="divider-vertical hidden-xs"></li>
+                            <li><a href="/VacationRequest/"><img src="~/Images/vacation-request.png" style="height:24px;margin-right:4px;" /> Vacation Requests</a></li>
+                        }
+                        else if ((Request.IsAuthenticated) && (User.IsInRole("Officer")))
+                        {
+                            <li>@Html.ActionLink("Officer Portal", "Index", "OfficerPortal")</li>
+                        }
+                        else if ((Request.IsAuthenticated) && (User.IsInRole("CCR")))
+                        {
+                            <li>@Html.ActionLink("Incident Reports", "Index", "IncidentReport")</li>
+                            <li class="divider-vertical hidden-xs"></li>
+                            <li><a href="/IncidentReport/Add" target="_blank">New Incident Report</a></li>
+                        }
+                        <li class="divider-vertical hidden-xs"></li>
+                        @if (Request.IsAuthenticated) {
+                            <li class="visible-xs">@Html.ActionLink("Sign Out", "LogOff", "Account")</li>
+                            <li class="divider-vertical visible-xs"></li>
+                        }
+                    </ul>
+                </div><!--/.navbar-collapse -->
+            </div>
+        </div>
+    </div>
+    <div class="container" style="padding:110px 20px 10px 20px;">
+        @RenderBody()
+    </div> <!-- /container -->
+
+    <script id="message-template" type="text/x-kendo-template">
+        <p>#= message #</p>
+        <hr style="background-color: \\#cccccc; border: 0 none; height:1px; margin-top:16px; margin-bottom: 16px;">
+        <div style="text-align:center;">
+            <button class="ok-button k-button">OK</button>
+        </div>
+    </script>
+    <script id="wait-template" type="text/x-kendo-template">
+        <div style="text-align:center;width:170px; height:70px;">
+            <div class="k-loading-image"></div>
+        </div>
+    </script>
+    @Scripts.Render("~/bundles/LayoutJS")
+    <script src="~/Scripts/jquery.smartmenus.min.js" type="text/javascript"></script>
+    <script src="~/Scripts/jquery.smartmenus.bootstrap.js" type="text/javascript"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+

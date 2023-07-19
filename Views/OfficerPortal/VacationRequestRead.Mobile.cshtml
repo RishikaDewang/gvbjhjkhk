@@ -1,0 +1,39 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Vacation Request Review";
+}
+
+<div id="main-view" data-role="view" data-title="Vacation Request Review" data-use-native-scrolling="true">
+    <header data-role="header">
+        <div data-role="navbar">
+            <a data-align="right" data-icon="mymenuicon" data-role="button" href="#report-menu">Report Menu</a>
+        </div>
+    </header>
+    <div id="logo" style="text-align:center; margin-top:20px;">
+        <img src="~/Images/logo.png" width="310" height="65">
+    </div>
+    <h1>Vacation Request Review</h1>
+
+    <div id="request-list"></div>
+</div>
+
+@section Scripts {
+    <script id="list-template" type="text/x-kendo-template">
+        <ul id="request-list-view" data-role="listview" data-style="inset">
+        # for (var i = 0; i < data.length; i++) { #
+            <li>
+                Date Entered: #= kendo.toString(moment.utc(data[i].CreatedDate, "YYYY-MM-DDTHH:mm:ss").local().toDate(), "g") #<br />
+                Start Date: #= kendo.toString(moment.utc(data[i].StartDate, "YYYY-MM-DDTHH:mm:ss").local().toDate(), "d") #<br />
+                End Date: #= kendo.toString(moment.utc(data[i].EndDate, "YYYY-MM-DDTHH:mm:ss").local().toDate(), "d") #<br />
+                Reason: #= replaceBreaks(data[i].Comments) #<br />
+                <b>Status</b>: #= data[i].VacationRequestStatusName #
+                # if (data[i].VacationRequestStatusId != 1) { #
+                    <br /><b>Status Changed By:</b> #= data[i].FirstName # #= data[i].LastName #
+                # } #
+            </li>
+        # } #
+        </ul>
+    </script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/VacationRequestRead.Mobile.js")
+}

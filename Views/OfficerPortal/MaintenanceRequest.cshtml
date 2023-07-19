@@ -1,0 +1,105 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Maintenance Request";
+}
+
+<form id="report-form">
+    <div style="padding:10px 0 26px 10px;">
+        <div class="logo-heading clearfix">
+            <div class="logo-top">
+                <img src="~/Images/logo.png" height="40">
+            </div>
+            <div style="float:left;">
+                <h1>Maintenance Request</h1>
+            </div>
+        </div>
+        <div class="report-separator">
+            Officer and Site
+        </div>
+        <div class="form-row row-tight clearfix">
+            <div class="form-label"><label>Officer:</label></div>
+            <div class="form-field"><span>@Model.FirstName @Model.LastName</span></div>
+        </div>
+        <div class="form-row row-tight clearfix">
+            <div class="form-label"><label>Client:</label></div>
+            <div class="form-field"><span>@Model.ClientName</span></div>
+        </div>
+        <div class="form-row row-tight clearfix">
+            <div class="form-label"><label>Site:</label></div>
+            <div class="form-field"><span>@Model.SiteName</span></div>
+        </div>
+        <div class="report-separator">
+            Maintenance Request
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="maintenance-type">Maintenance Type:</label><span class="required-indicator">*</span></div>
+            <div class="form-field">
+                <select id="maintenance-type" name="maintenance-type" class="standard-width" disabled="disabled" data-role="dropdownlist" data-option-label="-- Select Type --" data-value-field="MaintenanceTypeId" data-text-field="MaintenanceTypeName" data-bind="source: maintenanceDataSource, value: report.maintenanceTypeId" data-value-primitive="true" required data-required-msg="Please select Maintenance Type."></select>
+                <span class="k-invalid-msg" data-for="maintenance-type"></span>
+            </div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="type-other">If Other, What Type:</label></div>
+            <div class="form-field">
+                <input id="type-other" type="text" maxlength="100" class="k-textbox standard-width" data-bind="value: report.typeIfOther" />
+            </div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="maintenance-details">Details:</label><span class="required-indicator">*</span></div>
+            <div class="form-field">
+                <textarea id="maintenance-details" name="maintenance-details" maxlength="2000" class="k-textbox" data-bind="value: report.details" required data-required-msg="Please enter the Details."></textarea>
+            </div>
+        </div>
+        <div class="report-separator">
+            Notification
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="notification">Who has been notified?:</label></div>
+            <div class="form-field">
+                <textarea id="notification" name="notification" maxlength="2000" class="k-textbox" data-bind="value: report.notification"></textarea>
+            </div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label for="email-client">Email Client:</label><span class="required-indicator">*</span></div>
+            <div class="form-field">
+                <select id="email-client" name="email-client" data-role="dropdownlist" data-option-label="-- Select Yes or No --" data-bind="value: report.emailClient" data-value-primitive="true" required data-required-msg="Please select Yes or No for Email Client.">
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+                <span class="k-invalid-msg" data-for="email-client"></span>
+            </div>
+        </div>
+        <div class="report-separator">
+            Photos, Videos, Audio
+        </div>
+        <div style="width:90%; max-width:780px;">
+            <div style="margin-bottom:6px;"><button id="btn-add-photo" class="k-button" type="button" style="width:140px;font-weight:bold; font-family: Verdana;">+ Add Photo, Video, or Audio</button></div>
+            <div id="upload-progress-wrapper" style="width:100%;"></div>
+            <div style="height: 0;width:0; overflow:hidden;"><input name="fileUpload" id="fileUpload" type="file" /></div>
+            <div id="photo-list" style="margin-top:8px;"></div>
+            <div id="media-list" style="margin-top:8px;"></div>
+            <div id="attachment-list" style="margin-top:8px;"></div>
+        </div>
+        <div class="row" style="margin-top:12px;">
+            <div class="form-label">&nbsp;</div>
+            <div class="form-field">
+                <button class="k-button" data-bind="click: submit" style="width:140px; font-weight:bold; font-family: Verdana;">Submit</button>
+                <button class="k-button" data-bind="click: clearForm" style="width:140px; font-weight:bold; font-family: Verdana;">Clear Form</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Head {
+    <link href="~/Content/toastmessage/css/jquery.toastmessage.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <script type="text/javascript" src="/Scripts/jquery.toastmessage.js"></script>
+    <script type="text/javascript">
+        var clientSiteId = @Model.ClientSiteId;
+        var userId = @Model.UserId;
+    </script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/MaintenanceRequest.js")
+}

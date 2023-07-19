@@ -1,0 +1,34 @@
+﻿@{
+    Layout = null;
+}
+<div id="login-view" data-role="view" data-use-native-scrolling="true" data-init="initReLogin">
+    <header data-role="header">
+        <div data-role="navbar">
+            <a id="back-button" class="nav-button" data-align="right" data-role="backbutton">Back</a>
+        </div>
+    </header>
+    <div style="text-align:center; margin-top:20px;">
+        <a href="/"><img src="~/Images/logo.png" width="310" height="65"></a>
+    </div>
+    <h1>Officer Portal Sign In</h1>
+
+    <form id="re-login-form">
+        <ul data-role="listview" data-style="inset">
+            <li>
+                <label for="UserName">User Name
+                    <input id="UserName" name="UserName" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" class="k-input k-textbox" required data-required-msg="Please enter your User Name" />
+                </label>
+            </li>
+            <li>
+                <label for="Password">Password
+                    <input id="Password" name="Password" type="password" autocomplete="off" autocorrect="off" autocapitalize="off" class="k-input k-textbox" required data-required-msg="Please enter your Password" />
+                </label>
+            </li>
+            <li>
+                <ul class="submit-buttons">
+                    <li><a id="re-login" data-role="button">Submit</a></li>
+                </ul>
+            </li>
+        </ul>
+    </form>
+</div>

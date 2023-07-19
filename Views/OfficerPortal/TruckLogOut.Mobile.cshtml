@@ -1,0 +1,94 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Truck Check-Out";
+}
+
+<div id="main-view" data-role="view" data-title="Truck Check-Out" data-use-native-scrolling="true">
+    <header data-role="header">
+        <div data-role="navbar">
+            <a data-align="right" data-icon="mymenuicon" data-role="button" href="#report-menu">Report Menu</a>
+        </div>
+    </header>
+    <div id="logo" style="text-align:center; margin-top:20px;">
+        <img src="~/Images/logo.png" width="310" height="65">
+    </div>
+    <h1>Truck Check-Out</h1>
+
+    <div id="truck-list"></div>
+</div>
+<div id="details-view" data-role="view" data-title="Truck Details" data-use-native-scrolling="true">
+    <header data-role="header">
+        <div data-role="navbar">
+            <a class="nav-button" data-align="right" data-role="backbutton">Back</a>
+            <span data-role="view-title"></span>
+        </div>
+    </header>
+
+    <h2>Truck Details</h2>
+
+    <div id="truck-detail"></div>
+</div>
+
+@section Scripts {
+    <script id="list-template" type="text/x-kendo-template">
+        <ul id="truck-list-view" data-role="listview" data-style="inset">
+        # for (var i = 0; i < data.length; i++) { #
+            <li>
+                <a class="details-link" data-log-id="#= data[i].TruckLogId #">
+                Date: #= kendo.toString(moment.utc(data[i].InDate, "YYYY-MM-DDTHH:mm:ss").local().toDate(), "g") #<br />
+                Company: #= data[i].Company #<br />
+                Driver: #= data[i].InDriver #<br />
+                Tractor \\#: #= data[i].TractorNumber #
+                </a>
+            </li>
+        # } #
+        </ul>
+    </script>
+    <script id="details-template" type="text/x-kendo-template">
+        <ul id="truck-list-view" data-role="listview" data-style="inset">
+            <li>
+                <b>Date:</b><br />
+                #= kendo.toString(moment.utc(data.InDate, "YYYY-MM-DDTHH:mm:ss").local().toDate(), "g") #
+            </li>
+            <li>
+                <b>Company:</b><br />
+                #= data.Company #
+            </li>
+            <li>
+                <b>Inbound Driver:</b><br />
+                #= data.InDriver #
+            </li>
+            <li>
+                <b>Tractor \\#:</b><br />
+                #= data.TractorNumber #
+            </li>
+            <li>
+                <label for="out-driver">Outbound Driver</label><span class="required-indicator">*</span><br />
+                <input id="out-driver" type="text" maxlength="50" value="#= data.InDriver #" class="k-input k-textbox" required data-required-msg="Please enter the Outbound Driver name." />
+            </li>
+            <li>
+                <label for="out-trailer-number">Trailer \\#</label><br />
+                <input id="out-trailer-number" type="text" maxlength="50" class="k-input k-textbox" />
+            </li>
+            <li>
+                <label for="out-seal-number">Seal \\#</label><br />
+                <input id="out-seal-number" type="text" maxlength="50" class="k-input k-textbox" />
+            </li>
+            <li>
+                <label for="out-notes">Notes on Exit</label><br />
+                <textarea id="out-notes" maxlength="2000" class="k-input k-textbox"></textarea>                
+            </li>
+            <li>
+                <ul class="submit-buttons">
+                    <li><a id="btnUpdate" data-role="button" data-log-id="#= data.TruckLogId #">Check Out</a></li>
+                </ul>
+            </li>
+        </ul>
+    </script>
+
+    <script type="text/javascript">
+        var clientSiteId = @Model.ClientSiteId;
+    </script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/TruckLogOut.Mobile.js")
+}

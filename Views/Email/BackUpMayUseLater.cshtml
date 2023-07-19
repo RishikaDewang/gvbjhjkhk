@@ -1,0 +1,321 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    <div id="main-area"></div>
+
+    <script id="report-template" type="text/x-kendo-template">
+        <div style="font-family:Arial;font-size:12px;">
+            <p style="margin-bottom:10px"><img src="#= siteBaseUrl #Images/logo_small.png" alt="Logo" border="0" /></p>
+            <p style="font-size:18px;margin-bottom:12px;">
+                <b>Daily Activity Report</b>
+            </p>
+            <p>
+                <b>Time Zone: #= data.report.TimeZoneDisplayName #</b>
+            </p>
+            <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+            <b>DATE, CLIENT, &amp; SITE<b/>
+            <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+            <table class="label-value">
+	            <tr>
+		            <td>Date Entered:</td>
+		            <td>#= moment.utc(data.report.CreatedDate, "YYYY-MM-DDTHH:mm:ss").tz(data.report.TimeZoneName).format("MM/DD/YYYY hh:mm A") #</td>
+	            </tr>
+	            <tr>
+		            <td>Client:</td>
+		            <td>#= data.report.ClientName #</td>
+	            </tr>
+	            <tr>
+		            <td>Site Name:</td>
+		            <td>#= data.report.SiteName #</td>
+	            </tr>
+            <table>
+            <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+            <b>OFFICER INFORMATION<b/>
+            <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+            <table class="label-value">
+	            <tr>
+		            <td>User Name:</td>
+		            <td>#= data.report.UserName #</td>
+	            </tr>
+	            <tr>
+		            <td>Officer Name:</td>
+		            <td>#= data.report.OfficerFullName #</td>
+	            </tr>
+            </table>
+            <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+            <b>SHIFT START NOTES<b/>
+            <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+            <table class="label-value">
+	            <tr class="post-shift">
+		            <td>Post/Shift:</td>
+		            <td>#= data.report.PostShift #</td>
+	            </tr>
+	            <tr class="special-instructions">
+		            <td>Special Instructions:</td>
+		            <td>#= addBreaks(data.report.SpecialInstructions) #</td>
+	            </tr>
+	            <tr class="post-items-received">
+		            <td>Post Items Received:</td>
+		            <td>#= addBreaks(data.report.PostItemsReceived) #</td>
+	            </tr>
+            </table>
+            <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+            <b>OBSERVATIONS<b/>
+            <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="width:5%;">\\#</th>
+                        <th style="width:15%;">Type</th>
+                        <th style="width:18%;">Time</th>
+                        <th style="width:62%;">Comments</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    # for (var i = 0; i < data.observations.length; i++) { #
+                        <tr class="observation-#= i + 1 #">
+                            <td>#= i + 1 #</td>
+                            <td>#= data.observations[i].ObservationTypeName #</td>
+                            <td>#= moment.utc(data.observations[i].ObservationDate, "YYYY-MM-DDTHH:mm:ss").tz(data.report.TimeZoneName).format("MM/DD/YYYY hh:mm A") #</td>
+                            <td>#= addBreaks(data.observations[i].Observation) #</td>
+                        </tr>
+                    # } #
+                </tbody>
+            </table>
+            <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+            <b>RELIEVING OFFICER INFORMATION</b>
+            <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+            <table class="label-value">
+	            <tr class="relieving-officer-info">
+		            <td>First Name:</td>
+		            <td>#= data.report.RelievingOfficerFirstName #</td>
+	            </tr>
+	            <tr class="relieving-officer-info">
+		            <td>Last Name:</td>
+		            <td>#= data.report.RelievingOfficerLastName #</td>
+	            </tr>
+            </table>
+            # if (data.entityComments.length > 0) { #
+            <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+            <b>COMMENTS</b>
+            <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="width:19%;">Date</th>
+                        <th style="width:19%;">Entered By</th>
+                        <th style="width:19%;">Related Section</th>
+                        <th style="width:43%;">Comment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                # for (var i = 0; i < data.entityComments.length; i++) { #
+                    <tr>
+                        <td>#= moment.utc(data.entityComments[i].CreatedDate, "YYYY-MM-DDTHH:mm:ss").tz(data.report.TimeZoneName).format("MM/DD/YYYY hh:mm A") #</td>
+                        <td>#= data.entityComments[i].FullName #</td>
+                        <td>#= data.entityComments[i].RelatedSection #</td>
+                        <td>#= addBreaks(data.entityComments[i].Comment) #</td>
+                    </tr>
+                # } #
+                </tbody>
+            </table>
+            # } #
+        </div>
+    </script>
+    <script src="~/Scripts/jquery.min.js"></script>
+    @Html.VersionedJsUrl("/Scripts/kendo.all.min.js")
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/Scripts/moment-timezone.min.js"></script>
+    <script src="~/Scripts/moment-timezone-data.min.js"></script>
+    <script src="~/Scripts/purl.js"></script>
+	<script type="text/javascript">
+	    var url = $.url();
+	    var entityId = url.segment(-1);
+	    var sections = null;
+	    var timeZoneName = null;
+	    var siteBaseUrl = '@ORWeb.Classes.Shared.App.SiteBaseUrl';
+
+	    var errorOccurred = false;
+	    var contentGenerated = false;
+	    var documentReady = false;
+	    var messageLog = '';
+	    var resultData = '';
+	    var errorMessage = '';
+
+	    $(function () {
+	        documentReady = true;
+	        logMessage('set documentReady to true');
+
+	        $.getJSON("/api/Utility/GetDailyActivityReport/" + entityId)
+                .done(function (data) {
+                    var template = kendo.template($("#report-template").html());
+                    var result = template(data);
+                    $("#main-area").html(result);
+
+                    $('.label-value').css({
+                        'border-collapse': 'collapse',
+                        'width': '100%'
+                    });
+
+                    $('.table').css({
+                        'border-collapse': 'collapse',
+                        'width': '100%'
+                    });
+
+                    $('.label-value td:first-child').css({
+                        'width': '20%',
+                        'vertical-align': 'top',
+                        'border': '1px solid #cccccc',
+                        'padding': '4px',
+                        'text-align': 'right',
+                        'font-weight': 'bold',
+                        'font-family': 'Arial',
+                        'font-size': '12px'
+                    });
+
+                    $('.label-value td:nth-child(2)').css({
+                        'width': '80%',
+                        'vertical-align': 'top',
+                        'border': '1px solid #cccccc',
+                        'padding': '4px',
+                        'font-weight': 'normal',
+                        'font-family': 'Arial',
+                        'font-size': '12px'
+                    });
+
+                    $('.table th').css({
+                        'text-align': 'left',
+                        'vertical-align': 'top',
+                        'border': '1px solid #cccccc',
+                        'padding': '4px',
+                        'font-weight': 'bold',
+                        'font-family': 'Arial',
+                        'font-size': '12px'
+                    });
+
+                    $('.table td').css({
+                        'vertical-align': 'top',
+                        'border': '1px solid #cccccc',
+                        'padding': '4px',
+                        'font-weight': 'normal',
+                        'font-family': 'Arial',
+                        'font-size': '12px'
+                    });
+
+                    $('.label-value').removeClass('label-value');
+                    $('.table').removeClass('table');
+
+                    sections = [
+                        { sectionName: 'Entire Report' },
+                        { sectionName: 'Post/Shift' },
+                        { sectionName: 'Special Instructions' },
+                        { sectionName: 'Post Items Received' },
+                    ];
+                    for (var i = 0; i < data.observations.length; i++) {
+                        sections.push({ sectionName: 'Observation ' + (i + 1) });
+                    }
+                    sections.push({ sectionName: 'Relieving Officer Information' });
+                    timeZoneName = data.report.TimeZoneName;
+
+                    resultData = $("#main-area").html();
+
+
+                    var highlightClasses = [];
+                    $.each(data.entityComments, function (i, comment) {
+                        if ((/^Observation/).test(comment.RelatedSection)) {
+                            highlightClasses.push('.observation-' + comment.RelatedSection.split(" ")[1]);
+                        }
+                        else {
+                            switch (comment.RelatedSection) {
+                                case 'Post/Shift':
+                                    highlightClasses.push('.post-shift');
+                                    break;
+                                case 'Special Instructions':
+                                    highlightClasses.push('.special-instructions');
+                                    break;
+                                case 'Post Items Received':
+                                    highlightClasses.push('.post-items-received');
+                                    break;
+                                case 'Relieving Officer Information':
+                                    highlightClasses.push('.relieving-officer-info');
+                                    break;
+                            }
+                        }
+                    });
+                    highlightClasses = $.unique(highlightClasses);
+                    $.each(highlightClasses, function (i, highlightClass) {
+                        $(highlightClass + ' td').css({
+                            'background-color': '#f2dede',
+                            'border-color': '#eed3d7'
+                        });
+                        $(highlightClass).removeClass(highlightClass.replace('.',''));
+                    });
+
+                    contentGenerated = true;
+                })
+                .fail(function (jqxhr, textStatus, error) {
+                    errorMessage = textStatus + ', ' + error;
+                    console.log("Request Failed: " + errorMessage);
+                    logMessage(errorMessage);
+                    errorOccurred = true;
+                });
+	    });
+
+	    function nullToString(value) {
+	        return (value != null) ? value : '--';
+	    }
+
+	    function addBreaks(value) {
+	        return (value != null) ? value.replace(/\n/g, '<br />') : '';
+	    }
+
+	    function removeBreaks(value) {
+	        return (value != null) ? value.replace(/<br\s*[\/]?>/gi, "\n") : '';
+	    }
+
+	    function logMessage(message) {
+	        messageLog = messageLog + message + '<br/>';	
+	    }
+
+	    function isDone() {
+	        return (contentGenerated || errorOccurred);
+	    }
+
+	    function getMessageLog() {
+	        return messageLog;
+	    }
+
+	    function getErrorMessage() {
+	        return errorMessage;
+	    }
+
+	    function isSuccess() {
+	        return contentGenerated;
+	    }
+
+	    function isDocumentReady() {
+	        return documentReady;
+	    }
+
+	    function getResultData() {
+	        if (contentGenerated) {
+	            return resultData;
+	        }
+	        else if (errorOccurred) {
+	            return JSON.stringify({ 'error': errorMessage });
+	        }
+	        else {
+	            return '';
+	        }
+	    }
+	</script>
+</body>
+</html>

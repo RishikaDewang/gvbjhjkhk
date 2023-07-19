@@ -1,0 +1,84 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Policy Manual";
+}
+
+<div id="main-view" data-role="view" data-title="Policy Manual" data-use-native-scrolling="true">
+    <header data-role="header">
+        <div data-role="navbar">
+            <a data-align="right" data-icon="mymenuicon" data-role="button" href="#report-menu">Report Menu</a>
+        </div>
+    </header>
+    <div id="logo" style="text-align:center; margin-top:20px;">
+        <img src="~/Images/logo.png" width="310" height="65">
+    </div>
+    <h2>Policy Manual</h2>
+
+    <div id="policy-manual-list"></div>
+</div>
+<div id="details-view" data-role="view" data-title="Policy Manual" data-use-native-scrolling="true">
+    <header data-role="header">
+        <div data-role="navbar">
+            <a class="nav-button" data-align="right" data-role="backbutton">Back</a>
+            <span data-role="view-title"></span>
+        </div>
+    </header>
+
+    <h2>Policy Manual Entry Details</h2>
+
+    <div id="policy-manual-details"></div>
+</div>
+
+@section Scripts {
+    <script id="manual-list-template" type="text/x-kendo-template">
+        # for (var i = 0; i < data.length; i++) { #
+            <ul id="manual-list-view" data-role="listview" data-style="inset">
+                <li class="report-separator">
+                    #= data[i].CategoryName #
+                </li>
+                # for (var j = 0; j < data[i].PolicyManualSubCategories.length; j++) { #
+                    # for (var k = 0; k < data[i].PolicyManualSubCategories[j].PolicyManualEntries.length; k++) { #
+                        # var entry = data[i].PolicyManualSubCategories[j].PolicyManualEntries[k]; #
+                        # if (!entry.IsDeleted) { #
+                        <li>
+                            <a class="manual-entry-button" data-entry-id="#= entry.PolicyManualEntryId #">#= entry.Title #</a>
+                        </li>
+                        # } #
+                    # } #
+                # } #
+            </ul>
+        # } #
+    </script>
+    <script id="manual-details-template" type="text/x-kendo-template">
+        <ul id="manual-list-view" data-role="listview" data-style="inset">
+            <li>
+                <b>Date</b><br />
+                #= kendo.toString(moment.utc(data.CreatedDate, "YYYY-MM-DDTHH:mm:ss").local().toDate(), "g") #
+            </li>
+            <li>
+                <b>Category</b><br />
+                #= data.CategoryName #
+            </li>
+            <li>
+                <b>Subcategory</b><br />
+                #= data.SubCategoryName #
+            </li>
+            <li>
+                <b>Title</b><br />
+                #= data.Title #
+            </li>
+            <li>
+                <b>Details</b><br />
+                #= replaceBreaks(data.Details) #
+            </li>
+            # if (data.FileName) { # 
+            <li>
+                <b>File Attachment</b><br />
+                <a href="/Upload/#= data.FileName #" download="#= data.OriginalFileName #">#= data.OriginalFileName #</a>
+            </li>
+            # } #
+        </ul>
+    </script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/PolicyManual.Mobile.js")
+}

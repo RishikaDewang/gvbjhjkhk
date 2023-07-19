@@ -1,0 +1,444 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Custom Report Test";
+}
+
+<div style="padding:10px 0 26px 10px;">
+    <div class="report-separator">
+        Custom Report Definition
+    </div>
+    <div class="form-row clearfix">
+        <div class="form-label"><label for="form-definition">Definition:</label></div>
+        <div class="form-field"><textarea id="form-definition" name="form-definition" class="k-textbox"></textarea></div>
+    </div>
+    <div class="form-row clearfix">
+        <div class="form-label">&nbsp;</div>
+        <div class="form-field"><button id="create-form" class="k-button" style="width:140px; font-weight:bold; font-family: Verdana;">Submit</button></div>
+    </div>
+</div>
+
+<div id="dynamic-form-div" style="padding:10px 0 26px 10px;">
+
+</div>
+
+<div id="grid"></div>
+
+<script id="photo-list-template-edit" type="text/x-kendo-tmpl">
+    # for (var i = 0; i < data.length; i++) { #
+    <div class="clearfix">
+        <div style="float:left; vertical-align:top; margin-right: 10px; margin-bottom: 3px;">
+            <div>
+                <img src="#: data[i].SmallUrl #" />
+            </div>
+            <div style="margin-top:8px;">
+                <b>Description:</b><br />
+                <textarea maxlength="1000" class="k-textbox photo-description" data-photo-id="#= data[i].PhotoSmall #" data-modified="false">#= nullToString(data[i].PhotoDescription) #</textarea>
+            </div>
+        </div>
+        <div style="float:left; vertical-align:top;"><button type="button" data-role="button" class="remove-photo" style="display:none;" data-photo-id="#= data[i].PhotoSmall #"><span class="k-icon k-i-close"></span> Remove</button></div>
+    </div>
+    <hr class="hr-sep" />
+    # } #
+</script>
+<script id="media-list-template-edit" type="text/x-kendo-tmpl">
+    # for (var i = 0; i < data.length; i++) { #
+    <div class="clearfix">
+        <div style="float:left; vertical-align:top; margin-right: 10px; margin-bottom: 3px;">
+            <div>
+                # if (data[i].MediaTypeId == 3) {#
+                <b>Video File: </b>
+                # } else if (data[i].MediaTypeId == 2) { #
+                <b>Audio File: </b>
+                # } #<br />
+                #: data[i].OriginalFileName #
+            </div>
+            <div style="margin-top:8px;">
+                <b>Description:</b><br />
+                <textarea maxlength="1000" class="k-textbox media-description" data-media-id="#= data[i].FileName #" data-modified="false">#= nullToString(data[i].AttachmentDescription) #</textarea>
+            </div>
+        </div>
+        <div style="float:left; vertical-align:top;"><button type="button" data-role="button" class="remove-media" style="display:none;" data-media-id="#= data[i].FileName #"><span class="k-icon k-i-close"></span> Remove</button></div>
+    </div>
+    <hr class="hr-sep" />
+    # } #
+</script>
+<script id="attachment-list-template-edit" type="text/x-kendo-tmpl">
+    # for (var i = 0; i < data.length; i++) { #
+    <div class="clearfix">
+        <div style="float:left; vertical-align:top; margin-right: 10px; margin-bottom: 3px;">
+            <div>
+                <b>File: </b><br /> #: data[i].OriginalFileName #
+            </div>
+            <div style="margin-top:8px;">
+                <b>Description:</b><br />
+                <textarea maxlength="1000" class="k-textbox attachment-description" data-attachment-id="#= data[i].FileName #" data-modified="false">#= nullToString(data[i].AttachmentDescription) #</textarea>
+            </div>
+        </div>
+        <div style="float:left; vertical-align:top;"><button type="button" data-role="button" class="remove-attachment" style="display:none;" data-attachment-id="#= data[i].FileName #"><span class="k-icon k-i-close"></span> Remove</button></div>
+    </div>
+    <hr class="hr-sep" />
+    # } #
+</script>
+
+<script id="form-template" type="text/x-kendo-template">
+    <form id="dynamic-form">
+    <div class="report-separator">
+        #= data.reportNameSingular #<br />
+        #= data.entityId #
+    </div>
+    # for (var i = 0; i < data.formItems.length; i++) { #
+        # if (data.formItems[i].type === 'separator') { #
+            <div class="report-separator">
+                #= data.formItems[i].html #
+            </div>
+        # } else { #
+            <div class="form-row clearfix">
+                <div class="form-label">
+                    <label for="#= data.formItems[i].id #">#= data.formItems[i].label #</label>
+                    # if (data.formItems[i].required) { #
+                        <span class="required-indicator">*</span>
+                    # } #
+                </div>
+                <div class="form-field">
+                    # if ((data.formItems[i].type === 'text') || (data.formItems[i].type === 'email') || (data.formItems[i].type === 'number') || (data.formItems[i].type === 'tel') || (data.formItems[i].type === 'url')) { #
+                        <input id="#= data.formItems[i].id #" name="#= data.formItems[i].id #" type="#= data.formItems[i].type #" class="k-textbox #= data.formItems[i].class #" # if (data.formItems[i].maxlength) { # maxlength="#= data.formItems[i].maxlength #" # } # data-bind="value: report.#= data.formItems[i].id #" # if (data.formItems[i].required) { # required data-required-msg="#= data.formItems[i].requiredMessage #" # } # />
+                    # } else if (data.formItems[i].type === 'select') { #
+                        <select id="#= data.formItems[i].id #" name="#= data.formItems[i].id #" class="#= data.formItems[i].class #" data-role="dropdownlist" data-option-label="-- Select --" data-bind="value: report.#= data.formItems[i].id #" data-value-primitive="true" # if (data.formItems[i].required) { # required data-required-msg="#= data.formItems[i].requiredMessage #" # } #>
+                        # for (var j = 0; j < data.formItems[i].options.length; j++) { #
+                            <option value="#= data.formItems[i].options[j].value #">#= data.formItems[i].options[j].text #</option>
+                        # } #
+                        </select>
+                        <span class="k-invalid-msg" data-for="#= data.formItems[i].id #"></span>
+                    # } else if (data.formItems[i].type === 'datetime') { #
+                        <input id="#= data.formItems[i].id #" name="#= data.formItems[i].id #" class="#= data.formItems[i].class #" data-bind="value: report.#= data.formItems[i].id #" # if (data.formItems[i].required) { # required data-required-msg="#= data.formItems[i].requiredMessage #" # } # />
+                        <span class="k-invalid-msg" data-for="#= data.formItems[i].id #"></span>
+                    # } else if (data.formItems[i].type === 'date') { #
+                        <input id="#= data.formItems[i].id #" name="#= data.formItems[i].id #" class="#= data.formItems[i].class #" data-bind="value: report.#= data.formItems[i].id #" # if (data.formItems[i].required) { # required data-required-msg="#= data.formItems[i].requiredMessage #" # } # />
+                        <span class="k-invalid-msg" data-for="#= data.formItems[i].id #"></span>
+                    # } else if (data.formItems[i].type === 'kendoMultiSelect') { #
+                        <select id="#= data.formItems[i].id #" name="#= data.formItems[i].id #" class="#= data.formItems[i].class #" data-role="multiselect" data-option-label="-- Select --" data-bind="value: report.#= data.formItems[i].id #" data-value-primitive="true" # if (data.formItems[i].required) { # required data-required-msg="#= data.formItems[i].requiredMessage #" # } #>
+                        # for (var j = 0; j < data.formItems[i].options.length; j++) { #
+                            <option value="#= data.formItems[i].options[j].value #">#= data.formItems[i].options[j].text #</option>
+                        # } #
+                        </select>
+                        <span class="k-invalid-msg" data-for="#= data.formItems[i].id #"></span>
+                    # } else if (data.formItems[i].type === 'checkBoxList') { #
+                        # for (var j = 0; j < data.formItems[i].options.length; j++) { #
+                            <label>
+                                <input type="checkbox" name="#= data.formItems[i].id #" value="#= data.formItems[i].options[j].value #" data-bind="checked: report.#= data.formItems[i].id #" />
+                                #= data.formItems[i].options[j].text #
+                            </label><br />
+                        # } #
+                        <span class="k-invalid-msg" data-for="#= data.formItems[i].id #"></span>
+                    # } else if (data.formItems[i].type === 'checkBox') { #
+                        <input type="checkbox" name="#= data.formItems[i].id #" data-bind="checked: report.#= data.formItems[i].id #" />
+                    # } else if (data.formItems[i].type === 'radioButtonList') { #
+                        # for (var j = 0; j < data.formItems[i].options.length; j++) { #
+                            <label>
+                                <input type="radio" name="#= data.formItems[i].id #" value="#= data.formItems[i].options[j].value #" data-bind="checked: report.#= data.formItems[i].id #" />
+                                #= data.formItems[i].options[j].text #
+                            </label><br />
+                        # } #
+                        <span class="k-invalid-msg" data-for="#= data.formItems[i].id #"></span>
+                    # } else if (data.formItems[i].type === 'radioBoolean') { #
+                        <label>
+                            <input type="radio" name="#= data.formItems[i].id #" value="true" data-bind="checked: report.#= data.formItems[i].id #" />
+                            #= data.formItems[i].options.trueLabel #
+                        </label>
+                        <label>
+                            <input type="radio" name="#= data.formItems[i].id #" value="false" data-bind="checked: report.#= data.formItems[i].id #" />
+                            #= data.formItems[i].options.falseLabel #
+                        </label>
+                        <span class="k-invalid-msg" data-for="#= data.formItems[i].id #"></span>
+                    # } else if (data.formItems[i].type === 'autoComplete') { #
+                        <input id="#= data.formItems[i].id #" name="#= data.formItems[i].id #" class="#= data.formItems[i].class #" data-bind="value: report.#= data.formItems[i].id #" # if (data.formItems[i].required) { # required data-required-msg="#= data.formItems[i].requiredMessage #" # } # />
+                        <span class="k-invalid-msg" data-for="#= data.formItems[i].id #"></span>
+                    # } else if (data.formItems[i].type === 'textarea') { #
+                        <textarea id="#= data.formItems[i].id #" name="#= data.formItems[i].id #" class="k-textbox #= data.formItems[i].class #" # if (data.formItems[i].maxlength) { # maxlength="#= data.formItems[i].maxlength #" # } # data-bind="value: report.#= data.formItems[i].id #" # if (data.formItems[i].required) { # required data-required-msg="#= data.formItems[i].requiredMessage #" # } #></textarea>
+                    # } else if (data.formItems[i].type === 'kendoNumeric') { #
+                        <input id="#= data.formItems[i].id #" name="#= data.formItems[i].id #" class="#= data.formItems[i].class #" # if (data.formItems[i].maxlength) { # maxlength="#= data.formItems[i].maxlength #" # } # data-bind="value: report.#= data.formItems[i].id #" # if (data.formItems[i].required) { # required data-required-msg="#= data.formItems[i].requiredMessage #" # } # />
+                        <span class="k-invalid-msg" data-for="#= data.formItems[i].id #"></span>
+                    # } else if (data.formItems[i].type === 'upload') { #
+                        <div style="width:90%; max-width:780px;">
+                            <div style="margin-bottom:6px;"><button id="btn-add-photo" class="k-button" type="button" style="width:140px;font-weight:bold; font-family: Verdana;">+ Add Photo, Video, or Audio</button></div>
+                            <div id="upload-progress-wrapper" style="width:100%;"></div>
+                            <div style="height: 0;width:0; overflow:hidden;"><input name="fileUpload" id="fileUpload" type="file" /></div>
+                            <div id="photo-list" style="margin-top:8px;"></div>
+                            <div id="media-list" style="margin-top:8px;"></div>
+                            <div id="attachment-list" style="margin-top:8px;"></div>
+                        </div>
+                    # } #
+                </div>
+            </div>
+        # } #
+    # } #
+    <div class="form-row clearfix">
+        <div class="form-label">&nbsp;</div>
+        <div class="form-field"><button class="k-button" data-bind="click: submit" style="width:140px; font-weight:bold; font-family: Verdana;">Submit</button></div>
+    </div>
+    </form>
+</script>
+
+<script id="details-template" type="text/x-kendo-template">
+    <div style="float:left;">
+        <h1>#= data.definition.reportNameSingular #</h1>
+    </div>
+    <div class="bootstrap-scope" style="float:right; text-align:right; padding: 14px 10px 0 0;">
+        <button id="print" type="button" class="btn btn-primary">
+            <span class="glyphicon glyphicon-print"></span> Print
+        </button>
+        <button id="edit" style="display:none;" type="button" class="btn btn-primary">
+            <span class="glyphicon glyphicon-pencil"></span> Edit
+        </button>
+        <button id="approve" style="display:none;" type="button" class="btn btn-primary">
+            <span class="glyphicon glyphicon-ok"></span> Approve
+        </button>
+        <span id="upload-button" style="display:none;" class="btn btn-success fileinput-button">
+            <i class="glyphicon glyphicon-upload"></i>
+            <span>Add File</span>
+            <input name="file-upload" id="file-upload" type="file" />
+        </span>
+        <div id="progress" class="progress" style="display:none; width:300px;margin-top:4px;">
+            <div class="progress-bar progress-bar-success"></div>
+        </div>
+    </div>
+    <div style="clear:both;"></div>
+    <hr style="background-color: \\#cccccc; border: 0 none; height:1px;">
+    <div id="main-area" class="bootstrap-scope" style="padding: 10px 5px 0 5px;"></div>
+    <div class="bootstrap-scope" style="padding: 0 5px 0 5px;">
+        <div class="panel panel-default" style="border-bottom-right-radius: 0; border-bottom-left-radius: 0; margin-bottom: 0px;">
+            <div class="panel-heading">COMMENTS</div>
+        </div>
+    </div>
+    <div style="padding: 0 5px 0 5px;">
+        <div id="comments"></div>
+    </div>
+</script>
+
+<script id="report-header-template" type="text/x-kendo-template">
+    <div class="panel panel-default">
+        <div class="panel-heading">ID, DATE, CLIENT, &amp; SITE</div>
+        <table class="table table-condensed no-lines">
+            <tr>
+                <td>Internal ID:</td>
+                <td>#= data.report.report_id #</td>
+            </tr>
+            <tr>
+                <td>Date Entered:</td>
+                <td>#= moment(data.report.report_data.CreatedDateSite, "YYYY-MM-DDTHH:mm:ss").format("MM/DD/YYYY hh:mm A") #</td>
+            </tr>
+            <tr>
+                <td>Client:</td>
+                <td>#= data.dataItem.ClientName #</td>
+            </tr>
+            <tr>
+                <td>Site:</td>
+                <td>#= data.dataItem.SiteName #</td>
+            </tr>
+        </table>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">OFFICER / ENTERED BY</div>
+        <table class="table table-condensed no-lines">
+            <tr class="officer-name">
+                <td>Officer Name:</td>
+                <td>#= data.dataItem.OfficerFullName #</td>
+            </tr>
+        </table>
+    </div>
+    <div class="panel panel-default internal-info">
+        <div class="panel-heading">APPROVAL, VISIBILITY, LAST MODIFIED (INTERNAL)</div>
+        <table class="table table-condensed no-lines">
+            <tr>
+                <td>Is Approved:</td>
+                <td>
+                    # if (data.definition.approvalRequired) { #
+                        #= boolToYesNo(data.report.is_approved) #
+                    # } else { #
+                        N/A
+                    # } #
+                </td>
+            </tr>
+            # if (data.definition.approvalRequired && data.report.is_approved) { #
+            <tr>
+                <td>Approved Date:</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Approved By:</td>
+                <td>#= data.report.approved_date_site #</td>
+            </tr>
+            # } #
+            <tr>
+                <td>Visible to Client/Site:</td>
+                <td>
+                    # if (data.definition.approvalRequired && !data.report.is_approved) { #
+                        No
+                    # } else { #
+                        Yes
+                    # } #
+                </td>
+            </tr>
+            <tr>
+                <td>Last Modified Date:</td>
+                <td>
+                    # if (data.report.last_updated_date_site) { #
+                        #= data.report.last_updated_date_site #
+                    # } #
+                </td>
+            </tr>
+            <tr>
+                <td>Last Modified By:</td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+</script>
+
+<script id="report-template" type="text/x-kendo-template">
+    # var isFirstSeparator = true; #
+    # for (var i = 0; i < data.definition.formItems.length; i++) { #
+        # if (data.definition.formItems[i].type === 'separator') { #
+            # if (!isFirstSeparator) { #
+                    </table>
+                </div>
+            # } else { isFirstSeparator = false; } #
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        #= data.definition.formItems[i].html #
+                    </div>
+                    <table class="table table-condensed no-lines">
+        # } else if (data.definition.formItems[i].type !== 'upload') { #
+            <tr>
+                <td>#= data.definition.formItems[i].label #</td>
+                <td>
+                    # if (data.definition.formItems[i].type === 'datetime') { #
+                        #= moment(data.report.report_data[data.definition.formItems[i].id], "YYYY-MM-DDTHH:mm:ss").format("MM/DD/YYYY hh:mm A") #
+                    # } else if ((data.definition.formItems[i].type === 'kendoMultiSelect') || (data.definition.formItems[i].type === 'checkBoxList')) { #
+                        # if (data.report.report_data[data.definition.formItems[i].id]) { #
+                            # for (var j =0; j < data.report.report_data[data.definition.formItems[i].id].length; j++) { #
+                                #= data.report.report_data[data.definition.formItems[i].id][j] #<br /> 
+                            # } #
+                        # } #
+                    # } else if (data.definition.formItems[i].type === 'radioBoolean') { #
+                        # if (data.report.report_data[data.definition.formItems[i].id] !== null) { #
+                            # if (data.report.report_data[data.definition.formItems[i].id] === true) { #
+                                #= data.definition.formItems[i].options.trueLabel #
+                            # } else { #
+                                #= data.definition.formItems[i].options.falseLabel #
+                            # } # 
+                        # } #
+                    # } else if (data.definition.formItems[i].type === 'checkBox') { #
+                        # if (data.report.report_data[data.definition.formItems[i].id] !== null) { #
+                            # if (data.report.report_data[data.definition.formItems[i].id] === true) { #
+                                #= 'Yes' #
+                            # } else { #
+                                #= 'No' #
+                            # } # 
+                        # } #
+                    # } else if ((data.definition.formItems[i].type === 'number') || (data.definition.formItems[i].type === 'kendoNumeric')) { #
+                        # if (data.report.report_data[data.definition.formItems[i].id] !== null) { #
+                            #= data.report.report_data[data.definition.formItems[i].id] #
+                        # } #
+                    # } else  { #
+                        #= replaceBreaks(data.report.report_data[data.definition.formItems[i].id]) #
+                    # } #
+                </td>
+            </tr>
+        # } #
+    # } #
+        </table>
+    </div>
+</script>
+@section Head {
+<style>
+    /* may move - details window css */
+    #cboxOverlay {
+        z-index: 11001;
+    }
+
+    #colorbox {
+        z-index: 11002;
+    }
+
+    #details-window,
+    #edit-window {
+        font-size: 13px;
+    }
+
+        #edit-window .form-field {
+            padding-top: 1px;
+        }
+
+    /* fix out of line delete button */
+    .k-grid tbody td > .k-grid-delete {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    .bootstrap-scope .no-lines tbody > tr > td {
+        border-top: none;
+        padding: 3px;
+    }
+    /*
+        .bootstrap-scope .no-lines tbody > tr td:nth-of-type(1) {
+            text-align:right;
+            width: 180px;
+            font-weight: bold;
+        }
+        */
+    .bootstrap-scope .no-lines tbody > tr td:first-child {
+        text-align: right;
+        width: 180px;
+        font-weight: bold;
+    }
+
+    .bootstrap-scope .panel-default > .panel-heading {
+        font-weight: bold;
+        color: #05508f;
+    }
+
+    .k-grid td {
+        vertical-align: top;
+    }
+
+    /* remove red border on firefox for required or invalid fields */
+    input:required, textarea {
+        box-shadow: none;
+    }
+
+    input:invalid, textarea {
+        box-shadow: none;
+    }
+
+    .k-grid-export-image, .k-i-excel {
+        display: inline-block;
+        background: url('/images/Excel-icon.png');
+        margin-right: 4px !important;
+    }
+
+    .internal-info {
+        display:none;
+    }
+    textarea.k-textbox.photo-description,
+    textarea.k-textbox.media-description,
+    textarea.k-textbox.attachment-description {
+        width: 380px;
+        height: 70px;
+    }
+</style>
+}
+
+@section Scripts {
+    <!-- find a different way to set clientSiteId -->
+    <script src="~/Scripts/underscore-min.js"></script>
+    <script type="text/javascript">
+        var clientSiteId = @Model.ClientSiteId;
+
+        function boolToYesNo(value) {
+            return (value) ? 'Yes' : 'No';
+        }
+    </script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/CustomReportTest.js")
+}

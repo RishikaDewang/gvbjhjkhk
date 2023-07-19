@@ -1,0 +1,81 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Visitor Check-Out";
+}
+
+<div id="main-view" data-role="view" data-title="Visitor Check-Out" data-use-native-scrolling="true">
+    <header data-role="header">
+        <div data-role="navbar">
+            <a data-align="right" data-icon="mymenuicon" data-role="button" href="#report-menu">Report Menu</a>
+        </div>
+    </header>
+    <div id="logo" style="text-align:center; margin-top:20px;">
+        <img src="~/Images/logo.png" width="310" height="65">
+    </div>
+    <h1>Visitor Check-Out</h1>
+
+    <div id="visitor-list"></div>
+</div>
+<div id="details-view" data-role="view" data-title="Visitor Details" data-use-native-scrolling="true">
+    <header data-role="header">
+        <div data-role="navbar">
+            <a class="nav-button" data-align="right" data-role="backbutton">Back</a>
+            <span data-role="view-title"></span>
+        </div>
+    </header>
+
+    <h2>Visitor Details</h2>
+
+    <div id="visitor-detail"></div>
+</div>
+
+@section Scripts {
+    <script id="list-template" type="text/x-kendo-template">
+        <ul id="visitor-list-view" data-role="listview" data-style="inset">
+        # for (var i = 0; i < data.length; i++) { #
+            <li>
+                <a class="details-link" data-log-id="#= data[i].VisitorLogId #">
+                Visitor Name: #= data[i].VisitorName #<br />
+                Date: #= kendo.toString(moment.utc(data[i].InDate, "YYYY-MM-DDTHH:mm:ss").local().toDate(), "g") #<br />
+                Company: #= nullToEmptyString(data[i].Company) #<br />
+                Destination: #= data[i].Destination #
+                </a>
+            </li>
+        # } #
+        </ul>
+    </script>
+    <script id="details-template" type="text/x-kendo-template">
+        <ul id="visitor-list-view" data-role="listview" data-style="inset">
+            <li>
+                <b>Visitor Name:</b><br />
+                #= data.VisitorName #
+            </li>
+            <li>
+                <b>Date/Time In:</b><br />
+                #= kendo.toString(moment.utc(data.InDate, "YYYY-MM-DDTHH:mm:ss").local().toDate(), "g") #
+            </li>
+            <li>
+                <b>Company:</b><br />
+                #= nullToEmptyString(data.Company) #
+            </li>
+            <li>
+                <b>Destination:</b><br />
+                #= data.Destination #
+            </li>
+            <li>
+                <label for="out-notes">Notes on Exit</label><br />
+                <textarea id="out-notes" style="height: 200px;" maxlength="2000" class="k-input k-textbox"></textarea>                
+            </li>
+            <li>
+                <ul class="submit-buttons">
+                    <li><a id="btnUpdate" data-role="button" data-log-id="#= data.VisitorLogId #">Check Out</a></li>
+                </ul>
+            </li>
+        </ul>
+    </script>
+    <script type="text/javascript">
+        var clientSiteId = @Model.ClientSiteId;
+    </script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/VisitorLogOut.Mobile.js")
+}

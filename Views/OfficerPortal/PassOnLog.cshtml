@@ -1,0 +1,80 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Pass On Log";
+}
+
+<form id="report-form">
+    <div style="padding:10px 0 26px 10px;">
+        <div class="logo-heading clearfix">
+            <div class="logo-top">
+                <img src="~/Images/logo.png" height="40">
+            </div>
+            <div style="float:left;">
+                <h1>Pass On Log Entry</h1>
+            </div>
+        </div>
+        <div class="report-separator">
+            Officer and Site
+        </div>
+        <div class="form-row row-tight clearfix">
+            <div class="form-label"><label>Officer:</label></div>
+            <div class="form-field"><span>@Model.FirstName @Model.LastName</span></div>
+        </div>
+        <div class="form-row row-tight clearfix">
+            <div class="form-label"><label>Client:</label></div>
+            <div class="form-field"><span>@Model.ClientName</span></div>
+        </div>
+        <div class="form-row row-tight clearfix">
+            <div class="form-label"><label>Site:</label></div>
+            <div class="form-field"><span>@Model.SiteName</span></div>
+        </div>
+        <div class="report-separator">
+            Write to POL
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label>Post/Shift:</label><span class="required-indicator">*</span></div>
+            <div class="form-field">
+                <input id="post-shift" name="post-shift" type="text" class="k-textbox standard-width" data-bind="value: report.postShift" required data-required-msg="Please enter your Post/Shift." />
+            </div>
+        </div>
+        <div class="form-row clearfix">
+            <div class="form-label"><label>Note:</label><span class="required-indicator">*</span></div>
+            <div class="form-field">
+                <textarea id="note" name="note" class="k-textbox" data-bind="value: report.note" required data-required-msg="Please enter a Note."></textarea>
+            </div>
+        </div>
+        <div class="report-separator">
+            Photos, Videos, Audio
+        </div>
+        <div style="width:90%; max-width:780px;">
+            <div style="margin-bottom:6px;"><button id="btn-add-photo" class="k-button" type="button" style="width:140px;font-weight:bold; font-family: Verdana;">+ Add Photo, Video, or Audio</button></div>
+            <div id="upload-progress-wrapper" style="width:100%;"></div>
+            <div style="height: 0;width:0; overflow:hidden;"><input name="fileUpload" id="fileUpload" type="file" /></div>
+            <div id="photo-list" style="margin-top:8px;"></div>
+            <div id="media-list" style="margin-top:8px;"></div>
+            <div id="attachment-list" style="margin-top:8px;"></div>
+        </div>
+
+        <div class="form-row clearfix">
+            <div class="form-label">&nbsp;</div>
+            <div class="form-field">
+                <button class="k-button" data-bind="click: submit" style="width:140px; font-weight:bold; font-family: Verdana;">Submit</button>
+                <button class="k-button" data-bind="click: clearForm" style="width:140px; font-weight:bold; font-family: Verdana;">Clear Form</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Head {
+    <link href="~/Content/toastmessage/css/jquery.toastmessage.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <script type="text/javascript">
+        var clientSiteId = @Model.ClientSiteId;
+        var userId = @Model.UserId;
+    </script>
+    <script type="text/javascript" src="/Scripts/jquery.toastmessage.js"></script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/PassOnLog.js")
+}

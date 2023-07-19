@@ -1,0 +1,74 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    <div id="main-area" style="font-family:Arial;font-size:12px;"></div>
+    <script id="report-template" type="text/x-kendo-template">
+        <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+        <b>MAINTENANCE REQUEST<b/>
+        <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+        <table class="table label-value">
+            <tr>
+                <td>Maintenance Type:</td>
+                <td>#= data.report.MaintenanceTypeName #</td>
+            </tr>
+            <tr>
+                <td>If Other, What Type:</td>
+                <td>#= nullToString(data.report.TypeIfOther) #</td>
+            </tr>
+            <tr>
+                <td>Details:</td>
+                <td>#= addBreaks(data.report.Details) #</td>
+            </tr>
+        </table>
+        <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+        <b>NOTIFICATION<b/>
+        <hr style="height:1px;border:none;color:\\#000000;background-color:\\#000000;" />
+        <table class="table label-value">
+            <tr>
+                <td>Who has been notified?:</td>
+                <td>#= addBreaks(data.report.Notification) #</td>
+            </tr>
+            <tr>
+                <td>Email Client?:</td>
+                <td>#= boolToYesNo(data.report.EmailClient) #</td>
+            </tr>
+        </table>
+    </script>
+    <script src="~/Scripts/jquery.min.js"></script>
+    @Html.VersionedJsUrl("/Scripts/kendoui/v2016.1.322/kendo.all.min.js")
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/Scripts/moment-timezone.min.js"></script>
+    <script src="~/Scripts/moment-timezone-data.min.js"></script>
+    @Html.VersionedJsUrl("/Scripts/app/internal-templateloader.js")
+    @Html.VersionedJsUrl("/Scripts/app/internal-report-email.js")
+    <script src="~/Scripts/purl.js"></script>
+    <script type="text/javascript">
+        var url = $.url();
+        var entityId = url.segment(-1);
+        var entityTypeId = 3;
+        var siteBaseUrl = '@ORWeb.Classes.Shared.App.SiteBaseUrl';
+        var reportBaseUrl = "/api/Utility/GetMaintenanceRequest/";
+        var reportTitle = "Maintenance Request";
+
+        $(function () {
+            documentReady = true;
+            logMessage('set documentReady to true');
+
+            templateLoader.loadExtTemplate("/Templates/_reportPageTemplatesEmail.tmpl.htm");
+            $(document).bind("TEMPLATE_LOADED", function (e, path) {
+                logMessage('Templates loaded');
+                refreshReport();
+            });
+        });
+    </script>
+</body>
+</html>
+

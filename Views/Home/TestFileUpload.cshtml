@@ -1,0 +1,50 @@
+﻿@{
+    ViewBag.Title = "Test File Upload";
+}
+
+<span class="btn btn-success fileinput-button">
+    <i class="icon-plus icon-white"></i>
+    <span>Add Photo...</span>
+    <input id="fileUpload" type="file" name="fileUpload">
+</span>
+
+<div id="progress" class="progress">
+    <div class="progress-bar progress-bar-success"></div>
+</div>
+
+@section Head {
+    <link rel="stylesheet" href="~/Content/bootstrap/css/bootstrap-24.css" />
+    <link href="~/Content/fileupload/jquery.fileupload-ui.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <script src="~/Scripts/jquery.iframe-transport.js"></script>
+    <script src="~/Scripts/jquery.ui.widget.js"></script>
+    <script src="~/Scripts/jquery.iframe-transport.js"></script>
+    <script src="~/Scripts/jquery.fileupload.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            var url = 'http://localhost:18371/api/FileUpload/UploadImage';
+            $('#fileUpload').fileupload({
+                url: url,
+                dataType: 'json',
+                done: function (e, data) {
+                    var imageInfo = data.result.Data;
+                    console.log(JSON.stringify(imageInfo));
+                    //debugger;
+                    //$.each(data.result.files, function (index, file) {
+                    //    $('<p/>').text(file.name).appendTo('#files');
+                    //});
+                },
+                progressall: function (e, data) {
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    console.log('progress: ' + progress);
+                    $('#progress .progress-bar').css(
+                        'width',
+                        progress + '%'
+                    );
+                }
+            });
+        });
+    </script>
+}

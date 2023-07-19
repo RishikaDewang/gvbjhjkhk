@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="sitelock-site-verification" content="7765" />
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" type="image/x-icon" href="~/Images/favicon.ico">
+    <link href="~/Content/dotcom/bootstrap/css/bootstrap-scope.css" rel="stylesheet" />
+    <link href="~/Content/kendoui/v2016.1.322/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/Content/kendoui/v2016.1.322/kendo.silver.min.css" rel="stylesheet" />
+    <link href="~/Content/dotcom.css" rel="stylesheet" />
+    <style>
+        .bootstrap-scope .dropdown-no-hover > li > a:hover {
+            text-decoration: none;
+            color: #dd2c1c;
+            background-color: #F1F1F3;
+        }
+
+        .k-widget.k-tooltip-validation {
+            border-color: #ffe79e;
+            background-color: #fff4c9;
+            color: #635145;
+        }
+    </style>
+    @RenderSection("Head", false)
+    <!--[if lt IE 9]>
+    <script src="~/Scripts/json3.min.js"></script>
+    <script src="~/Scripts/html5shiv.js"></script>
+    <script src="~/Scripts/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div id="contaner">
+        <div class="header_box">
+            <div class="header_top_box">
+                <div class="logo_box"><a href="http://www.officerreports.com/index.html"><img src="~/Images/logo.jpg" alt="" width="407" height="102" border="0" /></a></div>
+
+            </div>
+
+            <div class="clear"></div>
+
+            <div id='cssmenu'>
+                <ul>
+                    <li class='active'><a href='http://www.officerreports.com/index.html'><span>Home</span></a></li>
+                    <li><a href="http://www.officerreports.com/about_us.html">About Us</a> </li>
+                    <li class='has-sub'>
+                        <a href='#'><span>Products</span></a>
+                        <ul>
+                            <li><a href='http://www.officerreports.com/products.html'><span>Reporting Software</span></a></li>
+                            <li><a href='http://www.officerreports.com/guard-tour-tracking-software.html'><span>Guard Tour Tracking Software</span></a></li>
+                            <li><a href='http://www.officerreports.com/time-and-attendance.html'><span>Time and Attendance</span></a></li>
+                            <li class='last'><a href='http://www.officerreports.com/technology-bundle.html'><span>Technology Bundle</span></a></li>
+                        </ul>
+                    </li>
+                    <li><a href="http://www.officerreports.com/faq.html">FAQs</a></li>
+                    <li><a href="http://www.officerreports.com/pricing-plans.html">Pricing </a></li>
+                    <li><a href="http://www.officerreports.com/blog">Blog</a></li>
+                    <li><a href="http://www.officerreports.com/resources.html">Resources</a></li>
+                    <li>@Html.ActionLink("Contact Us", "Index", "Contact")</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-content">
+        <div id="main-content-inner1">
+            <div id="main-content-inner2">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom_box">
+        <div class="footer_box">
+            <h1>We create affordable and easy to use software that helps security guard companies<br /> better manage their operations, better service their current contracts,<br /> and win new business. </h1>
+            <div class="footer_icon_row">
+                <div class="footer_icon_box">
+                    <div class="footer_f-icon_box">
+                        <a href="http://www.facebook.com/Officerreportscom" target="_blank"><img src="/images/f-icon.jpg" alt="" width="30" height="30" border="0" /></a>
+                    </div>
+                    <div class="footer_f-icon_box2"><a href="https://plus.google.com/106796257374956653561" target="_blank"><img src="/images/g-icon.jpg" alt="" width="30" height="30" border="0" /></a></div>
+                    <div class="footer_f-icon_box2">
+                        <a href="https://twitter.com/OfficerReports" target="_blank"><img src="/images/t-icon.jpg" alt="" width="30" height="30" border="0" /></a>
+                    </div>
+                    <div class="footer_f-icon_box2"><a href="http://www.linkedin.com/company/officerreports-com/" target="_blank"><img src="/images/in-icon.jpg" alt="" width="30" height="30" border="0" /></a></div>
+                    <div class="footer_f-icon_box2">
+                        <a href="https://www.youtube.com/user/OfficerReports" target="_blank"><img src="/images/you-icon.jpg" alt="" width="30" height="30" border="0" /></a>
+                    </div>
+                    <div class="footer_f-icon_box2">
+                        <a href="http://officerreports.tumblr.com/" target="_blank"><img src="/images/iconTumblr.jpg" alt="" width="30" height="30" border="0" /></a>
+                    </div>
+                </div>
+            </div>
+            <p>&nbsp;</p>
+            <p>
+                <a href="http://www.officerreports.com/index.html">Home</a> | <a href="http://www.officerreports.com/about_us.html">About Us</a> | <a href="http://www.officerreports.com/products.html">Products</a> | <a href="http://www.officerreports.com/faq.html">FAQs</a> | <a href="http://www.officerreports.com/blog/">Blog</a> | <a href="http://www.officerreports.com/pricing-plans.html">Pricing </a> | <a href="http://www.officerreports.com/resources.html">Resources</a> | <a href="http://www.officerreports.com/contact_us.html">Contact Us</a> | <a href="http://www.officerreports.com/terms_conditions.html">Terms & Conditions</a> <br />
+                Copyright&copy; 2016 OfficerReports.com.  All Rights Reserved.<br /><a href="http://www.bluedomino.com/green-certified/officerreports.com" onclick="MyWindow=window.open('http://www.bluedomino.com/green-certified/officerreports.com','greenCertified','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=550,height=800,left=50,top=50'); return false;"><img src="http://www.bluedomino.com/green-certified/hosting-badge-2.png" border="0"></a>
+
+                &nbsp; <a href="https://www.sitelock.com/verify.php?site=www.officerreports.com" onclick="window.open('https://www.sitelock.com/verify.php?site=www.officerreports.com','SiteLock','width=600,height=600,left=160,top=170');return false;"><img alt="malware removal and website security" title="SiteLock" src="//shield.sitelock.com/sshield/www.officerreports.com" /></a>
+                <div class="clear"></div>
+
+        </div>
+    </div>
+
+    <script id="message-template" type="text/x-kendo-template">
+        <p>#= message #</p>
+        <hr style="background-color: \\#cccccc; border: 0 none; height:1px; margin-top:16px; margin-bottom: 16px;">
+        <div style="text-align:center;">
+            <button class="ok-button k-button">OK</button>
+        </div>
+    </script>
+    <script id="wait-template" type="text/x-kendo-template">
+        <div style="text-align:center;width:170px; height:70px;">
+            <div class="k-loading-image"></div>
+        </div>
+    </script>
+    @Html.VersionedJsUrl("/Scripts/app/console.fix.js")
+    <script src="~/Scripts/jquery.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/mousehover.js"></script>
+    @Html.VersionedJsUrl("/Scripts/kendoui/v2016.1.322/kendo.all.min.js")
+    <script src="~/Scripts/jquery.cycle.lite.js"></script>
+    <script src="~/Scripts/jquery.scrollTo.min.js"></script>
+    @Html.VersionedJsUrl("/Scripts/app/internal-misc.js")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

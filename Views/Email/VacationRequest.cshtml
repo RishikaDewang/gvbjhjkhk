@@ -1,0 +1,152 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    <div id="main-area" style="font-family:Arial;font-size:12px;"></div>
+    <script id="report-template" type="text/x-kendo-template">
+        <p style="margin-bottom:10px"><img src="#= siteBaseUrl #Images/logo.png" alt="Logo" border="0" /></p>
+        <p style="font-family:Arial; font-size:12px;margin-bottom:12px;">
+            <b>New Vacation Request:</b>
+        </p>
+        <table style="border-collapse:collapse;">
+            <tr>
+                <td style="font-family:Arial;font-size:12px;vertical-align:top;border: 1px solid \\#cccccc;padding: 4px;text-align:right;"><b>Officer:</b></td>
+                <td style="font-family:Arial;font-size:12px;vertical-align:top;border: 1px solid \\#cccccc;padding: 4px;">#= data.OfficerFullName #</td>
+            </tr>
+            <tr>
+                <td style="font-family:Arial;font-size:12px;vertical-align:top;border: 1px solid \\#cccccc;padding: 4px;text-align:right;"><b>Start Date:</b></td>
+                <td style="font-family:Arial;font-size:12px;vertical-align:top;border: 1px solid \\#cccccc;padding: 4px;">#= kendo.toString(moment(data.StartDate, "YYYY-MM-DDTHH:mm:ss").toDate(), "d") #</td>
+            </tr>
+            <tr>
+                <td style="font-family:Arial;font-size:12px;vertical-align:top;border: 1px solid \\#cccccc;padding: 4px;text-align:right;"><b>End Date:</b></td>
+                <td style="font-family:Arial;font-size:12px;vertical-align:top;border: 1px solid \\#cccccc;padding: 4px;">#= kendo.toString(moment(data.EndDate, "YYYY-MM-DDTHH:mm:ss").toDate(), "d") #</td>
+            </tr>
+            <tr>
+                <td style="font-family:Arial;font-size:12px;vertical-align:top;border: 1px solid \\#cccccc;padding: 4px;text-align:right;"><b>Contact Email Address:</b></td>
+                <td style="font-family:Arial;font-size:12px;vertical-align:top;border: 1px solid \\#cccccc;padding: 4px;">#= nullToString(data.EmailAddress) #</td>
+            </tr>
+            <tr>
+                <td style="font-family:Arial;font-size:12px;vertical-align:top;border: 1px solid \\#cccccc;padding: 4px;text-align:right;"><b>Contact Phone:</b></td>
+                <td style="font-family:Arial;font-size:12px;vertical-align:top;border: 1px solid \\#cccccc;padding: 4px;">#= nullToString(data.Phone) #</td>
+            </tr>
+        </table>
+    </script>
+    <script src="~/Scripts/jquery.min.js"></script>
+    @Html.VersionedJsUrl("/Scripts/kendoui/v2016.1.322/kendo.all.min.js")
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/Scripts/moment-timezone.min.js"></script>
+    <script src="~/Scripts/moment-timezone-data.min.js"></script>
+    <script src="~/Scripts/purl.js"></script>
+    <script type="text/javascript">        
+        var url = $.url();
+        var entityId = url.segment(-1);
+        var siteBaseUrl = '@ORWeb.Classes.Shared.App.SiteBaseUrl';
+        var reportBaseUrl = "/api/Utility/GetVacationRequest/";
+
+        var errorOccurred = false;
+        var contentGenerated = false;
+        var documentReady = false;
+        var messageLog = '';
+        var resultData = '';
+        var errorMessage = '';
+
+        function refreshReport() {
+            debugger;
+            $.getJSON(reportBaseUrl + entityId)
+                .done(function (data) {
+                    debugger;
+                    var language = data.BrowserLanguage;
+                    $.getScript("/Scripts/kendoui/v2016.1.322/cultures/kendo.culture." + language + ".min.js").done(function (script, textStatus) {
+                        kendo.culture(language);
+
+                        var reportTemplate = kendo.template($("#report-template").html());
+
+                        $("#main-area").append(reportTemplate(data));
+                        resultData = $("#main-area")[0].outerHTML;
+
+                        contentGenerated = true;
+                    })
+                    .fail(function (jqxhr, textStatus, error) {
+                        errorMessage = textStatus + ', ' + error;
+                        console.log("Request Failed: " + errorMessage);
+                        logMessage(errorMessage);
+                        errorOccurred = true;
+                    });
+                })
+                .fail(function (jqxhr, textStatus, error) {
+                    errorMessage = textStatus + ', ' + error;
+                    console.log("Request Failed: " + errorMessage);
+                    logMessage(errorMessage);
+                    errorOccurred = true;
+                });
+        }
+
+        function logMessage(message) {
+            messageLog = messageLog + message + '<br/>';
+        }
+
+        function isDone() {
+            return (contentGenerated || errorOccurred);
+        }
+
+        function getMessageLog() {
+            return messageLog;
+        }
+
+        function getErrorMessage() {
+            return errorMessage;
+        }
+
+        function isSuccess() {
+            return contentGenerated;
+        }
+
+        function isDocumentReady() {
+            return documentReady;
+        }
+
+        function getResultData() {
+            if (contentGenerated) {
+                return resultData;
+            }
+            else if (errorOccurred) {
+                return JSON.stringify({ 'error': errorMessage });
+            }
+            else {
+                return '';
+            }
+        }
+
+        function nullToString(value) {
+            return (value != null) ? value : '';
+        }
+
+        function addBreaks(value) {
+            return (value != null) ? value.replace(/\n/g, '<br />') : '';
+        }
+
+        function removeBreaks(value) {
+            return (value != null) ? value.replace(/<br\s*[\/]?>/gi, "\n") : '';
+        }
+
+        function boolToYesNo(value) {
+            return (value) ? 'Yes' : 'No';
+        }
+
+        $(function () {
+            documentReady = true;
+            logMessage('set documentReady to true');
+
+            refreshReport();
+        });
+    </script>
+</body>
+</html>
+

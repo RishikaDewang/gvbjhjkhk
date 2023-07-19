@@ -1,0 +1,131 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Incident Report";
+}
+
+<div id="forms" data-role="view" data-title="iOS7 - Incident Report" data-use-native-scrolling="true">
+    <header data-role="header">
+        <div data-role="navbar">
+            <a data-align="right" data-icon="mymenuicon" data-role="button" href="/OfficerPortal/ReportMenu">Report Menu</a>
+        </div>
+    </header>
+    <div id="logo" style="text-align:center; margin-top:20px;">
+        <img src="~/Images/logo.png" width="310" height="65">
+    </div>
+    <h2>Incident Report</h2>
+
+    <ul data-role="listview" data-style="inset" data-type="group">
+        <li>
+            <ul>
+                <li>Officer: <span class="list-value">@Model.FirstName @Model.LastName</span></li>
+                <li>Client: <span class="list-value">@Model.ClientName</span></li>
+                <li>Site: <span class="list-value">@Model.SiteName</span></li>
+            </ul>
+        </li>
+    </ul>
+
+    <form>
+        <ul data-role="listview" data-style="inset">
+			<li class="report-separator">
+				Overview
+			</li>
+			<li>
+                <label for="incident-report-number">Incident Report #</label><br />
+                <input id="incident-report-number" name="incident-report-number" type="text" class="k-input k-textbox" data-bind="value: report.incidentReportNumber" />
+            </li>
+            <li>
+                <label for="incident-date">Date and Time of Incident</label><span class="required-indicator">*</span><br />
+                <input id="incident-date" name="incident-date" type="datetime" data-bind="value: report.incidentDate" required data-required-msg="Please enter the Date/Time of the Incident."/>
+                <span class="k-invalid-msg" data-for="incident-date"></span>
+            </li>
+            <li>
+                <label for="incident-type">Incident Type</label><span class="required-indicator">*</span><br />
+                <select id="incident-type" name="incident-type" data-value-field="IncidentTypeId" data-text-field="IncidentTypeName" data-bind="source: incidentTypes, value: report.incidentTypeId" required data-required-msg="Please select Type of Incident."></select>
+                <span class="k-invalid-msg" data-for="incident-type"></span>
+            </li>
+            <li>
+                <label for="incident-type-other">If Other, What Type</label><br />
+                <input id="incident-type-other" type="text" class="k-input k-textbox" data-bind="value: report.incidentOtherType" />
+            </li>
+            <li>
+                <label for="victim-name">Victim Name(s)</label><br />
+                <input id="victim-name" type="text" class="k-input k-textbox" data-bind="value: report.victimName" />
+            </li>
+            <li>
+                <label for="suspect-names">Suspect Name(s)</label><br />
+                <input id="suspect-names" type="text" class="k-input k-textbox" data-bind="value: report.suspectNames" />
+            </li>
+            <li>
+                <label for="incident-location">Incident Location</label><span class="required-indicator">*</span><br />
+                <input id="incident-location" name="incident-location" type="text" class="k-input k-textbox" data-bind="value: report.incidentLocation" required data-required-msg="Please enter the Location of the Incident." />
+            </li>
+            <li>
+                <label for="incident-summary">Incident Summary</label><span class="required-indicator">*</span><br />
+                <textarea id="incident-summary" name="incident-summary" maxlength="1000" class="k-input k-textbox" data-bind="value: report.incidentSummary" required data-required-msg="Please enter the Incident Summary."></textarea>
+            </li>
+			<li class="report-separator">
+				Responder Info
+			</li>
+            <li>
+                <label for="police-called">Police Called</label><span class="required-indicator">*</span><br />
+                <select id="police-called" name="police-called" data-bind="value: report.policeCalled" required data-required-msg="Please select Yes or No for Police Called.">
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+                <span class="k-invalid-msg" data-for="police-called"></span>          
+            </li>
+            <li>
+                <label for="why-not-called">If Not, Why?</label><br />
+                <input id="why-not-called" type="text" class="k-input k-textbox" data-bind="value: report.whyPoliceNotCalled" />
+            </li>
+            <li>
+                <label for="police-info">Police Name(s) & Badge(s)</label><br />
+                <textarea id="police-info" maxlength="1000" class="k-input k-textbox" data-bind="value: report.policeInfo"></textarea>
+            </li>
+            <li>
+                <label for="fire-truck-num">Fire Truck Number</label><br />
+                <input id="fire-truck-num" type="text" class="k-input k-textbox" data-bind="value: report.fireTruckNumber" />
+            </li>
+            <li>
+                <label for="ambulance-num">Ambulance Number</label><br />
+                <input id="ambulance-num" type="text" class="k-input k-textbox" data-bind="value: report.ambulanceNumber" />
+            </li>
+			<li class="report-separator">
+				Details
+			</li>
+            <li>
+                <label for="incident-details">Who, What, When, etc.</label><span class="required-indicator">*</span><br />
+                <textarea id="incident-details" name="incident-details" maxlength="1000" class="k-input k-textbox" data-bind="value: report.incidentDetails" required data-required-msg="Please enter the Incident Details."></textarea>
+            </li>
+			<li class="report-separator">
+				Photos, Videos, Audio
+			</li>
+			<li>
+                <input name="fileUpload" id="fileUpload" type="file" />
+                <div id="photo-list" style="margin-top:8px;"></div>
+                <div id="media-list" style="margin-top:8px;"></div>
+            </li>
+			<li class="report-separator">
+				Officer Actions
+			</li>
+            <li>
+                <label for="officer-actions">Details</label><span class="required-indicator">*</span><br />
+                <textarea id="officer-actions" name="officer-actions" maxlength="1000" class="k-input k-textbox" data-bind="value: report.officerActions" required data-required-msg="Please enter Officer Actions."></textarea>
+            </li>
+            <li>
+                <ul class="submit-buttons">
+                    <li><a data-role="button" data-bind="click: submit">Submit</a></li>
+                </ul>
+            </li>
+        </ul>
+    </form>
+    <br /><br />
+</div>
+
+@section Scripts {
+	<script type="text/javascript">
+	    var clientSiteId = @Model.ClientSiteId;
+	</script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/IncidentReport.Mobile_iOS7.js")
+}

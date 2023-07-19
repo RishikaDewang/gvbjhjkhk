@@ -1,0 +1,430 @@
+@model ORWeb.Models.LoginModel
+@{
+    Layout = null;
+    ViewBag.Title = "Sign In | OfficerReports.com";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <title>Officer Portal Sign In</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" /> 
+    <link href="~/Content/kendoui/kendo.common.min.css" rel="stylesheet" />
+    <link href="~/Content/kendoui/kendo.default.min.css" rel="stylesheet" />
+    <link href="~/Content/kendoui/kendo.mobile.all.min.css" rel="stylesheet" />
+    <link href="~/Content/mobile-page.css" rel="stylesheet" />
+    <style>
+        input.password-field {
+             -webkit-text-security: disc;
+        }
+    </style>
+</head>
+<body>
+    <div id="main-view" data-role="view" data-title="Officer Portal Sign In" data-use-native-scrolling="true">
+        <div id="logo" style="text-align:center; margin-top:20px;">
+            <img src="~/Images/logo.png" width="310" height="65">
+        </div>
+        <h1>Officer Portal Sign In</h1>
+
+        <form id="login-form">
+            <ul data-role="listview" data-style="inset">
+                <li>
+                    <label for="UserName">User Name
+                    <input id="UserName" name="UserName" type="text" class="k-input k-textbox" required data-required-msg="Please enter your User Name" />
+                    </label>
+                </li>
+                <li>
+                    <label for="Password">Password
+                    <input id="Password" name="Password" type="text" autocomplete="off" class="k-input k-textbox password-field" required data-required-msg="Please enter your Password" />
+                    </label>
+                </li>
+                <li>
+                    <ul class="submit-buttons">
+                        <li><a id="btnSubmitLogin" data-role="button">Submit</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </form>
+    </div>
+
+    <div id="site-selection-view" data-role="view" data-title="Site Selection" data-use-native-scrolling="true" style="display:none;">
+        <header data-role="header">
+            <div data-role="navbar">
+                <a class="nav-button" data-align="left" data-role="backbutton">Back</a>
+                <span data-role="view-title"></span>
+            </div>
+        </header>
+
+        <h2>Site Selection</h2>
+
+        <div id="site-list">
+
+
+        </div>
+    </div>
+
+    <div data-role="modalview" id="msg-view" style="width:auto; height:auto; display:none;">
+        <div data-role="header">
+            <div data-role="navbar">
+                <span id="msg-title"></span>
+            </div>
+        </div>
+        <div style="text-align: center;padding-bottom: 10px;">
+            <p id="msg-text"></p>
+            <a id="msg-ok-button" data-role="button">OK</a>
+        </div>
+    </div>
+
+    <div data-role="modalview" id="wait-indicator" style="width:auto; height:auto; display:none;">
+        <div data-role="header">
+            <div data-role="navbar">
+                <span id="wait-title">Please Wait...</span>
+            </div>
+        </div>
+        <div style="text-align:center;width:170px; height:70px;">
+            <div class="k-loading-image"></div>
+        </div>
+    </div>
+
+    <script src="~/Scripts/jquery.min.js"></script>
+    @Html.VersionedJsUrl("/Scripts/kendo.all.min.js")
+    @Html.VersionedJsUrl("/Scripts/app/internal-portal.js")
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/Scripts/geo.js"></script>
+    <script id="list-template" type="text/x-kendo-template">
+        <ul id="log-list-view" data-role="listview" data-style="inset">
+        # for (var i = 0; i < data.length; i++) { #
+            <li>
+                Client: #= data[i].CompanyName #<br />
+                Site: #= data[i].SiteName #<br />
+                # if (data[i].Address1) { #
+                    #= data[i].Address1 #<br />
+                    # if (data[i].Address2) { #
+                        #= data[i].Address2 #<br />
+                    # } #
+                    #= data[i].City #, #= data[i].State # #= data[i].PostalCode #<br />
+                # } #
+                <div class="submit-buttons">
+                    <a id="btnSubmitLogin" data-role="button" class="site-button" data-site-id="#= data[i].ClientSiteId #">Select This Site</a>
+                </div>
+            </li>
+        # } #
+        </ul>
+    </script>
+	<script type="text/javascript">
+	    var isMobile = true;
+	    var loginData = null;
+	    var gpsPosition = null;
+	    var deviceType = '@Request.GetDeviceType()';
+
+	    $(function () {
+	        window.kendoMobileApplication = new kendo.mobile.Application(document.body, {
+	            skin: "flat",
+	            transition: "slide"
+	        });
+
+	        var validator = $("#login-form").kendoValidator().data("kendoValidator");
+	        $('#btnSubmitLogin').click(function (e) {
+	            e.preventDefault();
+	            if (validator.validate()) {
+	                console.log('form is valid');
+
+	                var formData = {
+	                    UserName: $('#UserName').val(),
+                        Password: $('#Password').val()
+	                };
+
+	                $.ajax({
+	                    url: '/api/Account/OfficerValidate',
+	                    type: 'POST',
+	                    data: JSON.stringify(formData),
+	                    contentType: 'application/json; charset=utf-8',
+	                    beforeSend: function () {
+	                        showWait();
+	                    },
+	                    success: function (data) {
+	                        //hideWait();
+	                        loginData = data;
+
+	                        //$('#login').hide();
+	                        //initiate_geolocation();
+	                        fakeSuccess();
+
+	                        //$('#site-list').show();
+	                        console.log('officer validated');
+	                    },
+	                    error: function (jqXHR, textStatus, errorThrown) {
+	                        hideWait();
+
+	                        console.log('error validating: ' + errorThrown);
+
+	                        if (errorThrown == 'Bad Request') {
+	                            if (jqXHR.responseJSON) {
+	                                if (jqXHR.responseJSON.ModelState) {
+	                                    errorThrown = jqXHR.responseJSON.ModelState.errors[0];
+	                                }
+	                            }
+	                            else if (jqXHR.responseText) {
+	                                var responseJSON = JSON.parse(jqXHR.responseText);
+	                                if (responseJSON.ModelState) {
+	                                    errorThrown = responseJSON.ModelState.errors[0];
+	                                }
+	                            }
+	                        }
+
+	                        showMessage('Error Signing In', errorThrown, true);
+	                    }
+	                });
+	            }
+	        });
+
+	        $(document).on('click', '.site-button', function (e) {
+	            var clientSiteId = $(this).attr('data-site-id');
+	            for (var i = 0; i < loginData.clientSites.length; i++) {
+	                var site = loginData.clientSites[i];
+	                if (site.ClientSiteId == clientSiteId) {
+
+	                    var formData = {
+	                        UserName: $('#UserName').val(),
+	                        Password: $('#Password').val(),
+	                        ClientSiteId: clientSiteId,
+	                        ClientName: site.CompanyName,
+	                        SiteName: site.SiteName,
+	                        Latitude: 0,
+	                        Longitude: 0,
+	                        DistanceFromSiteFeet: 0,
+	                        AccuracyFeet: 0,
+	                        DeviceType: deviceType,
+	                        DeviceInfo: null,
+	                        IsTourTracker: false
+	                    }
+
+	                    $.ajax({
+	                        url: '/api/Account/OfficerLogin',
+	                        type: 'POST',
+	                        data: JSON.stringify(formData),
+	                        contentType: 'application/json; charset=utf-8',
+	                        beforeSend: function () {
+	                            showWait();
+	                        },
+	                        success: function () {
+	                            // store formData object
+	                            //$("#wait-indicator").kendoMobileModalView("close");
+	                            window.location.href = '/OfficerPortal';
+	                        },
+	                        error: function (jqXHR, textStatus, errorThrown) {
+	                            hideWait();
+
+	                            console.log('error logging in: ' + errorThrown);
+
+	                            if (jqXHR.responseJSON) {
+	                                if (jqXHR.responseJSON.ModelState) {
+	                                    errorThrown = jqXHR.responseJSON.ModelState.errors[0];
+	                                }
+	                            }
+	                            else if (jqXHR.responseText) {
+	                                var responseJSON = JSON.parse(jqXHR.responseText);
+	                                if (responseJSON.ModelState) {
+	                                    errorThrown = responseJSON.ModelState.errors[0];
+	                                }
+	                            }
+
+	                            showMessage('Error Signing In', errorThrown, true);
+	                        }
+	                    });
+	                    break;
+	                }
+	            }
+	        });
+
+	        //$(document).on('click', '.site-button', function (e) {
+	        //    var clientSiteId = $(this).attr('data-site-id');
+	        //    for (var i = 0; i < loginData.clientSites.length; i++) {
+	        //        var site = loginData.clientSites[i];
+	        //        if (site.ClientSiteId == clientSiteId) {
+	        //            var p1 = new google.maps.LatLng(gpsPosition.coords.latitude, gpsPosition.coords.longitude);
+	        //            var p2 = new google.maps.LatLng(site.SiteLatitude, site.SiteLongitude);
+	        //            var distanceGoogleFt = Math.round(google.maps.geometry.spherical.computeDistanceBetween(p1, p2) * 3.28);
+
+	        //            var formData = {
+	        //                UserName: $('#UserName').val(),
+	        //                Password: $('#Password').val(),
+	        //                ClientSiteId: clientSiteId,
+	        //                ClientName: site.CompanyName,
+	        //                SiteName: site.SiteName,
+	        //                Latitude: gpsPosition.coords.latitude,
+	        //                Longitude: gpsPosition.coords.longitude,
+	        //                DistanceFromSiteFeet: distanceGoogleFt,
+	        //                AccuracyFeet: Math.floor(gpsPosition.coords.accuracy * 3.28084),
+	        //                DeviceType: deviceType,
+	        //                DeviceInfo: null,
+	        //                IsTourTracker: false
+	        //            }
+                        
+	        //            $.ajax({
+	        //                url: '/api/Account/OfficerLogin',
+	        //                type: 'POST',
+	        //                data: JSON.stringify(formData),
+	        //                contentType: 'application/json; charset=utf-8',
+	        //                beforeSend: function () {
+	        //                    showWait();
+	        //                },
+	        //                success: function () {
+	        //                    // store formData object
+	        //                    //$("#wait-indicator").kendoMobileModalView("close");
+	        //                    window.location.href = '/OfficerPortal';
+	        //                },
+	        //                error: function (jqXHR, textStatus, errorThrown) {
+	        //                    hideWait();
+
+	        //                    console.log('error logging in: ' + errorThrown);
+
+	        //                    if (jqXHR.responseJSON) {
+	        //                        if (jqXHR.responseJSON.ModelState) {
+	        //                            errorThrown = jqXHR.responseJSON.ModelState.errors[0];
+	        //                        }
+	        //                    }
+	        //                    else if (jqXHR.responseText) {
+	        //                        var responseJSON = JSON.parse(jqXHR.responseText);
+	        //                        if (responseJSON.ModelState) {
+	        //                            errorThrown = responseJSON.ModelState.errors[0];
+	        //                        }
+	        //                    }
+
+	        //                    showMessage('Error Signing In', errorThrown, true);
+	        //                }
+	        //            });
+	        //            break;
+	        //        }
+	        //    }
+	        //});
+	    });
+
+	    function initiate_geolocation() {
+	        navigator.geolocation.getAccurateCurrentPosition(onGeolocationSuccess, onGeolocationError, onGeolocationProgress, { desiredAccuracy: 1609, maxWait: 6000 }); // 1 mile, 5 seconds
+	        //navigator.geolocation.getCurrentPosition(handle_geolocation_query, handle_errors, { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 });
+	    }
+
+	    function onGeolocationProgress(position) {
+	        console.log('in onGeolocationProgress - accuracy ft: ' + (position.coords.accuracy * 3.28));
+	    }
+
+	    function onGeolocationError(error) {
+	        hideWait();
+	        // error.code can be:
+	        //   0: unknown error
+	        //   1: permission denied
+	        //   2: position unavailable (error response from locaton provider)
+	        //   3: timed out
+
+	        switch (error.code) {
+	            case error.PERMISSION_DENIED: showMessage('Location Detection Denied', 'Did not share geolocation data.  Must answer "Yes" when prompted.  Click the Submit button to try again.', true);
+	                break;
+	            case error.POSITION_UNAVAILABLE: showMessage('Location Detection Error', 'Could not detect current position.  Click the Submit button to try again.', true);
+	                break;
+	            case error.TIMEOUT: showMessage('Location Detection Error', 'Retrieving position timed out.  Click the Submit button to try again.', true);
+	                break;
+	            default: showMessage('Location Detection Error', 'Unknown error.  Click the Submit button to try again.', true);
+	                break;
+	        }
+	    }
+
+	    function onGeolocationSuccess(position, succeeded, secondsElapsed, locationEventCount) {
+	        hideWait();
+	        if (!position) {
+	            showMessage('Location Detection Error', 'Unknown error.  If the problem persists, please contact your system administrator.', true)
+	            return;
+	        }
+
+	        console.log('succeeded: ' + succeeded);
+	        console.log('secondsElapsed: ' + secondsElapsed);
+	        console.log('locationEventCount: ' + locationEventCount);
+
+	        var p2 = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+	        var p1;
+	        var distanceGoogleFt;
+	        var accuracyFt = position.coords.accuracy * 3.28;
+	        var sitesInRange = [];
+
+	        $.each(loginData.clientSites, function (index, clientSite) {
+	            p1 = new google.maps.LatLng(clientSite.SiteLatitude, clientSite.SiteLongitude);
+
+	            // computeDistanceBetween - return meters
+	            distanceGoogleFt = google.maps.geometry.spherical.computeDistanceBetween(p1, p2) * 3.28;
+	            console.log(clientSite.SiteName + ' - Distance Ft: ' + distanceGoogleFt);
+
+	            // 1mi = 5280ft
+	            if ((distanceGoogleFt <= (accuracyFt + 2640)) || (clientSite.IsSupervisor)) {
+	                clientSite['Distance'] = distanceGoogleFt;
+	                sitesInRange.push(clientSite);
+	            }
+	        });
+
+	        if (sitesInRange.length > 0) {
+	            gpsPosition = position;
+	            var template = kendo.template($("#list-template").html());
+	            var result = template(sitesInRange);
+	            $('#site-list').html(result);
+	            kendo.mobile.init($("#site-list"));
+	            kendoMobileApplication.navigate("#site-selection-view");
+	        }
+	        else {
+	            showMessage('No Sites In Range', 'You do not appear to be close to any work sites.  If you are at a work site and the problem persists, contact your employer.', true);
+	        }
+	    }
+
+	    function fakeSuccess() {
+	        hideWait();
+
+	        var sitesInRange = [];
+	        $.each(loginData.clientSites, function (index, clientSite) {
+	            clientSite['Distance'] = 10;
+	            sitesInRange.push(clientSite);
+	        });
+
+	        if (sitesInRange.length > 0) {
+	            var template = kendo.template($("#list-template").html());
+	            var result = template(sitesInRange);
+	            $('#site-list').html(result);
+	            kendo.mobile.init($("#site-list"));
+	            kendoMobileApplication.navigate("#site-selection-view");
+	        }
+	    }
+
+	    //function handle_geolocation_query(position) {
+	    //    var p2 = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+	    //    var p1;
+	    //    var distanceGoogleFt;
+	    //    var sitesInRange = [];
+
+	    //    $.each(loginData.clientSites, function (index, clientSite) {
+	    //        p1 = new google.maps.LatLng(clientSite.SiteLatitude, clientSite.SiteLongitude);
+
+	    //        // computeDistanceBetween - return meters
+	    //        distanceGoogleFt = google.maps.geometry.spherical.computeDistanceBetween(p1, p2) * 3.28;
+	    //        console.log(clientSite.SiteName + ' - Distance Ft: ' + distanceGoogleFt);
+
+	    //        // 1mi = 5280ft
+	    //        if (distanceGoogleFt <= 2640) {
+	    //            clientSite['Distance'] = distanceGoogleFt;
+	    //            sitesInRange.push(clientSite);
+	    //        }
+	    //    });
+
+	    //    if (sitesInRange.length > 0) {
+	    //        gpsPosition = position;
+	    //        var template = kendo.template($("#list-template").html());
+	    //        var result = template(sitesInRange);
+	    //        $('#site-list').html(result);
+	    //        kendo.mobile.init($("#site-list"));
+	    //        kendoMobileApplication.navigate("#site-selection-view");
+	    //    }
+	    //    else {
+	    //        showMessage('No Sites In Range', 'You do not appear to be close to any work sites.  If you are at a work site and the problem persists, contact your employer.', true);
+	    //    }
+	    //}
+	</script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDBmfxrZF_QQPpGB_pZj3vlf2di-KQCFOc&sensor=false&libraries=geometry"></script>
+</body>
+</html>

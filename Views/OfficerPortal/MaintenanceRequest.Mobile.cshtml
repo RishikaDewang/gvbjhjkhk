@@ -1,0 +1,94 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Maintenance Request";
+}
+
+<div id="forms" data-role="view" data-title="Maintenance Request" data-use-native-scrolling="true">
+    <header data-role="header">
+        <div data-role="navbar">
+            <a data-align="right" data-icon="mymenuicon" data-role="button" href="#report-menu">Report Menu</a>
+        </div>
+    </header>
+    <div id="logo" style="text-align:center; margin-top:20px;">
+        <img src="~/Images/logo.png" width="310" height="65">
+    </div>
+    <h2>Maintenance Request</h2>
+
+    <ul data-role="listview" data-style="inset" data-type="group">
+        <li>
+            <ul>
+                <li>Officer: <span class="list-value">@Model.FirstName @Model.LastName</span></li>
+                <li>Client: <span class="list-value">@Model.ClientName</span></li>
+                <li>Site: <span class="list-value">@Model.SiteName</span></li>
+            </ul>
+        </li>
+    </ul>
+    <form id="report-form">
+        <ul data-role="listview" data-style="inset">
+            <li class="report-separator">
+                Maintenance Request
+            </li>
+            <li>
+                <label for="maintenance-type">Maintenance Type<span class="required-indicator">*</span>
+                    <select id="maintenance-type" name="maintenance-type" data-value-field="MaintenanceTypeId" data-text-field="MaintenanceTypeName" data-bind="source: maintenanceTypes, value: report.maintenanceTypeId" data-value-primitive="true" required data-required-msg="Please select Maintenance Type."></select>
+                <span class="k-invalid-msg" data-for="maintenance-type"></span>
+                </label>
+            </li>
+            <li>
+                <label for="type-other">If Other, What Type
+                <input id="type-other" type="text" maxlength="100" data-bind="value: report.typeIfOther" />
+                </label>
+            </li>
+            <li>
+                <label for="maintenance-details">Details<span class="required-indicator">*</span><br />
+                <textarea id="maintenance-details" name="maintenance-details" maxlength="2000" class="k-input k-textbox" data-bind="value: report.details" required data-required-msg="Please enter the Details."></textarea>
+                </label>
+            </li>
+            <li>
+                <label for="notification">Who has been notified?
+                <textarea id="notification" maxlength="2000" data-bind="value: report.notification"></textarea>
+                </label>
+            </li>
+            <li>
+                <label for="email-client">Email Client<span class="required-indicator">*</span>
+                <select id="email-client" name="email-client" data-bind="value: report.emailClient" required data-required-msg="Please select Yes or No for Email Client.">
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+                <span class="k-invalid-msg" data-for="email-client"></span>
+                </label>
+            </li>
+            <li>
+                <div style="margin-bottom:6px;"><button id="btn-add-photo" class="k-button" type="button" style="width:140px;font-weight:bold; font-family: Verdana;">+ Add Photo, Video, or Audio</button></div>
+                <div id="upload-progress-wrapper" style="width:100%;"></div>
+                <div style="height: 0;width:0; overflow:hidden;"><input name="fileUpload" id="fileUpload" type="file" style="width:0;height:0;" /></div>
+                <div id="photo-list" style="margin-top:8px;"></div>
+                <div id="media-list" style="margin-top:8px;"></div>
+                <div id="attachment-list" style="margin-top:8px;"></div>
+            </li>
+            <li>
+                <ul class="submit-buttons">
+                    <li><a data-role="button" data-bind="click: submit">Submit</a></li>
+                </ul>
+                <ul id="clear-form-ul" class="submit-buttons" style="display:none;">
+                    <li><br /><a data-role="button" data-bind="click: clearForm">Clear Form</a></li>
+                </ul>
+            </li>
+        </ul>
+    </form>
+    <br /><br />
+</div>
+
+@section Head {
+    <link href="~/Content/toastmessage/css/jquery.toastmessage.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <script type="text/javascript" src="/Scripts/jquery.toastmessage.js"></script>
+    <script type="text/javascript">
+        var clientSiteId = @Model.ClientSiteId;
+        var userId = @Model.UserId;
+    </script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/MaintenanceRequest.Mobile.js")
+}

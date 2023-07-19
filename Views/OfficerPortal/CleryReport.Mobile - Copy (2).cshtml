@@ -1,0 +1,239 @@
+@model ORWeb.Models.OfficerLoginModel
+@{
+    Layout = "~/Views/Shared/_LayoutPortal.cshtml";
+    ViewBag.Title = "Clery Report";
+}
+
+<div id="forms" data-role="view" data-title="Clery Report" data-use-native-scrolling="true">
+    <header data-role="header">
+        <div data-role="navbar">
+            <a data-align="right" data-icon="mymenuicon" data-role="button" href="#report-menu">Report Menu</a>
+        </div>
+    </header>
+    <div id="logo" style="text-align:center; margin-top:20px;">
+        <img src="~/Images/logo.png" width="310" height="65">
+    </div>
+    <h2>Clery Report</h2>
+
+    <ul data-role="listview" data-style="inset" data-type="group">
+        <li>
+            <ul>
+                <li>Officer: <span class="list-value">@Model.FirstName @Model.LastName</span></li>
+                <li>Client: <span class="list-value">@Model.ClientName</span></li>
+                <li>Site: <span class="list-value">@Model.SiteName</span></li>
+            </ul>
+        </li>
+    </ul>
+
+    <form>
+        <ul data-role="listview" data-style="inset">
+            <li class="report-separator">
+                Overview
+            </li>
+            <li>
+                <label for="incident-report-number">Incident Report #</label><br />
+                <input id="incident-report-number" name="incident-report-number" type="text" maxlength="50" class="k-input k-textbox" data-bind="value: report.incidentReportNumber" />
+            </li>
+            <li>
+                <label for="incident-date">Date and Time of Incident</label><span class="required-indicator">*</span><br />
+                <input id="incident-date" name="incident-date" type="datetime-local" style="height:32px;" data-bind="value: report.incidentDate" required data-required-msg="Please enter the Date/Time of the Incident." />
+                <span class="k-invalid-msg" data-for="incident-date"></span>
+            </li>
+            <li>
+                <label for="incident-type">Clery Report Type</label><span class="required-indicator">*</span><br />
+                <ul id="incident-type-list" data-role="listview" data-style="inset" data-type="group"></ul>
+                <span class="k-invalid-msg" data-for="incident-type"></span>
+            </li>
+            <div id="incident-sub-type-items"></div>
+            <li id="hate-crime-section" style="display:none;">
+                <label>Hate Related?</label><br />
+                <ul data-role="listview" data-style="inset" data-type="group">
+                    <li>
+                        <ul>
+                            <li>
+                                <label>
+                                    <input type="radio" id="hate-crime-yes" name="radio-hate-crime" value="true" data-bind="checked:report.isHateCrime" />
+                                    Yes
+                                </label>
+                            </li>
+                            <li>
+                                <label>
+                                    <input type="radio" id="hate-crime-no" name="radio-hate-crime" value="false" data-bind="checked:report.isHateCrime" />
+                                    No
+                                </label>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <span class="k-invalid-msg" data-for="radio-hate-crime"></span>
+            </li>
+            <li id="hate-type-section" style="display:none;">
+                <label>Type of Hate</label><br />
+                <ul id="hate-type-list" data-role="listview" data-style="inset"></ul>
+                <span class="k-invalid-msg" data-for="checkbox-hate-type"></span>
+            </li>
+            <li>
+                <label>Incident Location</label><br />
+                <ul id="location-list" data-role="listview" data-style="inset" data-type="group"></ul>
+                <span class="k-invalid-msg" data-for="radio-location"></span>
+            </li>
+            <li>
+                <label for="victim-name">Victim Name(s)</label><br />
+                <input id="victim-name" type="text" maxlength="250" class="k-input k-textbox" data-bind="value: report.victimName" />
+            </li>
+            <li>
+                <label for="suspect-names">Suspect Name(s)</label><br />
+                <input id="suspect-names" type="text" maxlength="250" class="k-input k-textbox" data-bind="value: report.suspectNames" />
+            </li>
+
+            <li>
+                <label for="witness-names">Witness Name(s)</label><br />
+                <input id="witness-names" type="text" maxlength="250" class="k-input k-textbox" data-bind="value: report.witnessNames" />
+            </li>
+            <li>
+                <label for="witness-info">Witness Contact Info</label><br />
+                <input id="witness-info" type="text" maxlength="250" class="k-input k-textbox" data-bind="value: report.witnessContactInfo" />
+            </li>
+            <li>
+                <label for="incident-summary">Incident Summary</label><span class="required-indicator">*</span><br />
+                <textarea id="incident-summary" name="incident-summary" maxlength="1000" class="k-input k-textbox" data-bind="value: report.incidentSummary" required data-required-msg="Please enter the Incident Summary."></textarea>
+            </li>
+            <li class="report-separator">
+                Responder Info
+            </li>
+            <li>
+                <label for="police-called">Police Called</label><span class="required-indicator">*</span><br />
+                <select id="police-called" name="police-called" data-bind="value: report.policeCalled" required data-required-msg="Please select Yes or No for Police Called.">
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+                <span class="k-invalid-msg" data-for="police-called"></span>
+            </li>
+            <li>
+                <label for="why-not-called">If Not, Why?</label><br />
+                <input id="why-not-called" type="text" maxlength="250" class="k-input k-textbox" data-bind="value: report.whyPoliceNotCalled" />
+            </li>
+            <li>
+                <label for="police-info">Police Name(s) & Badge(s)</label><br />
+                <textarea id="police-info" maxlength="500" class="k-input k-textbox" data-bind="value: report.policeInfo"></textarea>
+            </li>
+            <li>
+                <label for="fire-truck-num">Fire Truck Number</label><br />
+                <input id="fire-truck-num" type="text" maxlength="100" class="k-input k-textbox" data-bind="value: report.fireTruckNumber" />
+            </li>
+            <li>
+                <label for="ambulance-num">Ambulance Number</label><br />
+                <input id="ambulance-num" type="text" maxlength="100" class="k-input k-textbox" data-bind="value: report.ambulanceNumber" />
+            </li>
+            <li class="report-separator">
+                Details
+            </li>
+            <li>
+                <label for="incident-details">Who, What, When, etc.</label><span class="required-indicator">*</span><br />
+                <textarea id="incident-details" name="incident-details" class="k-input k-textbox" data-bind="value: report.incidentDetails" required data-required-msg="Please enter the Incident Details."></textarea>
+            </li>
+            <li class="report-separator">
+                Photos, Videos, Audio
+            </li>
+            <li>
+                <input name="fileUpload" id="fileUpload" type="file" />
+                <div id="photo-list" style="margin-top:8px;"></div>
+                <div id="media-list" style="margin-top:8px;"></div>
+            </li>
+            <li class="report-separator">
+                Officer Actions
+            </li>
+            <li>
+                <label for="officer-actions">Details</label><span class="required-indicator">*</span><br />
+                <textarea id="officer-actions" name="officer-actions" maxlength="3000" class="k-input k-textbox" data-bind="value: report.officerActions" required data-required-msg="Please enter Officer Actions."></textarea>
+            </li>
+            <li>
+                <ul class="submit-buttons">
+                    <li><a data-role="button" data-bind="click: submit">Submit</a></li>
+                </ul>
+            </li>
+        </ul>
+    </form>
+    <br /><br />
+    <div class="message-log"></div>
+</div>
+
+@section Head {
+    <link href="~/Content/mobiscroll.custom-2.9.2.min.css" rel="stylesheet" />
+}
+
+@section Scripts {
+    <script id="hate-type-list-template" type="text/x-kendo-tmpl">
+        # for (var i = 0; i < data.hateTypeDataSource.length; i++) { #
+        <li>
+            <label>
+                <input type="checkbox" name="checkbox-hate-type" id="hate-type-#: data.hateTypeDataSource[i].CleryHateTypeId #" value="#: data.hateTypeDataSource[i].CleryHateTypeId #" data-bind="checked: report.hateTypeIds" />
+                #: data.hateTypeDataSource[i].HateTypeName #
+            </label>
+        </li>
+        # } #
+    </script>
+    <script id="location-list-template" type="text/x-kendo-tmpl">
+        <li>
+            <ul>
+                # for (var i = 0; i < data.incidentLocationDataSource.length; i++) { #
+                <li>
+                    <label>
+                        <input type="radio" name="radio-location" id="location-#: data.incidentLocationDataSource[i].CleryIncidentLocationId #" value="#: data.incidentLocationDataSource[i].CleryIncidentLocationId #" data-bind="checked:report.cleryIncidentLocationId" />
+                        #: data.incidentLocationDataSource[i].IncidentLocationName #
+                    </label>
+                </li>
+                # } #
+            </ul>
+        </li>
+    </script>
+    <script id="incident-type-template" type="text/x-kendo-tmpl">
+        <li>
+            <ul>
+                # for (var i = 0; i < data.IncidentTypes.length; i++) { #
+                <li>
+                    <label>
+                        <input type="radio" name="radio-incident-type" id="incident-type-#: data.IncidentTypes[i].CleryIncidentTypeId #" value="#: data.IncidentTypes[i].CleryIncidentTypeId #" data-bind="checked:report.cleryIncidentTypeId" />
+                        #: data.IncidentTypes[i].IncidentTypeName #
+                    </label>
+                </li>
+                # } #
+            </ul>
+        </li>
+    </script>
+    <script id="incident-sub-type-template" type="text/x-kendo-tmpl">
+        # for (var i = 0; i < data.IncidentTypes.length; i++) { #
+            <li id="li-incident-sub-type-#: data.IncidentTypes[i].CleryIncidentTypeId #" class="li-incident-sub-type" style="display:none;">
+                <label for="incident-sub-type-#: data.IncidentTypes[i].CleryIncidentTypeId #">Incident Type</label><span class="required-indicator">*</span><br />
+                <ul data-role="listview" data-style="inset" data-type="group">
+                    <li>
+                        <ul>
+                            # 
+                                viewModel.incidentSubTypeHelperDS.filter({
+                                    field: "CleryIncidentTypeId",
+                                    operator: "eq",
+                                    value: data.IncidentTypes[i].CleryIncidentTypeId
+                                });
+                            #
+                            # for (var j = 0; j < viewModel.incidentSubTypeHelperDS.view().length; j++) { #
+                                <li>
+                                    <label>
+                                        <input type="radio" id="incident-sub-type-#: viewModel.incidentSubTypeHelperDS.view()[j].CleryIncidentSubTypeId #" name="radio-incident-sub-type" value="#: viewModel.incidentSubTypeHelperDS.view()[j].CleryIncidentSubTypeId #" data-bind="checked:report.cleryIncidentSubTypeId" />
+                                        #: viewModel.incidentSubTypeHelperDS.view()[j].IncidentSubTypeName #
+                                    </label>
+                                </li>
+                            # } #
+                        </ul>
+                    </li>
+                </ul>
+                <span class="k-invalid-msg" data-for="incident-sub-type-#: data.IncidentTypes[i].CleryIncidentTypeId #"></span>
+            </li>
+        # } #
+    </script>
+    <script src="~/Scripts/modernizr.custom.js"></script>
+    <script src="~/Scripts/mobiscroll.custom-2.9.2.min.js"></script>
+    <script type="text/javascript">
+        var clientSiteId = @Model.ClientSiteId;
+    </script>
+    @Html.VersionedJsUrl("/Scripts/app/OfficerPortal/CleryIncidentReport.Mobile.js")
+}
